@@ -694,6 +694,7 @@ function current(){ const h = location.hash.slice(1); return ROUTES.includes(h) 
 function go(r){ if(location.hash.slice(1)===r) show(); else location.hash = r; }
 function show(){
   let r = current();
+  if(r!=='plan' && !S.plan && /[?&]demo/.test(location.search)){ S.plan='1g'; }
   if(r!=='plan' && !S.plan){ r='plan'; history.replaceState(null,'','#plan'); }
   $$('.screen').forEach(s=>s.classList.toggle('active', s.id==='s-'+r));
   renderAll();

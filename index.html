@@ -225,6 +225,12 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
 .device-scroll::-webkit-scrollbar{display:none}
 .device-scroll img{display:block;width:100%;height:auto}
 .ba-col figcaption{text-align:center;max-width:32ch}
+.cph{width:300px;max-width:100%;border-radius:44px;padding:10px;background:#1d1d1f;box-shadow:0 30px 60px -30px rgba(0,0,0,.45);box-sizing:border-box}
+.cvp{width:280px;height:600px;border-radius:34px;overflow:hidden;background:#fff;position:relative}
+.cvp iframe{position:absolute;left:0;top:0;width:375px;height:803.6px;border:0;transform:scale(.74667);transform-origin:0 0;background:#fff}
+.ba{grid-template-columns:repeat(2,300px)}
+@media (max-width:760px){.ba{grid-template-columns:300px}}
+
 @media (max-width:760px){.ba{grid-template-columns:minmax(0,380px)}}
 
 .figs.three{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -412,12 +418,12 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     <div class="ba rv">
       <figure class="ba-col">
         <span class="label">Before</span>
-        <div class="device"><div class="device-scroll" tabindex="0" aria-label="Before: the old plan selection page, scrollable"><img src="m/plan-before.webp" alt="Old plan selection page with one long plan card, gift offer and Select button" loading="lazy"></div></div>
-        <figcaption>One plan at a time in a side scroll. Price, perks and fine print all compete.</figcaption>
+        <div class="cph"><div class="cvp"><iframe src="before/index.html" title="Before: the old plan selection page, rebuilt" loading="lazy"></iframe></div></div>
+        <figcaption>One plan at a time in a side scroll. Price, perks and fine print all compete. Rebuilt from the live page, so you can scroll it.</figcaption>
       </figure>
       <figure class="ba-col">
         <span class="label">After · live prototype</span>
-        <div class="device"><iframe src="proto/index.html#plan" title="Interactive plan selection prototype" loading="lazy"></iframe></div>
+        <div class="cph"><div class="cvp"><iframe src="proto/index.html?demo#plan" title="Interactive plan selection prototype" loading="lazy"></iframe></div></div>
         <figcaption>All plans in one list. Price and speed first, details open in place. Try it: tap a plan.</figcaption>
       </figure>
     </div>
