@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Abhishek Bora, Principal Designer. Selected work.">
+<style>html,body{margin:0;padding:0}</style>
+<title>Abhishek Bora Selected Work</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an exhibition catalogue. Each project is a plate: title, one-line facts, the problem in numbers, three decisions, then large visuals on soft panels. White ground so the work carries the colour. */
+:root{
+  --paper:#ffffff;
+  --ink:#0f1115;
+  --muted:#5d6370;
+  --panel:#f3f4f6;
+  --line:#e4e6ea;
+  --accent:#0f1115;
+  --display:"Geist","Helvetica Neue",Arial,sans-serif;
+  --body:"Geist","Helvetica Neue",Arial,sans-serif;
+  --mono:"Geist Mono",ui-monospace,Menlo,monospace;
+  --wrap:1240px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--wrap);margin:0 auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.02em;font-weight:500}
+p{margin:0}
+.label{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* Nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(255,255,255,.88);backdrop-filter:saturate(1.4) blur(12px);-webkit-backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid transparent;transition:border-color .3s}
+.nav.scrolled{border-bottom-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:24px;height:60px}
+.nav .mark{font-family:var(--display);font-weight:500;font-size:16px;text-decoration:none;letter-spacing:-.02em}
+.nav ul{display:flex;gap:22px;list-style:none;margin:0 0 0 auto;padding:0}
+.nav ul a{text-decoration:none;font-size:15px;color:var(--muted)}
+.nav ul a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:500;font-size:14px;padding:9px 16px;border-radius:999px;background:var(--ink);color:var(--paper);white-space:nowrap;border:0;cursor:pointer;font-family:var(--body)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+@media (max-width:760px){.nav ul{display:none}.nav .btn{margin-left:auto}}
+
+/* Hero */
+.hero{padding-block:clamp(56px,10vw,120px) clamp(48px,7vw,96px)}
+.hero h1{font-size:clamp(36px,5vw,64px);font-weight:500;line-height:1.02;letter-spacing:-.035em}
+.hero .intro{display:grid;gap:14px;margin-top:28px;max-width:58ch}
+.hero .intro p{font-size:clamp(17px,1.5vw,20px);line-height:1.5;color:var(--ink)}
+.hero .intro p:first-child{color:var(--ink)}
+.hero .lede{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:40px;margin-top:clamp(32px,5vw,56px);align-items:end}
+.hero .lede p{font-size:clamp(20px,2.2vw,26px);line-height:1.35;max-width:30ch}
+.hero .roles{color:var(--muted);font-size:16px;margin-top:14px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;border-top:1.5px solid var(--ink);padding-top:18px}
+.stat b{display:block;font-family:var(--display);font-weight:500;font-size:clamp(40px,5vw,64px);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.stat span{display:block;font-size:14px;color:var(--muted);margin-top:8px;line-height:1.3}
+@media (max-width:820px){.hero .lede{grid-template-columns:1fr}}
+
+/* Chapter */
+.chapter{padding-block:clamp(64px,9vw,120px) 0;border-top:1px solid var(--line)}
+.chapter-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.chapter-head h2{font-size:clamp(22px,2.4vw,30px);font-weight:500}
+.chapter-head .label{color:var(--ink)}
+.cs-link{text-decoration:none;background-image:linear-gradient(currentColor,currentColor);background-size:0 2px;background-position:0 100%;background-repeat:no-repeat;transition:background-size .3s}
+.cs-link:hover{background-size:100% 2px}
+.cs-link::after{content:" ↗";font-size:.5em;vertical-align:.7em;color:var(--muted)}
+.cs-btn{margin-top:var(--blk)}
+.locked{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:start;margin-top:var(--blk);padding:22px 24px;border:1px solid var(--line);border-radius:18px;max-width:720px}
+.locked .lk{width:44px;height:44px;border-radius:50%;background:var(--panel);display:grid;place-items:center}
+.locked .lk svg{width:20px;height:20px;fill:none;stroke:var(--ink);stroke-width:1.7;stroke-linecap:round}
+.locked b{font-weight:500;font-size:18px;letter-spacing:-.01em}
+.locked p{color:var(--muted);margin-top:4px}
+.lk-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
+.lk-mail{font-family:var(--mono);font-size:14px;user-select:all}
+.lk-copy{font-size:13px;padding:6px 12px}
+
+
+/* Project */
+.project{padding-block:clamp(56px,8vw,104px) 0}
+.p-title{font-size:clamp(32px,4.2vw,56px);font-weight:500;line-height:1.02;letter-spacing:-.035em;max-width:18ch}
+.facts{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:22px;font-size:15px}
+.facts div{display:flex;gap:8px;align-items:baseline}
+.facts dt{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.facts dd{margin:0;font-weight:500}
+.problem{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(28px,5vw,72px);margin-top:clamp(36px,5vw,60px);align-items:start}
+.problem .copy{min-width:0}
+.problem .copy p{font-size:clamp(17px,1.5vw,20px);line-height:1.5;max-width:62ch}
+.problem .copy p+p{margin-top:14px}
+.problem .copy em{font-style:normal;font-weight:500;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.figs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:1.5px solid var(--ink)}
+.fig{padding:18px 18px 20px 0;border-bottom:1px solid var(--line)}
+.fig:nth-child(odd){padding-right:24px}
+.fig b{display:block;font-family:var(--display);font-weight:500;font-size:clamp(34px,3.8vw,52px);line-height:1;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+
+.fig span{display:block;font-size:14.5px;color:var(--muted);margin-top:8px;line-height:1.35;max-width:22ch}
+@media (max-width:820px){.problem{grid-template-columns:1fr}}
+
+.decisions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,40px);margin-top:clamp(40px,5vw,64px)}
+.decision{border-top:1.5px solid var(--ink);padding-top:16px;min-width:0}
+.decision .label{display:block;margin-bottom:10px}
+.decision h3{font-size:clamp(18px,1.6vw,21px);font-weight:500;line-height:1.15;letter-spacing:-.02em}
+.decision p{color:var(--muted);margin-top:8px;font-size:15px}
+@media (max-width:820px){.decisions{grid-template-columns:1fr}}
+
+.outcome{display:flex;gap:16px;align-items:baseline;margin-top:clamp(32px,4vw,48px);padding:20px 24px;background:var(--panel);border-radius:18px;flex-wrap:wrap}
+
+.outcome p{font-size:16px;font-weight:400;flex:1 1 320px;min-width:0}
+
+/* Visuals */
+.stage{margin-top:clamp(36px,5vw,64px);background:var(--panel);border-radius:28px;padding:clamp(24px,4vw,56px);overflow:hidden}
+.stage.white{background:var(--paper);padding-inline:0}
+.stage-cap{display:flex;justify-content:space-between;gap:16px;align-items:baseline;margin-bottom:clamp(20px,3vw,36px);flex-wrap:wrap}
+.stage-cap h3{font-size:clamp(20px,2vw,26px);font-weight:500}
+.stage-cap p{color:var(--muted);max-width:52ch;font-size:16px}
+.phones{display:grid;grid-template-columns:repeat(var(--n,4),minmax(0,1fr));gap:clamp(12px,2vw,28px);align-items:start}
+.screen{border-radius:clamp(14px,2vw,30px);overflow:hidden;background:var(--paper);box-shadow:0 1px 0 rgba(15,17,21,.04),0 18px 40px -18px rgba(15,17,21,.28);aspect-ratio:640/1387;max-width:100%}
+.screen img,.screen video{display:block;width:100%;height:100%;object-fit:cover}
+.framed{max-width:100%}
+.framed img,.framed video{display:block;width:100%;height:auto}
+figure{margin:0;min-width:0}
+figcaption{font-size:14px;color:var(--muted);margin-top:12px;line-height:1.35}
+figcaption b{color:var(--ink);font-weight:500;display:block}
+.strip{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(180px,22vw,260px);gap:clamp(14px,2vw,24px);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:12px;scrollbar-width:thin}
+.strip>*{scroll-snap-align:start}
+@media (max-width:760px){.phones{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Placeholder slot for visuals still to come */
+.slot{border:1.5px dashed #c9ccd3;border-radius:22px;display:grid;place-items:center;text-align:center;padding:28px;color:var(--muted);font-size:15px;background:var(--paper);min-height:220px}
+.slot b{display:block;color:var(--ink);font-family:var(--display);font-size:20px;margin-bottom:6px}
+
+/* WiFi Backup interactive card */
+.wb{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:center}
+@media (max-width:860px){.wb{grid-template-columns:1fr}}
+.wcard{--tint:#e9f6ea;--tone:#2f9e44;background:var(--tint);border-radius:26px;padding:clamp(20px,3vw,32px);transition:background .45s ease;max-width:560px;width:100%;font-family:var(--body)}
+.wcard .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.wcard .top strong{font-family:var(--display);font-size:clamp(22px,2.2vw,28px);font-weight:600;letter-spacing:-.02em}
+.pill{background:var(--tone);color:#fff;font-weight:600;font-size:14px;padding:6px 14px;border-radius:999px;transition:background .45s ease}
+.wcard .left{margin-top:18px;font-size:18px}
+.wcard .left b{font-weight:500}
+.bar{height:8px;border-radius:8px;background:rgba(15,17,21,.1);margin-top:12px;overflow:hidden}
+.bar i{display:block;height:100%;width:100%;background:var(--tone);border-radius:8px;transition:width .8s cubic-bezier(.2,.7,.2,1),background .45s ease}
+.blocks{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(6px,1vw,12px);margin-top:20px}
+.blocks span{aspect-ratio:1;border-radius:10px;border:1.5px solid rgba(15,17,21,.18);display:grid;place-items:center;font-weight:600;font-size:clamp(14px,1.6vw,19px);background:rgba(255,255,255,.7);transition:all .4s ease}
+.blocks span.used{background:transparent;color:rgba(15,17,21,.35);border-color:rgba(15,17,21,.12)}
+.blocks span.on{background:var(--tone);color:#fff;border-color:var(--tone);transform:scale(1.04)}
+.wcard .meta{display:flex;justify-content:space-between;gap:12px;margin-top:14px;font-size:15px;flex-wrap:wrap}
+.wcard .action{margin-top:20px;width:100%;padding:13px;border-radius:999px;border:1.5px solid var(--ink);background:#fff;font-family:var(--body);font-weight:600;font-size:16px;color:var(--ink)}
+.states{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.states button{font-family:var(--body);font-size:14px;font-weight:600;padding:9px 14px 9px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.states button i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.states button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 .5px var(--ink)}
+.wb-copy h3{font-size:clamp(22px,2.4vw,30px);font-weight:500;line-height:1.05}
+.wb-copy p{color:var(--muted);margin-top:12px;max-width:40ch}
+.legend{display:grid;gap:12px;margin-top:22px}
+.legend div{display:grid;grid-template-columns:14px minmax(0,1fr);gap:12px;align-items:baseline;font-size:16px}
+.legend i{width:14px;height:14px;border-radius:4px;background:var(--c);transform:translateY(2px)}
+.legend b{font-weight:500}
+
+.onboard{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:clamp(28px,4vw,56px);align-items:center}
+.onboard ol{list-style:none;margin:20px 0 0;padding:0;display:grid;gap:16px;counter-reset:s}
+.onboard li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;counter-increment:s}
+.onboard li::before{content:counter(s);font-family:var(--mono);font-size:13px;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center}
+.onboard li b{display:block;font-weight:500}
+.onboard li span{color:var(--muted);font-size:15.5px}
+@media (max-width:860px){.onboard{grid-template-columns:1fr}}
+
+/* BlueJeans */
+.sub{margin-top:clamp(56px,7vw,88px)}
+.sub-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:clamp(20px,4vw,56px);align-items:end}
+.sub-head h3{font-size:clamp(24px,2.8vw,36px);font-weight:500;line-height:1.08;letter-spacing:-.03em}
+.sub-head ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.sub-head li{display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px;font-size:16.5px}
+.sub-head li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ink);margin-top:9px}
+.sub-head li b{font-weight:500}
+@media (max-width:860px){.sub-head{grid-template-columns:1fr}}
+.vgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,2vw,28px);align-items:start}
+@media (max-width:860px){.vgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.wide{margin-top:clamp(20px,3vw,36px)}
+.rooms-hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(16px,2.5vw,32px);align-items:center}
+.rooms-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:clamp(16px,2.5vw,32px);margin-top:clamp(16px,2.5vw,32px);align-items:center}
+.rooms-two .photo{border-radius:20px;overflow:hidden}
+@media (max-width:760px){.rooms-hero,.rooms-two{grid-template-columns:1fr}}
+
+/* Wall */
+.wall{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(14px,2vw,24px);margin-top:clamp(32px,4vw,48px)}
+.tile{background:var(--panel);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.tile .art{aspect-ratio:4/3;display:grid;place-items:center;color:var(--muted);font-size:14px;border-bottom:1px solid var(--line);background:repeating-linear-gradient(135deg,var(--panel) 0 14px,#eceef1 14px 15px)}
+.tile.big{grid-column:span 2}
+.tile.big{flex-direction:row}.tile.big .art{flex:1.5 1 0;aspect-ratio:auto;min-height:260px;border-bottom:0;border-right:1px solid var(--line)}.tile.big .txt{flex:1 1 0;align-self:end}
+.tile .txt{padding:18px 20px 20px}
+.tile h3{font-size:18px;font-weight:500}
+.tile p{color:var(--muted);font-size:15.5px;margin-top:6px}
+.tile .res{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+@media (max-width:860px){.wall{grid-template-columns:repeat(2,minmax(0,1fr))}.tile.big{grid-column:span 2}}
+@media (max-width:520px){.wall{grid-template-columns:1fr}.tile.big{grid-column:auto;flex-direction:column}.tile.big .art{aspect-ratio:4/3;min-height:0;border-right:0;border-bottom:1px solid var(--line)}}
+
+/* Contact */
+.contact{padding-block:clamp(80px,11vw,150px) clamp(48px,6vw,72px);border-top:1px solid var(--line);margin-top:clamp(80px,10vw,140px)}
+.contact h2{font-size:clamp(40px,6vw,80px);font-weight:500;line-height:1;letter-spacing:-.04em}
+.contact .rows{display:flex;flex-wrap:wrap;gap:16px 40px;margin-top:36px;align-items:center}
+.contact .rows .v{font-family:var(--display);font-size:clamp(18px,1.8vw,24px);font-weight:400;user-select:all}
+.copyrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.copy{font-size:13px;padding:6px 12px}
+.foot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:64px;color:var(--muted);font-size:14px}
+
+/* Reveal, only for things below the fold at load */
+.rv.pre{opacity:0;transform:translateY(28px)}
+.rv{transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+@media (prefers-reduced-motion:reduce){.rv,.rv.pre{opacity:1;transform:none;transition:none}}
+
+/* Before / after */
+.ba{display:grid;grid-template-columns:repeat(2,minmax(0,380px));justify-content:center;gap:clamp(24px,6vw,96px);margin-top:clamp(40px,5vw,64px)}
+.ba-col{display:flex;flex-direction:column;gap:14px;align-items:center;min-width:0}
+.ba-col .label{color:var(--ink)}
+.device{width:100%;max-width:380px;height:min(760px,80vh);border-radius:40px;padding:10px;background:var(--ink);box-shadow:0 30px 60px -30px rgba(15,17,21,.45)}
+.device-scroll,.device iframe{display:block;width:100%;height:100%;border:0;border-radius:31px;background:var(--paper);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+.device-scroll::-webkit-scrollbar{display:none}
+.device-scroll img{display:block;width:100%;height:auto}
+.ba-col figcaption{text-align:center;max-width:32ch}
+@media (max-width:760px){.ba{grid-template-columns:minmax(0,380px)}}
+
+.figs.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.figs.three .fig{padding-right:20px}
+@media (max-width:520px){.figs.three{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stage.line{background:var(--paper);box-shadow:inset 0 0 0 1px var(--line)}
+.onboard{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
+.onboard-video{justify-self:center;width:100%;max-width:340px}
+.device.vid{height:auto}
+.device.vid video{display:block;width:100%;height:auto;aspect-ratio:600/1170;border-radius:31px;background:var(--paper)}
+.phones.trio{grid-template-columns:repeat(3,minmax(0,260px));justify-content:start}
+@media (max-width:760px){.phones.trio{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.screen{border:1px solid #d9dce1;box-shadow:0 10px 24px -14px rgba(15,17,21,.28)}
+.stage.white{overflow:visible}
+.phones figcaption,.vgrid figcaption{padding-inline:12px}
+.phones.five{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media (max-width:860px){.phones.five{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.vgrid.five{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media (max-width:860px){.vgrid.five{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.wide.tablet{max-width:760px;margin-inline:auto;margin-top:clamp(32px,4vw,56px)}
+.phone-slot{aspect-ratio:840/1850;min-height:0;border-radius:28px}
+.vgrid.tight .screen{border-radius:10px;aspect-ratio:640/1453}
+.vpat-doc{order:2}
+.vpat{display:grid;grid-template-columns:minmax(0,480px) minmax(0,360px);gap:clamp(28px,4vw,48px);align-items:start;margin-top:clamp(48px,6vw,80px)}
+.vpat-doc img{display:block;width:100%;height:auto;border:1px solid #d9dce1;border-radius:6px;box-shadow:0 10px 24px -14px rgba(15,17,21,.28)}
+.vpat h3{font-size:clamp(22px,2.4vw,30px);font-weight:500;line-height:1.1;margin-top:10px}
+.vpat p{color:var(--muted);margin-top:12px;max-width:46ch}
+@media (max-width:760px){.vpat{grid-template-columns:1fr}}
+
+.vgrid figcaption{padding-inline:12px}
+.wide.tablet figcaption{padding-inline:6%}
+.phone-slot{aspect-ratio:640/1387;border-radius:clamp(14px,2vw,30px);padding:12px}
+
+.blurb{font-size:clamp(17px,1.5vw,20px);line-height:1.5;max-width:none;margin-top:clamp(28px,4vw,44px)}
+.rooms-main{max-width:980px;margin:clamp(40px,5vw,64px) auto 0}
+.rooms-main img{display:block;width:100%;height:auto}
+.rooms-guide{max-width:760px;margin:clamp(48px,6vw,80px) auto 0}
+.rooms-guide img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid #d9dce1;box-shadow:0 10px 24px -14px rgba(15,17,21,.28)}
+.rooms-main figcaption,.rooms-guide figcaption{text-align:center;max-width:52ch;margin:16px auto 0}
+.rooms-live{max-width:1100px;margin:var(--blk) auto 0}
+.rooms-frame{width:100%;aspect-ratio:1100/1010;max-width:100%}
+.rooms-frame iframe{display:block;width:100%;height:100%;border:0;background:var(--paper)}
+.rooms-live figcaption{text-align:center;max-width:56ch;margin:8px auto 0}
+@media (max-width:700px){.rooms-frame{aspect-ratio:400/680}}
+
+.protos{display:grid;gap:clamp(16px,2.4vw,28px);margin-top:clamp(24px,3vw,36px)}
+.protos.two{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:clamp(32px,4vw,48px)}
+.protos.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.proto{display:flex;flex-direction:column;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--paper);transition:box-shadow .25s,transform .25s}
+.proto:hover{box-shadow:0 16px 32px -18px rgba(15,17,21,.3);transform:translateY(-2px)}
+.proto-art{background:var(--panel);display:grid;place-items:center;padding:clamp(16px,2.4vw,28px) clamp(16px,2.4vw,28px) 0;overflow:hidden}
+.proto.desk .proto-art img{display:block;width:100%;height:auto;border-radius:10px 10px 0 0;box-shadow:0 10px 24px -14px rgba(15,17,21,.28)}
+.proto.phone .proto-art{aspect-ratio:4/3.6;align-items:start}
+.proto.phone .proto-art img{display:block;width:62%;height:auto;border-radius:18px 18px 0 0;border:1px solid #d9dce1;border-bottom:0}
+.proto-txt{padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.proto-txt h3{font-size:18px;font-weight:500}
+.proto-txt p{color:var(--muted);font-size:15px}
+.proto .open{margin-top:auto;padding-top:8px;font-size:14px;font-weight:500}
+@media (max-width:860px){.protos.three{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.protos.two,.protos.three{grid-template-columns:1fr}}
+
+.live-grid{display:grid;gap:clamp(20px,3vw,40px);margin-top:clamp(32px,4vw,48px)}
+.live-grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.live-grid.three{grid-template-columns:repeat(3,minmax(0,340px));justify-content:center;margin-top:clamp(48px,6vw,72px)}
+.live-grid figure{min-width:0}
+.live-grid figcaption{padding-inline:12px}
+.live-grid figcaption a{display:block;margin-top:4px;color:var(--ink);font-weight:500}
+.browser{border:1px solid #d9dce1;border-radius:12px;overflow:hidden;background:var(--paper);box-shadow:0 10px 24px -14px rgba(15,17,21,.28)}
+.browser .bar{display:flex;align-items:center;gap:6px;height:34px;padding:0 12px;background:var(--panel);border-bottom:1px solid var(--line)}
+.browser .bar i{width:10px;height:10px;border-radius:50%;background:#d0d3d9}
+.browser .bar span{margin-left:10px;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.scaler{position:relative;overflow:hidden;width:100%}
+.scaler iframe{position:absolute;top:0;left:0;border:0;transform-origin:0 0;background:var(--paper)}
+.live-phone .device{height:680px;max-width:340px;margin:0 auto}
+.live-phone .device iframe{display:block;width:100%;height:100%;border:0;border-radius:31px;background:var(--paper)}
+.live-phone a.device-scroll{display:block}
+@media (max-width:900px){.live-grid.two{grid-template-columns:1fr}.live-grid.three{grid-template-columns:minmax(0,340px)}}
+
+.live-stack{display:grid;gap:clamp(48px,6vw,80px);max-width:760px;margin:clamp(32px,4vw,48px) auto 0}
+.tabletf{background:var(--ink);padding:14px;border-radius:30px;box-shadow:0 30px 60px -30px rgba(15,17,21,.45)}
+.tabletf .scaler{border-radius:16px;background:var(--paper)}
+.live-desk figcaption{text-align:center;max-width:48ch;margin:16px auto 0}
+.thanks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(14px,2vw,24px);margin-top:clamp(28px,3vw,40px)}
+.thanks figure{min-width:0}
+.thanks img{display:block;width:100%;height:auto;border-radius:8px;border:1px solid #d9dce1;box-shadow:0 10px 24px -14px rgba(15,17,21,.28)}
+.thanks figcaption{font-size:14px;padding-inline:4px}
+@media (max-width:860px){.thanks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Consistent spacing: one rhythm for sections, one for blocks inside them */
+:root{--sec:clamp(56px,6vw,88px);--blk:clamp(28px,3.2vw,44px)}
+.hero{padding-block:clamp(48px,6vw,88px) var(--sec)}
+.hero .intro{max-width:80%}
+@media (max-width:760px){.hero .intro{max-width:none}}
+.chapter{padding-block:var(--sec) 0}
+.project{padding-block:var(--sec) 0}
+.problem,.decisions,.stage,.outcome,.ba,.vpat,.rooms-main,.rooms-guide,.live-stack,.live-grid.three,.thanks,.protos{margin-top:var(--blk)}
+.sub{margin-top:var(--sec)}
+.stage-cap{margin-bottom:var(--blk)}
+.wide.tablet{margin-top:var(--blk)}
+.live-stack{gap:var(--sec);margin-inline:auto}
+.rooms-main,.rooms-guide{margin-inline:auto}
+.contact{margin-top:var(--sec);padding-block:var(--sec) clamp(40px,5vw,64px)}
+.blurb{margin-top:var(--blk)}
+.chapter-head + .project{padding-top:var(--blk)}
+.stage.white{padding-block:0}
+.stage.white+.outcome{margin-top:var(--blk)}
+
+/* Ask about my work */
+.ask-fab{position:fixed;right:max(20px,env(safe-area-inset-right,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:40;display:inline-flex;align-items:center;gap:10px;padding:12px 18px 12px 14px;border-radius:999px;border:0;background:var(--ink);color:var(--paper);font-family:var(--body);font-size:15px;font-weight:500;cursor:pointer;box-shadow:0 14px 30px -12px rgba(15,17,21,.5)}
+.ask-fab i{width:8px;height:8px;border-radius:50%;background:#3ccf6e;box-shadow:0 0 0 4px rgba(60,207,110,.2)}
+.ask{position:fixed;right:max(20px,env(safe-area-inset-right,0px));bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:41;width:min(400px,calc(100vw - 32px));max-height:min(620px,calc(100vh - 120px));display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:20px;box-shadow:0 30px 60px -20px rgba(15,17,21,.35);overflow:hidden}
+.ask-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.ask-head b{font-weight:500;font-size:16px}
+.ask-head span{display:block;font-size:13px;color:var(--muted)}
+.ask-x{border:0;background:var(--panel);width:32px;height:32px;border-radius:50%;font-size:18px;line-height:1;cursor:pointer;color:var(--ink)}
+.ask-log{flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:12px;overscroll-behavior:contain}
+.msg{max-width:88%;padding:10px 14px;border-radius:16px;font-size:15px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;background:var(--ink);color:var(--paper);border-bottom-right-radius:6px}
+.msg.bot{align-self:flex-start;background:var(--panel);color:var(--ink);border-bottom-left-radius:6px}
+.msg.bot.wait{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:7px 12px;font-family:var(--body);font-size:13.5px;cursor:pointer;text-align:left}
+.chips button:hover{border-color:var(--ink)}
+.ask-form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+.ask-form input{flex:1;min-width:0;border:1px solid var(--line);border-radius:999px;padding:11px 16px;font-family:var(--body);font-size:15px;color:var(--ink);background:var(--paper)}
+.ask-form input:focus{outline:none;border-color:var(--ink)}
+.ask-form button{border:0;border-radius:999px;padding:0 16px;background:var(--ink);color:var(--paper);font-family:var(--body);font-weight:500;cursor:pointer}
+.ask-form button:disabled{opacity:.4;cursor:default}
+.ask-note{font-size:12px;color:var(--muted);padding:0 18px 12px}
+</style>
+</head>
+<body>
+
+
+<nav class="nav" id="nav">
+  <div class="wrap">
+    <a class="mark" href="#top">Selected work</a>
+    <ul>
+      <li><a href="#verizon">Verizon</a></li>
+      <li><a href="#bluejeans">BlueJeans</a></li>
+      <li><a href="#ai">AI prototypes</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="btn ghost js-resume" type="button">Resume ↓</button>
+    <a class="btn" href="https://abhishekbora.myportfolio.com" target="_blank" rel="noopener">Full portfolio ↗</a>
+  </div>
+</nav>
+
+<main id="top">
+<header class="hero wrap">
+  <h1>Hello, I am Abhishek</h1>
+  <div class="intro">
+    <p>I am a designer based in Bangalore. For the past 15 years I have worked on things people use every day without thinking about them, like buying home internet, joining a video call or booking a lab test.</p>
+    <p>I care about the small details, and I do my best work when design, product and engineering figure things out together.</p>
+    <p>Right now I am a Principal Designer at Verizon, working on how people shop for home internet. Lately I have also been using AI to prototype faster and build small Figma plugins for my team.</p>
+    <p>When I am not designing, I am usually sketching, reading, or spending time with my family.</p>
+  </div>
+</header>
+
+<!-- ============ VERIZON ============ -->
+<section class="chapter wrap" id="verizon">
+  <div class="chapter-head"><h2>Verizon</h2><span class="label">Home Internet · 2024 to 2026</span></div>
+
+  <!-- Plan selection -->
+  <article class="project" id="plans">
+    <h2 class="p-title rv">Simplifying plan selection</h2>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Principal Designer</dd></div>
+      <div><dt>Timeline</dt><dd>Q1 2026</dd></div>
+      <div><dt>Team</dt><dd>Product, Engineering, Design System</dd></div>
+    </dl>
+    <div class="problem">
+      <div class="copy rv">
+        <p>Verizon Home Internet has about 17 million customers and adds about 350,000 every quarter.</p>
+        <p>But <em>4 in 10 people</em> who could buy dropped off at plan selection. Prices, discounts and speeds were hard to compare, especially on mobile.</p>
+      </div>
+    </div>
+    <div class="decisions">
+      <div class="decision rv"><span class="label">Decision 1</span><h3>Price and speed first</h3><p>The two things people compare lead every card. Everything else is one tap away.</p></div>
+      <div class="decision rv"><span class="label">Decision 2</span><h3>Expand in place</h3><p>Plan details open right on the card, so people never lose their place. This converted better on mobile.</p></div>
+      <div class="decision rv"><span class="label">Decision 3</span><h3>Hub and spoke</h3><p>Perks, TV and Home Phone are optional spokes. The path to checkout stays short.</p></div>
+    </div>
+    <div class="ba rv">
+      <figure class="ba-col">
+        <span class="label">Before</span>
+        <div class="device"><div class="device-scroll" tabindex="0" aria-label="Before: the old plan selection page, scrollable"><img src="m/plan-before.webp" alt="Old plan selection page with one long plan card, gift offer and Select button" loading="lazy"></div></div>
+        <figcaption>One plan at a time in a side scroll. Price, perks and fine print all compete.</figcaption>
+      </figure>
+      <figure class="ba-col">
+        <span class="label">After · live prototype</span>
+        <div class="device"><iframe src="proto/index.html#plan" title="Interactive plan selection prototype" loading="lazy"></iframe></div>
+        <figcaption>All plans in one list. Price and speed first, details open in place. Try it: tap a plan.</figcaption>
+      </figure>
+    </div>
+    <div class="outcome rv"><span class="label">Outcome</span><p>Rolling out in phases, measured on how many people move past plan selection. The card and hub patterns are now reused across Home Internet buying.</p></div>
+    <div class="locked rv"><span class="lk" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+      <div><b>Full case study on request</b><p>The detailed story is under NDA. I walk through it on a call or when we meet.</p>
+      <div class="lk-row"><span class="lk-mail" id="lkMail">abhishekbora86@gmail.com</span><button type="button" class="btn ghost lk-copy" id="lkCopy">Copy email</button></div></div></div>
+  </article>
+
+  <!-- WiFi Backup -->
+  <article class="project" id="wifi">
+    <h2 class="p-title rv">WiFi Backup</h2>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Principal Designer, research to launch</dd></div>
+      <div><dt>Timeline</dt><dd>6 months, 2025</dd></div>
+      <div><dt>Team</dt><dd>Product, Engineering, Marketing, Research</dd></div>
+    </dl>
+    <div class="problem">
+      <div class="copy rv">
+        <p>When home internet goes down, work, calls and smart homes stop. Customers needed a simple way to switch to backup.</p>
+        <p>The challenge: <em>7 sessions a month, 24 hours each.</em> Show what is used, what is left and what is happening now, so anyone understands it in a second.</p>
+      </div>
+    </div>
+
+    <div class="stage line rv">
+      <div class="wb">
+        <div>
+          <div class="wcard" id="wcard" aria-live="polite">
+            <div class="top"><strong>Wi‑Fi Backup</strong><span class="pill" id="wpill">Session 1 is active</span></div>
+            <div class="left" id="wleft"><b>24 Hrs</b> left in session 1</div>
+            <div class="bar"><i id="wbar"></i></div>
+            <div class="blocks" id="wblocks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
+            <div class="meta"><span id="wrem">6 sessions remaining</span><span>Ends on Oct 23 at 5:18pm</span></div>
+            <button class="action" id="wact" type="button" tabindex="-1">Pause Session</button>
+          </div>
+          <div class="states" role="group" aria-label="Session state">
+            <button type="button" data-s="active" style="--c:#2f9e44" aria-pressed="true"><i></i>Active</button>
+            <button type="button" data-s="paused" style="--c:#b8a316" aria-pressed="false"><i></i>Paused</button>
+            <button type="button" data-s="expiring" style="--c:#e5484d" aria-pressed="false"><i></i>Expiring</button>
+            <button type="button" data-s="next" style="--c:#2f9e44" aria-pressed="false"><i></i>Session 2</button>
+          </div>
+        </div>
+        <div class="wb-copy">
+          <span class="label">Try it</span>
+          <h3 style="margin-top:10px">One block for each session</h3>
+          <p>Seven blocks read at a glance. A calm progress bar replaced the countdown, because a ticking timer felt stressful in testing.</p>
+          <div class="legend">
+            <div style="--c:#2f9e44"><i></i><span><b>Green</b> means a session is running.</span></div>
+            <div style="--c:#b8a316"><i></i><span><b>Yellow</b> means it is paused and time is saved.</span></div>
+            <div style="--c:#e5484d"><i></i><span><b>Red</b> means it is about to run out.</span></div>
+          </div>
+          <p>Everything else stays neutral, so the one colour that matters stands out.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="decisions">
+      <div class="decision rv"><span class="label">Decision 1</span><h3>One block per session</h3><p>Seven numbered blocks show used, active and left without any reading.</p></div>
+      <div class="decision rv"><span class="label">Decision 2</span><h3>Progress bar, not a countdown</h3><p>Time left feels calm and clear. No ticking clock.</p></div>
+      <div class="decision rv"><span class="label">Decision 3</span><h3>Colour only when it means something</h3><p>Green, yellow and red carry state. The rest of the card stays quiet.</p></div>
+    </div>
+
+    <div class="stage white rv">
+      <div class="phones stroked" style="--n:4">
+        <figure><div class="screen"><img src="m/w-active.webp" alt="Session 1 active with 24 hours left" loading="lazy"></div><figcaption><b>Active</b>24 hours left</figcaption></figure>
+        <figure><div class="screen"><img src="m/w-paused.webp" alt="Session 1 paused with 22 hours left" loading="lazy"></div><figcaption><b>Paused</b>Time is saved</figcaption></figure>
+        <figure><div class="screen"><img src="m/w-extend.webp" alt="Session 1 with 1 hour left and an Extend button" loading="lazy"></div><figcaption><b>Expiring</b>Extend in one tap</figcaption></figure>
+        <figure><div class="screen"><img src="m/w-s2.webp" alt="Session 2 active, session 1 marked as used" loading="lazy"></div><figcaption><b>Next session</b>Used blocks get a tick</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="stage white rv">
+      <div class="onboard">
+        <div>
+          <span class="label">Onboarding</span>
+          <h3 style="font-size:clamp(22px,2.4vw,30px);font-weight:500;line-height:1.1;margin-top:10px">A short tour, then try it</h3>
+          <ol>
+            <li><div><b>Works on every device</b><span>One flow that fits small and large phones, and works across Verizon plans.</span></div></li>
+            <li><div><b>A clean look</b><span>One idea per step. The card stays on screen, so people learn on the real thing.</span></div></li>
+            <li><div><b>Simple copy</b><span>Short lines like "Each block is one 24 hour session." No jargon.</span></div></li>
+            <li><div><b>Colour with meaning</b><span>The tour points out what green, yellow and red mean before people need it.</span></div></li>
+            <li><div><b>Try it right away</b><span>The tour ends with a trial session, so people trust backup before an outage.</span></div></li>
+          </ol>
+        </div>
+        <figure class="onboard-video"><div class="device vid"><video data-src="m/wonboard2.mp4" poster="m/wonboard2-poster.webp" muted loop playsinline preload="none" aria-label="Animated onboarding tour"></video></div></figure>
+      </div>
+    </div>
+    <div class="outcome rv"><span class="label">Outcome</span><p>Launched as an MVP in the Verizon Home app.</p></div>
+  </article>
+
+  <!-- More from the Verizon Home app -->
+  <div class="sub rv">
+    <div class="stage-cap"><h3>More from the Verizon Home app</h3><p>App tour, speed test and home security, built on the same quiet system.</p></div>
+    <div class="phones five">
+      <figure><div class="screen"><img src="m/tour3.webp" alt="App tour step 3 of 4: quick actions" loading="lazy"></div><figcaption><b>App tour</b>Quick actions for the most used features</figcaption></figure>
+      <figure><div class="screen"><img src="m/speed2.webp" alt="Speed test showing live download speed" loading="lazy"></div><figcaption><b>Speed test</b>Download speed, live</figcaption></figure>
+      <figure><div class="screen"><img src="m/speed4.webp" alt="Speed test completed and saved to history" loading="lazy"></div><figcaption><b>Speed test</b>Result saved to history</figcaption></figure>
+      <figure><div class="screen"><img src="m/sec1.webp" alt="Home security offer on the home screen" loading="lazy"></div><figcaption><b>Home security</b>Offer on the home screen</figcaption></figure>
+      <figure><div class="screen"><img src="m/sec2.webp" alt="Home security camera dashboard" loading="lazy"></div><figcaption><b>Home security</b>All cameras in one place</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BLUEJEANS ============ -->
+<section class="chapter wrap" id="bluejeans">
+  <div class="chapter-head"><h2>BlueJeans by Verizon</h2><span class="label">Video meetings · 2018 to 2023</span></div>
+
+  <article class="project" id="mobile">
+    <h2 class="p-title rv">Meetings, calls and messages in one app</h2>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Design Manager, led 6 designers</dd></div>
+      <div><dt>Platforms</dt><dd>iOS, Android, tablet</dd></div>
+      <div><dt>Timeline</dt><dd>2018 to 2023</dd></div>
+    </dl>
+    <div class="problem">
+      <div class="copy rv">
+        <p>People join meetings on the move, switching apps on shaky networks.</p>
+        <p>We had to turn a meetings app into <em>calling, messaging and meetings in one place</em>, without making it harder to use.</p>
+      </div>
+    </div>
+
+    <div class="sub">
+      <div class="sub-head rv">
+        <h3>Calling, messaging and meetings (UCaaS)</h3>
+        <ul>
+          <li><span><b>Flat navigation.</b> We tested two options and flat won.</span></li>
+          <li><span><b>Calls always on top</b> with priority-based notifications.</span></li>
+          <li><span><b>Tablet in two columns,</b> list on the left, conversation on the right.</span></li>
+        </ul>
+      </div>
+      <div class="stage white rv">
+        <div class="vgrid five">
+          <figure><div class="screen"><video data-src="m/nav2s.mp4" poster="m/nav2s-poster.webp" muted loop playsinline preload="none" aria-label="Global navigation"></video></div><figcaption><b>Global navigation</b>One tap between everything</figcaption></figure>
+          <figure><div class="screen"><video data-src="m/notifs.mp4" poster="m/notifs-poster.webp" muted loop playsinline preload="none" aria-label="Incoming call notification"></video></div><figcaption><b>Calls on top</b>Priority notifications</figcaption></figure>
+          <figure><div class="screen"><video data-src="m/callings.mp4" poster="m/callings-poster.webp" muted loop playsinline preload="none" aria-label="Audio and video calling"></video></div><figcaption><b>Calling</b>Audio and video</figcaption></figure>
+          <figure><div class="screen"><video data-src="m/contactss.mp4" poster="m/contactss-poster.webp" muted loop playsinline preload="none" aria-label="Contacts"></video></div><figcaption><b>Contacts</b>Call, message or meet</figcaption></figure>
+          <figure><div class="screen"><video data-src="m/searchs.mp4" poster="m/searchs-poster.webp" muted loop playsinline preload="none" aria-label="Search"></video></div><figcaption><b>Search</b>People, messages, meetings</figcaption></figure>
+        </div>
+        <figure class="wide tablet"><div class="framed"><video data-src="m/ipad2.mp4" poster="m/ipad2-poster.webp" muted loop playsinline preload="none" aria-label="Tablet two column layout"></video></div><figcaption><b>Tablet</b>Two columns, built for a bigger screen</figcaption></figure>
+      </div>
+    </div>
+
+    <div class="vpat rv">
+      <figure class="vpat-doc"><img src="m/vpat.webp" alt="BlueJeans Virtual Meetings Accessibility Conformance Report, Revised Section 508 Edition, VPAT Version 2.4, January 31, 2022" loading="lazy"></figure>
+      <div>
+        <span class="label">Accessibility</span>
+        <h3>VPAT certified</h3>
+        <p>BlueJeans mobile has a published Accessibility Conformance Report (VPAT 2.4, Revised Section 508 Edition), assessed against Section 508 and WCAG 2.1 on Android phone and tablet.</p>
+        <dl class="facts"><div><dt>Standard</dt><dd>Section 508, WCAG 2.1</dd></div><div><dt>Date</dt><dd>January 2022</dd></div></dl>
+      </div>
+    </div>
+
+    <div class="sub">
+      <div class="stage-cap rv"><h3>More from BlueJeans mobile</h3></div>
+      <div class="stage white rv">
+        <div class="vgrid five tight">
+          <figure><div class="screen"><img src="m/oldmeet2.webp" alt="Earlier in-meeting screen with gallery and more options sheet" loading="lazy"></div><figcaption><b>Earlier in-meeting UI</b>Audio and more options</figcaption></figure>
+          <figure><div class="screen"><img src="m/bjm4s2.webp" alt="Pre-meeting screen with upcoming meetings" loading="lazy"></div><figcaption><b>Ready to join</b>Next meeting up front</figcaption></figure>
+          <figure><div class="screen"><img src="m/bjm1s.webp" alt="In-meeting gallery view" loading="lazy"></div><figcaption><b>In the meeting</b>Gallery view</figcaption></figure>
+          <figure><div class="screen"><img src="m/bjm2s.webp" alt="In-meeting gallery with reactions bar" loading="lazy"></div><figcaption><b>Reactions</b>Quick reactions and controls</figcaption></figure>
+          <figure><div class="screen"><img src="m/blur2.webp" alt="Video preferences with background blur options" loading="lazy"></div><figcaption><b>Background blur</b>Pick blur or a background</figcaption></figure>
+        </div>
+      </div>
+    </div>
+
+    <div class="outcome rv"><span class="label">Outcome</span><p>Met accessibility standards (VPAT). Calling and messaging was fully tested and ready to ship when BlueJeans was shut down in 2023.</p></div>
+  </article>
+
+  <article class="project" id="rooms">
+    <h2 class="p-title rv">Conference rooms</h2>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Lead Designer, TV and room controller</dd></div>
+      <div><dt>Timeline</dt><dd>2020 to 2023</dd></div>
+      <div><dt>Team</dt><dd>Poly, Engineering, Sales, Marketing</dd></div>
+    </dl>
+    <p class="blurb rv">Every room is different: size, screens, cameras and languages. I led the design of the TV screen and a new 12 inch touch controller, so joining from a room feels as easy as joining from a laptop. One tap joins a meeting or shares a screen, and it works with other meeting platforms too. It shipped with Poly hardware.</p>
+    <figure class="rooms-live rv"><div class="rooms-frame"><iframe src="rooms/index.html" scrolling="no" title="BlueJeans Rooms: TV and 12 inch controller, interactive prototype" loading="lazy"></iframe></div></figure>
+    <figure class="rooms-guide rv"><img src="m/room4.webp" alt="Printed visual installation guide open on a table" loading="lazy"><figcaption><b>Visual installation guide</b>A printed, picture-first guide so IT teams can set up a room without a manual.</figcaption></figure>
+  </article>
+</section>
+
+<!-- ============ AI & EARLIER WORK ============ -->
+<section class="chapter wrap" id="ai">
+  <div class="chapter-head"><h2>Built with AI</h2><span class="label">Working prototypes</span></div>
+  <p class="blurb rv">New ideas and older projects, rebuilt as working prototypes with AI (Claude). They are live right here, so click around.</p>
+  <div class="live-stack rv">
+    <figure class="live-desk">
+      <div class="tabletf"><div class="scaler" data-w="1180" data-h="820"><iframe src="protos/logdoc/index.html" title="LogDoc interactive prototype" loading="lazy"></iframe></div></div>
+      <figcaption><b>LogDoc</b>A logbook for design decisions. Log an entry, or ask LogDoc a question.</figcaption>
+    </figure>
+    <figure class="live-desk">
+      <div class="tabletf"><div class="scaler" data-w="1440" data-h="1000"><iframe src="protos/onquest/index.html" title="Onquest interactive prototype" loading="lazy"></iframe></div></div>
+      <figcaption><b>Onquest</b>A logistics dashboard that matches purchase orders to ship space.</figcaption>
+    </figure>
+  </div>
+  <div class="live-grid three rv">
+    <figure class="live-phone">
+      <div class="device"><iframe src="protos/health/index.html" title="Health Feed (Practo) interactive prototype" loading="lazy"></iframe></div>
+      <figcaption><b>Health Feed (Practo)</b>Tap an article, like, save or follow a doctor.</figcaption>
+    </figure>
+    <figure class="live-phone">
+      <div class="device"><iframe src="protos/caralta/index.html" title="Caralta interactive prototype" loading="lazy"></iframe></div>
+      <figcaption><b>Caralta</b>Swipe between overview, expenses and nearby.</figcaption>
+    </figure>
+    <figure class="live-phone">
+      <div class="device"><a class="device-scroll" href="https://abhishek98604-commits.github.io/celebration-reminder-prototype/" target="_blank" rel="noopener"><img src="m/ai-celebrate.webp" alt="Celebration Reminder prototype screen" loading="lazy"></a></div>
+      <figcaption><b>Celebration Reminder</b>Birthdays and anniversaries, with a quick wish or gift. <a href="https://abhishek98604-commits.github.io/celebration-reminder-prototype/" target="_blank" rel="noopener">Open prototype ↗</a></figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="chapter wrap" id="thanks">
+  <div class="chapter-head"><h2>Appreciation</h2><span class="label">A few notes from leaders</span></div>
+  <div class="thanks rv">
+    <figure><img src="m/cert-home.webp" alt="Verizon Customer Excellence recognition for the Home app onboarding" loading="lazy"><figcaption><b>Customer Excellence</b>For the Verizon Home app onboarding. Dir, Experience Design</figcaption></figure>
+    <figure><img src="m/cert-titan.webp" alt="Verizon recognition for the CXO Titan program" loading="lazy"><figcaption><b>CXO Titan program</b>For partnership and defining the program framework. Distinguished Engineer</figcaption></figure>
+    <figure><img src="m/cert-frontier.webp" alt="Verizon recognition for the Frontier launch summary" loading="lazy"><figcaption><b>Frontier launch</b>For presenting the day one launch summary. Sr Dir, Experience</figcaption></figure>
+    <figure><img src="m/cert-cto.webp" alt="BlueJeans Teamwork recognition from the CTO" loading="lazy"><figcaption><b>Teamwork</b>From the BlueJeans CTO</figcaption></figure>
+  </div>
+</section>
+
+<section class="contact wrap" id="contact">
+  <p class="label">Contact</p>
+  <h2 style="margin-top:14px">Let's talk.</h2>
+  <div class="rows">
+    <div class="copyrow"><span class="v" id="em">abhishekbora86@gmail.com</span><button class="btn ghost copy" type="button" data-copy="em">Copy</button></div>
+    <div class="copyrow"><span class="v" id="ph">+91 99721 38947</span><button class="btn ghost copy" type="button" data-copy="ph">Copy</button></div>
+    </div>
+  <div class="rows">
+    <a class="btn" href="https://calendar.app.google/LJijNYPd8qTrFru26" target="_blank" rel="noopener">Schedule a call</a>
+    <button class="btn ghost js-resume" type="button">Download resume ↓</button>
+    <a class="btn ghost" href="https://abhishekbora.myportfolio.com" target="_blank" rel="noopener">Full portfolio ↗</a>
+  </div>
+  <div class="foot"><span>Bangalore, India</span><span>Designed by me, built with AI</span></div>
+</section>
+</main>
+
+
+<button class="ask-fab" id="askFab" type="button" aria-expanded="false" aria-controls="askPanel"><i></i>Ask about my work</button>
+<section class="ask" id="askPanel" hidden aria-label="Ask about Abhishek's work">
+  <div class="ask-head"><div><b>Ask about my work</b><span>Short answers, in my words</span></div><button class="ask-x" id="askClose" type="button" aria-label="Close">×</button></div>
+  <div class="ask-log" id="askLog" aria-live="polite">
+    <div class="msg bot">Hi, I'm Abhishek. Ask me about my work, decisions or how I lead. Pick one, or type your own.</div>
+    <div class="chips" id="askChips">
+      <button type="button" data-q="impact">What impact did the plan selection work aim for?</button>
+      <button type="button" data-q="lead">How do you lead a design team?</button>
+      <button type="button" data-q="ai">How do you use AI in design?</button>
+      <button type="button" data-q="hardware">Have you designed for hardware?</button>
+      <button type="button" data-q="contact">How do I reach you?</button>
+    </div>
+  </div>
+  <form class="ask-form" id="askForm"><input id="askInput" type="text" placeholder="Type a question" autocomplete="off" aria-label="Your question"><button id="askSend" type="submit">Ask</button></form>
+  <p class="ask-note" id="askNote">Typed questions use Claude on your account.</p>
+</section>
+<script>
+(()=>{
+  const nav=document.getElementById('nav');
+  const onScroll=()=>nav.classList.toggle('scrolled',scrollY>8);
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Reveal: only elements below the first screen start hidden
+  if('IntersectionObserver' in window && !reduce){
+    const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.remove('pre');io.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px'});
+    document.querySelectorAll('.rv').forEach(el=>{if(el.getBoundingClientRect().top>innerHeight){el.classList.add('pre');io.observe(el)}});
+  }
+
+  // Count up numbers when they come into view
+  if('IntersectionObserver' in window && !reduce){
+    const co=new IntersectionObserver(es=>es.forEach(e=>{
+      if(!e.isIntersecting)return;co.unobserve(e.target);
+      const el=e.target,end=+el.dataset.count,pre=el.dataset.pre||'',suf=el.dataset.suf||'';const t0=performance.now(),d=1100;
+      const step=t=>{const k=Math.min(1,(t-t0)/d),v=Math.round(end*(1-Math.pow(1-k,3)));el.textContent=pre+v+suf;if(k<1)requestAnimationFrame(step)};
+      requestAnimationFrame(step);
+    }),{threshold:.6});
+    document.querySelectorAll('[data-count]').forEach(el=>{if(el.getBoundingClientRect().top>innerHeight)co.observe(el)});
+  }
+
+  // Videos load and play only when on screen
+  const vids=[...document.querySelectorAll('video[data-src]')];
+  const load=v=>{if(!v.src){v.src=v.dataset.src}};
+  if('IntersectionObserver' in window){
+    const vo=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting){load(v);if(!reduce)v.play().catch(()=>{})}else{v.pause()}}),{rootMargin:'200px 0px'});
+    vids.forEach(v=>vo.observe(v));
+  }else vids.forEach(v=>{load(v);v.autoplay=true});
+
+  // WiFi Backup card
+  const S={
+    active:{tint:'#e9f6ea',tone:'#2f9e44',pill:'Session 1 is active',left:'<b>24 Hrs</b> left in session 1',bar:100,on:0,used:0,rem:'6 sessions remaining',act:'Pause Session'},
+    paused:{tint:'#f7f4dc',tone:'#b8a316',pill:'Session 1 is paused',left:'<b>22 Hrs</b> left in session 1',bar:92,on:0,used:0,rem:'6 sessions remaining',act:'Continue Session'},
+    expiring:{tint:'#fde6e6',tone:'#e5484d',pill:'Session 1 is active',left:'<b>1 Hr</b> left in session 1',bar:5,on:0,used:0,rem:'6 sessions remaining',act:'Extend Session'},
+    next:{tint:'#e9f6ea',tone:'#2f9e44',pill:'Session 2 is active',left:'<b>24 Hrs</b> left in session 2',bar:100,on:1,used:1,rem:'5 sessions remaining',act:'Pause Session'}
+  };
+  const card=document.getElementById('wcard'),blocks=[...document.querySelectorAll('#wblocks span')],btns=[...document.querySelectorAll('.states button')];
+  function set(k){
+    const s=S[k];card.style.setProperty('--tint',s.tint);card.style.setProperty('--tone',s.tone);
+    document.getElementById('wpill').textContent=s.pill;document.getElementById('wleft').innerHTML=s.left;
+    document.getElementById('wbar').style.width=s.bar+'%';document.getElementById('wrem').textContent=s.rem;document.getElementById('wact').textContent=s.act;
+    blocks.forEach((b,i)=>{b.className=i===s.on?'on':(i<s.used?'used':'');b.textContent=i<s.used?'✓':String(i+1)});
+    btns.forEach(b=>b.setAttribute('aria-pressed',b.dataset.s===k));
+  }
+  let auto=null,order=['active','paused','expiring','next'],idx=0;
+  btns.forEach(b=>b.addEventListener('click',()=>{clearInterval(auto);auto=null;set(b.dataset.s)}));
+  if(!reduce&&'IntersectionObserver' in window){
+    const wo=new IntersectionObserver(es=>es.forEach(e=>{
+      if(e.isIntersecting&&!auto&&!card.dataset.touched){auto=setInterval(()=>{idx=(idx+1)%4;set(order[idx])},2600)}
+      else if(!e.isIntersecting&&auto){clearInterval(auto);auto=null}
+    }),{threshold:.5});
+    wo.observe(card);
+    btns.forEach(b=>b.addEventListener('click',()=>card.dataset.touched='1'));
+  }
+  set('active');
+
+  // Copy buttons
+  document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',()=>{
+    const el=document.getElementById(b.dataset.copy),txt=el.textContent;
+    const done=()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1600)};
+    const sel=()=>{const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r)};
+    try{navigator.clipboard.writeText(txt).then(done,sel)}catch(e){sel()}
+  }));
+  // Scale desktop prototypes to fit their frame
+  const fit=()=>document.querySelectorAll('.scaler').forEach(sc=>{const w=+sc.dataset.w,h=+sc.dataset.h,k=sc.clientWidth/w,f=sc.querySelector('iframe');f.style.width=w+'px';f.style.height=h+'px';f.style.transform='scale('+k+')';sc.style.height=(h*k)+'px'});
+  fit();addEventListener('resize',fit);
+
+  // ---- Ask about my work ----
+  const fab=document.getElementById('askFab'),panel=document.getElementById('askPanel'),log=document.getElementById('askLog'),form=document.getElementById('askForm'),input=document.getElementById('askInput'),send=document.getElementById('askSend'),note=document.getElementById('askNote');
+  const open=v=>{panel.hidden=!v;fab.setAttribute('aria-expanded',v);if(v)input.focus()};
+  fab.onclick=()=>open(panel.hidden);document.getElementById('askClose').onclick=()=>open(false);
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)open(false)});
+  const add=(cls,t)=>{const d=document.createElement('div');d.className='msg '+cls;d.textContent=t;log.appendChild(d);log.scrollTop=log.scrollHeight;return d};
+  const FAQ={
+    impact:"About 4 in 10 shoppers dropped off at plan selection, roughly 100,000 a month. I put price and speed first, opened details in place and kept add-ons optional. It is rolling out in phases, measured on how many people move past plan selection.",
+    lead:"At BlueJeans I built and led a team of 6 designers for iOS and Android. I set direction and quality standards, planned the roadmap with product and engineering, and handled hiring and mentoring. The apps were rated 4.8 on iOS and 4.6 on Android.",
+    ai:"I use AI to research, prototype and ship faster: Gemini, NotebookLM, Claude and Figma Make. The prototypes in the Built with AI section were built with Claude, and I build small Figma plugins for my team. AI speeds things up, but judgment and craft decide quality.",
+    hardware:"Yes. I designed BlueJeans Rooms, the TV screen and a 12 inch touch controller, shipped with Poly hardware for customers like Facebook, LinkedIn and Red Hat. At Verizon I designed WiFi Backup, which pairs a backup router with the Verizon Home app.",
+    contact:"Email me at abhishekbora86@gmail.com or call +91 99721 38947. You can also use Schedule a call at the bottom of this page."
+  };
+  const PROFILE=`Facts about me (Abhishek Bora): Principal Designer, 15+ years across telecom, video conferencing and health tech, based in Bangalore. M.Des from IIT Guwahati (2009-2011), B.Tech from RTM Nagpur University. Verizon, Principal Designer, Jan 2024 to present: worked alongside the Digital Home Internet Sales team on sales experiences for a broadband business of about 11M consumer connections; Mobile + Home buying (Spotlight Award), plan selection, Frontier integration, Verizon Home app onboarding, AI-powered conversational sales, Verizon Design System frameworks; drove AI adoption in design (Gemini, NotebookLM, Claude, Figma Make). BlueJeans by Verizon, Design Manager, Dec 2018 to Dec 2023: built and led 6 designers for iOS and Android (apps rated 4.8 iOS, 4.6 Android), hiring, mentoring, roadmap; led accessibility work for VPAT conformance; led the browser experience and meeting join redesign (internal QScore 4.7); designed BlueJeans Rooms for Facebook, LinkedIn, Red Hat and Viacom. Practo, Lead Designer, Jun 2015 to Dec 2018: led 2 designers on Practo Diagnostics, launched with 4,000+ diagnostic centres across 8 cities. Clarice Technologies, Sr UX Designer, Jun 2011 to Jun 2015: Quick Heal, LoudCloud, MobiCoach; co-authored a paper on mobile security UX (HCI International 2014). Contact: abhishekbora86@gmail.com, +91 99721 38947.`;
+  let pageText=null;const getPage=()=>pageText||(pageText=(document.querySelector('main')?.innerText||'').replace(/\n{2,}/g,'\n').slice(0,14000));
+  const RULES=()=>`You are Abhishek Bora answering questions about your own work on your portfolio page, usually from a hiring manager or CTO. Speak in first person ("I led...", "I designed..."). Answer ONLY from the facts and page content below. Be short and crisp: at most 3 short sentences, under 60 words, plain words, no markdown or lists. Lead with the outcome or decision. If something is not covered, say "I'd be happy to talk about that on a call" and share abhishekbora86@gmail.com. Never invent numbers, names or dates.\n\n${PROFILE}\n\nPAGE CONTENT:\n${getPage()}`;
+  const turns=[];let sample=null,busy=false,ctl=null;
+  (async()=>{try{sample=await claude.use('sample')}catch(e){sample=null}if(!sample){form.hidden=true;note.hidden=true}})();
+  document.getElementById('askChips').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;add('me',b.textContent);setTimeout(()=>add('bot',FAQ[b.dataset.q]),250)});
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();const q=input.value.trim();if(!q||busy)return;input.value='';add('me',q);
+    if(!sample){add('bot','Typed questions are not available here. Try one of the suggestions, or email abhishekbora86@gmail.com.');return}
+    busy=true;send.disabled=true;const out=add('bot wait','Thinking...');ctl=new AbortController();
+    turns.push({role:'user',content:q});while(turns.length>8)turns.shift();
+    try{
+      const {text}=await sample([{role:'user',content:RULES()},...turns],{cache:false,modelTier:'quick',signal:ctl.signal,onText:({text})=>{out.classList.remove('wait');out.textContent=text;log.scrollTop=log.scrollHeight}});
+      out.classList.remove('wait');out.textContent=text;turns.push({role:'assistant',content:text});
+    }catch(err){
+      turns.pop();out.classList.remove('wait');
+      const c=err&&err.code;
+      if(c==='not_granted'||c==='sampling_disabled'||c==='not_declared'||c==='capability_disabled'){sample=null;out.textContent='Typed questions are not available here. Try one of the suggestions, or email abhishekbora86@gmail.com.';note.textContent='Typed questions need Claude. Try the suggestions above.'}
+      else if(c==='rate_limited'){out.textContent=(err.text||'')+(err.text?'\n\n':'')+'Too many questions at once. Please try again in a minute.'}
+      else if(c==='cancelled'){out.textContent=err.text||'Stopped.'}
+      else{out.textContent=(err&&err.text)||'Something went wrong. Please try again.'}
+    }finally{busy=false;send.disabled=false;log.scrollTop=log.scrollHeight}
+  });
+
+  // Resume download
+  let dl=null;(async()=>{try{dl=await claude.use('downloads')}catch(e){dl=null}})();
+  document.querySelectorAll('.js-resume').forEach(b=>b.addEventListener('click',async()=>{
+    const label=b.textContent;
+    try{
+      if(!dl)throw 0;
+      const blob=await fetch('resume.pdf').then(r=>{if(!r.ok)throw 0;return r.blob()});
+      await dl.save({filename:'Resume_Abhishek_Bora.pdf',data:blob});
+    }catch(e){
+      if(e&&(e.code==='declined'||e.code==='rate_limited'))return;
+      const a=document.createElement('a');a.href='resume.pdf';a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
+    }finally{b.textContent=label}
+  }));
+})();
+</script>
+<script>
+(()=>{const b=document.getElementById('lkCopy');if(!b)return;b.addEventListener('click',()=>{const t=document.getElementById('lkMail').textContent;
+  const done=()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy email',1600)};
+  try{navigator.clipboard.writeText(t).then(done,()=>{const r=document.createRange();r.selectNodeContents(document.getElementById('lkMail'));const s=getSelection();s.removeAllRanges();s.addRange(r)})}catch(e){}})})();
+</script>
+
+
+</body>
+</html>

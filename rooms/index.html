@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BlueJeans Rooms</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Outfit:wght@200;300&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,300,0,0&display=block">
+<style>
+/* Layout: a quiet room. White wall, TV with a camera on top, one hairline for the desk edge, the controller standing on the desk. A grey caption under it says what just happened. */
+:root{
+  --wall:#ffffff; --desk:#f6f6f7; --hair:#d9dadd; --cap:#7a7d85; --bezel:#111214;
+  --nav:#1e2f4f; --nav2:#2b4170; --tile:#172743; --tile2:#ffffff17; --accent:#4b9bff; --go:#35b55a; --leave:#d6336c;
+  --ui:"Roboto","Helvetica Neue",Arial,sans-serif; --thin:"Outfit","Helvetica Neue",Arial,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{overflow:hidden}
+[hidden]{display:none!important}
+body{margin:0;background:var(--wall);color:#1d2230;font-family:var(--ui);-webkit-font-smoothing:antialiased;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px}
+.room{max-width:1100px;margin:0 auto;position:relative}
+.wallzone{padding-top:2%;display:flex;flex-direction:column;align-items:center}
+.cam{width:min(12%,calc(62vh * .2133));aspect-ratio:7/1;position:relative;margin-bottom:-2px}
+.cam i{position:absolute;inset:0;background:linear-gradient(#3a3d43,#1c1d21);border-radius:6px 6px 3px 3px;box-shadow:0 2px 4px #0003}
+.cam i::before{content:"";position:absolute;left:50%;top:50%;width:14%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 40% 40%,#5a6a8a,#07080b 60%);box-shadow:0 0 0 2px #2a2c31}
+.cam i::after{content:"";position:absolute;right:12%;top:50%;width:3%;aspect-ratio:1;transform:translateY(-50%);border-radius:50%;background:#2ecc71;opacity:var(--live,0);transition:opacity .3s}
+.tv{width:min(64%,calc(62vh * 1.7778));aspect-ratio:16/9;background:var(--bezel);border-radius:6px;padding:.7%;box-shadow:0 24px 50px -28px #0008}
+.tvs{position:relative;width:100%;height:100%;overflow:hidden;container-type:inline-size;background:#0c0d10;color:#fff;border-radius:2px}
+.deskline{height:1px;background:var(--hair);margin-top:3%}
+.deskzone{position:relative;padding-top:2%;padding-bottom:9.5%;display:flex;flex-direction:column;align-items:center}
+.table{position:absolute;left:0;right:0;bottom:0;width:100%;height:auto;z-index:0;stroke:var(--hair);fill:none;stroke-width:1.2}
+.deskzone .ctl{position:relative;z-index:1}
+.caption{position:relative;z-index:1}
+.ctl{width:min(46%,calc(44vh * 1.6));aspect-ratio:16/10;background:var(--bezel);border-radius:20px;padding:1.1%;box-shadow:0 26px 30px -22px #0007}
+.base{width:30%;height:10px;background:linear-gradient(#c9cbd0,#e7e8ea);border-radius:0 0 40% 40%/0 0 100% 100%;margin-top:-2px}
+.cs{position:relative;width:100%;height:100%;overflow:hidden;container-type:inline-size;border-radius:10px;background:radial-gradient(120% 90% at 20% 0%,#36508a,#1c2c4c 70%);color:#fff}
+.caption{margin:18px auto 0;max-width:640px;text-align:center;color:var(--cap);font-size:13.5px;line-height:1.5;min-height:3em}
+.caption b{color:#4a4e57;font-weight:500}
+@media (max-width:700px){.tv{width:100%}.ctl{width:100%;border-radius:14px}.cam{width:20%}}
+/* shared */
+.scr{position:absolute;inset:0;display:none}
+.scr.on{display:block;animation:fd .3s ease}
+@keyframes fd{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+svg.i{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.13em;flex:none}
+/* ---------- TV ---------- */
+.sky{position:absolute;inset:0;background:url(img/hills.webp) center 60%/cover}
+.sky.blur{filter:blur(2.2cqw) brightness(.62) saturate(1.1);transform:scale(1.1)}
+.tvh .shade{position:absolute;inset:0;background:linear-gradient(90deg,#0003,#0000 50%),linear-gradient(#0000 70%,#0003)}
+.tvh .loc{text-shadow:0 1px 6px rgba(0,0,0,.5);position:absolute;left:3.2cqw;top:2.8cqw;font-size:1.5cqw;display:flex;gap:.6cqw;align-items:center;opacity:.92}
+.glass{position:absolute;left:5cqw;top:8.5cqw;width:34cqw;border-radius:1.8cqw;background:rgba(8,12,20,.22);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);border:1px solid #ffffff38;box-shadow:0 1cqw 3cqw #0002;overflow:hidden;padding:.6cqw 0}
+.glass .gh{padding:1.2cqw 2.2cqw .6cqw;font-size:1.1cqw;font-weight:500;letter-spacing:.1em;text-transform:uppercase;opacity:.8}
+.gm{display:grid;grid-template-columns:1fr auto;gap:.4cqw 1cqw;padding:1.3cqw 1.4cqw;margin:0 .8cqw;border-radius:1.1cqw;font-size:1.25cqw;text-shadow:0 1px 2px #0003}
+.gm .tm{opacity:.75}
+.gm .tt{grid-column:1;font-size:1.55cqw;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gm .badge{grid-row:1/3;grid-column:2;align-self:center;font-size:1.1cqw;font-weight:500;letter-spacing:.06em;padding:.4cqw .9cqw;border-radius:2cqw;background:#ffffffe6;color:#111}
+.gm.cur{background:#ffffff24}
+.gm+.gm{margin-top:.2cqw}
+.clock{position:absolute;right:6cqw;top:16cqw;text-align:right;text-shadow:0 .2cqw 1.2cqw rgba(0,0,0,.35),0 0 .3cqw rgba(0,0,0,.15)}
+.clock b{display:block;font-family:var(--thin);font-weight:200;font-size:11cqw;letter-spacing:-.03em;line-height:.95}
+.clock span{font-family:var(--thin);font-weight:300;font-size:1.9cqw;opacity:.9}
+.tvlogo{text-shadow:0 1px 8px rgba(0,0,0,.45);position:absolute;left:50%;bottom:2.6cqw;transform:translateX(-50%);text-align:center;font-weight:700;font-size:2cqw;letter-spacing:-.04em;line-height:1}
+.tvlogo small{display:block;font-size:.9cqw;font-weight:400;letter-spacing:0;opacity:.85}
+.tvm{display:none}
+.tvm.on{display:block}
+.tvm .ct{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.tvm .ct b{display:block;font-family:var(--thin);font-weight:300;font-size:3.6cqw;letter-spacing:-.01em}
+.tvm .ct span{display:block;font-size:1.6cqw;opacity:.75;margin-top:1cqw}
+.spin{width:4cqw;height:4cqw;border-radius:50%;border:.35cqw solid #ffffff33;border-top-color:#fff;margin:0 auto 2cqw;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.svc{display:inline-flex;gap:.6cqw;align-items:center;font-size:1.4cqw;padding:.5cqw 1.2cqw;border-radius:2cqw;background:#ffffff1f;margin-bottom:1.6cqw}
+.stars{font-size:3.6cqw;letter-spacing:.8cqw;color:#f5c04a;margin-top:1.6cqw}
+.mbar{position:absolute;inset:0 0 auto;height:5.6cqw;display:flex;align-items:center;justify-content:center;font-size:1.6cqw;z-index:3;background:linear-gradient(#000b,#0000)}
+.mbar .l{position:absolute;left:2cqw;font-size:1.2cqw;opacity:.7}
+.mbar .r{position:absolute;right:2cqw;display:flex;gap:.6cqw;align-items:center;font-size:1.4cqw}
+.mbar .via{font-size:1.1cqw;padding:.2cqw .8cqw;border-radius:2cqw;background:#ffffff26;margin-left:1cqw}
+.grid{position:absolute;inset:5.6cqw .3cqw .3cqw;display:grid;gap:.3cqw}
+.grid.gallery{grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr)}
+.grid.speaker{grid-template-columns:repeat(5,1fr);grid-template-rows:4fr 1fr}
+.grid.speaker .tile.spk{grid-column:1/-1}
+.tile{position:relative;background:#22252c center/cover;border-radius:.3cqw;overflow:hidden;box-shadow:inset 0 0 0 0 var(--go);transition:box-shadow .2s}
+.tile.talk{box-shadow:inset 0 0 0 .28cqw var(--go)}
+.tile .nm{position:absolute;inset:auto 0 0;padding:.5cqw .8cqw;font-size:1.1cqw;background:linear-gradient(#0000,#0009);display:flex;justify-content:space-between;align-items:center}
+.tile .av{position:absolute;inset:0;display:grid;place-items:center}
+.tile .av b{width:8cqw;aspect-ratio:1;border-radius:50%;background:#e9ebf0;color:#2a2e38;display:grid;place-items:center;font-size:3cqw;font-weight:400}
+.grid.speaker .tile:not(.spk) .av b{width:3.6cqw;font-size:1.3cqw}
+.tile.self{background:linear-gradient(160deg,#30343d,#1b1d22)}
+.tile.self .rc{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font-size:1.2cqw;opacity:.8}
+.tile.self .rc svg{display:block;margin:0 auto .6cqw;font-size:3cqw}
+.grid.speaker .tile.self:not(.spk) .rc svg{font-size:1.6cqw}
+.talking{position:absolute;left:1.4cqw;top:6.6cqw;z-index:4;background:#000a;border-radius:.4cqw;padding:.5cqw 1cqw;font-size:1.25cqw;display:flex;gap:.5cqw;align-items:center}
+.share .board{position:absolute;left:.3cqw;top:5.6cqw;right:21cqw;bottom:.3cqw;background:#fff url(img/board.webp) center/contain no-repeat;border-radius:.3cqw}
+.share .side{position:absolute;right:.3cqw;top:5.6cqw;bottom:.3cqw;width:20.4cqw;display:grid;gap:.3cqw;grid-template-rows:repeat(4,1fr)}
+.red{color:#ff6b8f}
+.pipv.off{background:#2b2f37}
+.pipv b{position:absolute;inset:0;display:grid;place-items:center;margin:auto;width:5cqw;height:5cqw;border-radius:50%;background:#e9ebf0;color:#2a2e38;font-size:1.8cqw;font-weight:400}
+.pipv>span{position:relative;display:flex;gap:.5cqw;align-items:center;text-shadow:0 1px 2px #000a}
+.pipv{position:absolute;right:1.4cqw;bottom:1.4cqw;width:17cqw;aspect-ratio:16/9;border-radius:.6cqw;background:url(img/room.webp) center/cover,#3a404c;box-shadow:0 .4cqw 1.6cqw #0008;border:.15cqw solid #ffffff55;z-index:5;display:grid;place-items:end start;padding:.6cqw .8cqw;font-size:1.1cqw}
+.tvt{position:absolute;left:50%;top:7cqw;transform:translate(-50%,-.6cqw);background:#000c;border-radius:.6cqw;padding:.9cqw 1.8cqw;font-size:1.5cqw;opacity:0;transition:.3s;z-index:6;display:flex;gap:.7cqw;align-items:center;white-space:nowrap}
+.tvt.show{opacity:1;transform:translate(-50%,0)}
+.vol{position:absolute;right:2.6cqw;top:50%;transform:translateY(-50%);width:3.6cqw;height:22cqw;background:#000b;border-radius:2cqw;padding:1cqw;opacity:0;transition:.3s;z-index:6;display:flex;flex-direction:column;align-items:center;gap:1cqw;font-size:1.6cqw}
+.vol.show{opacity:1}
+.vol .tr{flex:1;width:.5cqw;background:#ffffff33;border-radius:1cqw;position:relative}
+.vol .tr i{position:absolute;inset:auto 0 0;background:#fff;border-radius:1cqw}
+/* ---------- Controller ---------- */
+.hd{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:2.4cqw 3cqw 1.4cqw}
+.lg{font-weight:700;font-size:3cqw;letter-spacing:-.05em;line-height:.95}
+.lg small{display:block;font-size:1.25cqw;font-weight:400;letter-spacing:0;opacity:.8}
+.hd .mid{text-align:center}
+.hd .mid b{display:block;font-size:3cqw;font-weight:500;line-height:1.05}
+.hd .mid span{display:block;font-size:1.7cqw;opacity:.85;line-height:1.2;margin-top:.2cqw}
+.hd .rt{display:flex;justify-content:flex-end;align-items:center;gap:1.4cqw;font-size:2.4cqw}
+.hd .rt{gap:1cqw!important;font-size:2cqw!important}
+.hd input[type=range]{-webkit-appearance:none;appearance:none;width:10cqw;height:.4cqw;border-radius:1cqw;background:#ffffff55;outline:none}
+.hd input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:1.6cqw;height:1.6cqw;border-radius:50%;background:#fff;border:0}
+.hd input[type=range]::-moz-range-thumb{width:1.6cqw;height:1.6cqw;border-radius:50%;background:#fff;border:0}
+.ms{font-family:"Material Symbols Outlined";font-weight:300;font-style:normal;font-size:1.2em;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased;font-variation-settings:"opsz" 24;width:1em;overflow:hidden;flex:none;user-select:none}
+.ib{border:0;background:none;padding:0;display:grid;place-items:center;font-size:2.6cqw;opacity:.9}
+.back{border:0;background:none;padding:0;display:flex;align-items:center;gap:.6cqw;font-size:1.9cqw}
+.home{display:grid;grid-template-columns:1fr 25cqw;gap:1.8cqw;padding:.4cqw 3.4cqw 0;height:calc(100% - 11.6cqw)}
+.rows{display:flex;flex-direction:column;gap:1.4cqw;min-height:0;overflow-y:auto;scrollbar-width:none;overscroll-behavior:contain}
+.rows::-webkit-scrollbar{display:none}
+.row{flex:0 0 calc((100% - 4.2cqw) / 3.25);border-radius:1.4cqw;background:#ffffff12;border:1px solid #ffffff1f;padding:0 2cqw;display:grid;grid-template-columns:minmax(0,1fr) 18cqw auto;column-gap:1.6cqw;align-items:center;position:relative;overflow:hidden}
+.row .tg2{display:flex;align-items:center;gap:.8cqw;height:2cqw;margin-bottom:.7cqw}
+.row .tg2 em{font-style:normal;background:#fff;color:var(--tile);font-weight:700;font-size:1.1cqw;padding:.2cqw .6cqw;border-radius:.3cqw;flex:none}
+.row .via{display:inline-flex;align-items:center;gap:.4cqw;font-size:1.1cqw;letter-spacing:.04em;text-transform:uppercase;opacity:.8;flex:none}
+.row .via .ms{font-size:1.5cqw}
+.row.pv .nm b{font-weight:400}
+.row .when .ms{font-size:1.9cqw}
+.row.now{background:#0b1a33cc;border-color:#ffffff2e}
+.row .tag{grid-column:1/-1;display:flex;gap:.8cqw;align-items:center;font-size:1.2cqw;letter-spacing:.06em;opacity:.85;text-transform:uppercase}
+.row .tag em{font-style:normal;background:#fff;color:var(--tile);font-weight:700;padding:.2cqw .7cqw;border-radius:.3cqw;opacity:1}
+.row .nm b{display:block;font-size:2.2cqw;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.row .nm>span{display:flex;align-items:center;gap:1cqw;font-size:1.45cqw;opacity:.85;margin-top:.8cqw}
+.av3{display:flex}
+.av3 i{width:2.6cqw;height:2.6cqw;border-radius:50%;border:.2cqw solid var(--nav);background:#c9d6ee;color:#1e2f4f;font-style:normal;font-size:1cqw;font-weight:700;display:grid;place-items:center;margin-left:-.7cqw}
+.av3 i:first-child{margin-left:0}
+.av3 i.n{background:var(--accent);color:#fff}
+.row .when{white-space:nowrap;font-size:1.55cqw;display:flex;gap:.7cqw;align-items:center;opacity:.95}
+.jn{border:.2cqw solid #fff;background:transparent;border-radius:5cqw;padding:.9cqw 0;width:11cqw;font-size:1.8cqw;font-weight:500;letter-spacing:.05em}
+.row.now .jn{background:#fff;color:var(--tile)}
+.row .pg{position:absolute;inset:auto 2cqw .8cqw;height:.35cqw;border-radius:1cqw;background:#ffffff26}
+.row .pg i{display:block;height:100%;width:52%;background:var(--go);border-radius:1cqw}
+.acts{display:grid;grid-template-rows:repeat(4,1fr);gap:1.4cqw;min-height:0;padding-bottom:3.4cqw}
+.ac{border:1px solid #ffffff1f;border-radius:1.4cqw;background:#0b1a3399;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.9cqw;padding:0 1.4cqw;font-size:1.55cqw;text-align:center;line-height:1.2}
+.ac i{width:4cqw;height:4cqw;border-radius:50%;background:var(--accent);display:grid;place-items:center;font-size:2.3cqw;flex:none}
+#ctl>.scr.on:not(.set):not(.fb){display:flex;flex-direction:column}
+#ctl>.scr>.home,#ctl>.scr>.meet,#ctl>.scr>.form,#ctl>.scr>.svcs,#ctl>.scr>.center{flex:1 1 auto;min-height:0;height:auto}
+/* in meeting */
+.meet{display:grid;grid-template-columns:1fr 25cqw;gap:1.8cqw;padding:.4cqw 3.4cqw 3.4cqw;height:calc(100% - 11.6cqw)}
+.pn{background:#0b1a3399;border:1px solid #ffffff1f;border-radius:1.4cqw;padding:2cqw;min-height:0}
+.mpanel{display:flex;flex-direction:column;align-items:center;text-align:center;padding:2.6cqw 2.4cqw 0;position:relative;overflow:hidden}
+.mpanel .host{font-size:1.6cqw;font-weight:500;opacity:.9}
+.mpanel h3{margin:.8cqw 0 0;font-size:3.4cqw;font-weight:400;letter-spacing:-.01em}
+.ctrls{display:flex;justify-content:center;gap:2.8cqw;margin-top:3cqw}
+.cb{border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:1cqw;font-size:1.45cqw;padding:0;opacity:.95}
+.cb i{width:7.4cqw;height:7.4cqw;border-radius:50%;border:.22cqw solid #ffffffd9;background:transparent;color:#fff;display:grid;place-items:center;font-size:3cqw;transition:.2s;font-style:normal}
+.cb.off i{background:#fff;color:var(--leave);border-color:#fff}
+.cb.act i{background:#fff;color:var(--nav)}
+.cb.lvr{margin-top:3.4cqw}
+.cb.lvr i{width:8cqw;height:8cqw;background:var(--leave);border-color:var(--leave)}
+.leavebtn{margin-top:4.4cqw;border:0;border-radius:5cqw;background:var(--leave);color:#fff;font-size:1.8cqw;font-weight:500;letter-spacing:.06em;padding:1.3cqw 0;width:52%}
+.tline{margin-top:auto;width:calc(100% + 4.8cqw);padding:0 2.4cqw}
+.tline span{display:block;font-size:1.45cqw;opacity:.85;margin-bottom:1.1cqw}
+.tline .bar{height:.6cqw;background:#ffffff26;border-radius:0}
+.tline .bar i{display:block;height:100%;background:var(--go);width:50%;transition:width .6s}
+.ppl{font-size:1.45cqw;display:grid;gap:1.1cqw;align-content:start;overflow:hidden;background:#ffffff12}
+.ppl .id{padding-bottom:1cqw;border-bottom:1px solid #ffffff26;line-height:1.5;opacity:.9}
+.ppl .w{display:flex;align-items:center;gap:1cqw}
+.ppl .w b{width:3.2cqw;height:3.2cqw;border-radius:50%;background:#ffffff26;display:grid;place-items:center;font-size:1.1cqw;font-weight:500;flex:none}
+.ppl .w span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.modal{position:absolute;inset:0;background:#0008;display:none;place-items:center;z-index:5}
+.modal.on{display:grid;animation:fd .2s}
+.sheet{width:64cqw;background:#fff;color:#1d2230;border-radius:1.2cqw;padding:2.6cqw}
+.sheet h4{margin:0 0 1.8cqw;font-size:2.1cqw;font-weight:500}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:1.4cqw}
+.opt{border:.2cqw solid #e3e5ea;background:#f7f8fa;border-radius:1cqw;padding:1.8cqw;display:flex;align-items:center;gap:1.4cqw;font-size:1.9cqw;text-align:left}
+.opt i{width:4.6cqw;height:4.6cqw;border-radius:50%;background:#e4eaf5;color:var(--nav2);display:grid;place-items:center;font-size:2.4cqw;flex:none}
+.opt.sel{border-color:var(--accent);background:#eef5ff}
+.opt.sel i{background:var(--accent);color:#fff}
+.done{margin-top:1.8cqw;width:100%;border:0;border-radius:5cqw;background:var(--nav2);color:#fff;padding:1.3cqw;font-size:1.9cqw}
+/* join forms */
+.form{display:grid;grid-template-columns:1fr 1fr;gap:3cqw;padding:1cqw 6cqw 3cqw;height:calc(100% - 11.6cqw);align-items:center}
+.fl{font-size:1.6cqw;opacity:.8}
+.fv{border-bottom:.25cqw solid #ffffff80;font-size:3.6cqw;letter-spacing:.12em;padding:.8cqw 0;min-height:6cqw;font-variant-numeric:tabular-nums}
+.fv.sm{font-size:2.2cqw;letter-spacing:0}
+.note{font-size:1.6cqw;opacity:.75;margin-top:1.4cqw;line-height:1.45}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1cqw}
+.pad button{border:0;border-radius:1cqw;background:var(--tile2);font-size:3cqw;padding:1.3cqw 0;font-weight:300}
+.pad .go{background:var(--go);font-size:2cqw;font-weight:500;letter-spacing:.05em}
+.svcs{display:grid;grid-template-columns:repeat(3,1fr);gap:2cqw;padding:2cqw 6cqw;height:calc(100% - 11.6cqw);align-content:center}
+.sv{border:0;border-radius:1.2cqw;background:var(--tile);padding:3cqw 2cqw;display:flex;flex-direction:column;align-items:center;gap:1.4cqw;font-size:1.9cqw}
+.sv i{width:7cqw;height:7cqw;border-radius:1.6cqw;display:grid;place-items:center;font-style:normal;font-weight:700;font-size:2.6cqw}
+.sv small{font-size:1.4cqw;opacity:.75}
+.pill{border:0;border-radius:5cqw;background:#fff;color:var(--nav);padding:1.3cqw 4cqw;font-size:1.9cqw;font-weight:500}
+.pill.g{background:var(--go);color:#fff}
+.pill.r{background:var(--leave);color:#fff}
+.center{display:grid;place-items:center;text-align:center;height:calc(100% - 11.6cqw);padding:0 8cqw 4cqw}
+.center h3{margin:0;font-size:3cqw;font-weight:400}
+.center p{margin:1.2cqw 0 0;font-size:1.8cqw;opacity:.85;line-height:1.45}
+.code{font-size:4.6cqw;letter-spacing:.25em;margin:2cqw 0 2.4cqw;font-weight:300}
+/* settings (white) */
+.set{background:#fff;color:#2a2e38}
+.set .sh{display:grid;grid-template-columns:6cqw 1fr 6cqw;align-items:center;height:7cqw;border-bottom:1px solid #eceef2;font-size:2cqw}
+.set .sh b{text-align:center;font-weight:500}
+.set .sh button{border:0;background:none;font-size:2.4cqw;padding:0;color:#2a2e38}
+.sb{display:grid;grid-template-columns:27cqw 1fr;height:calc(100% - 7cqw)}
+.snav{border-right:1px solid #eceef2;padding:1.4cqw 1.4cqw;display:flex;flex-direction:column;gap:.4cqw}
+.snav .ms{font-size:2.1cqw}
+.snav button{border:0;background:none;text-align:left;display:flex;gap:1.2cqw;align-items:center;font-size:1.55cqw;padding:1.1cqw 1.2cqw;border-radius:.8cqw;color:#3a3f4b}
+.snav button.on{background:#edf3ff;color:#2a5bd7}
+.snav .rep{margin-top:auto;justify-content:center;border:.2cqw solid #2a2e38;border-radius:5cqw;font-size:1.3cqw;letter-spacing:.05em;padding:.9cqw}
+.sc{padding:1.8cqw 3cqw;overflow:auto}
+.sc h5{margin:0 0 1cqw;font-size:1.6cqw;font-weight:500}
+.sr{display:grid;grid-template-columns:3cqw 1fr auto;gap:1cqw;align-items:center;font-size:1.45cqw;padding:1.05cqw 0;border-bottom:1px solid #f0f1f4}
+.sr span:last-child{color:#5a5f6b;text-align:right}
+.sr svg{color:#8a8f9b}
+.sr .si{font-size:2cqw;color:#8a8f9b;justify-self:center}
+.sr .dt{width:.8cqw;height:.8cqw;border-radius:50%;background:#c9cdd6;justify-self:center}
+.tg{width:4.4cqw;height:2.4cqw;border-radius:2cqw;background:#d5d8de;border:0;position:relative;padding:0;transition:.2s}
+.tg::after{content:"";position:absolute;left:.3cqw;top:.3cqw;width:1.8cqw;height:1.8cqw;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 2px #0003}
+.tg.on{background:var(--accent)}
+.tg.on::after{left:2.3cqw}
+.cmd{position:absolute;inset:0;background:linear-gradient(170deg,var(--nav2),var(--nav));color:#fff;z-index:6;display:none;padding:5cqw 9cqw}
+.cmd.on{display:block;animation:fd .25s}
+.cmd h3{margin:0 0 3.4cqw;text-align:center;font-weight:400;font-size:2.6cqw}
+.cmd .x{position:absolute;right:3cqw;top:3cqw;border:0;background:none;font-size:2.6cqw;padding:0}
+.cmd ol{margin:0;padding-left:2.4cqw;font-size:1.8cqw;line-height:1.6;display:grid;gap:2.4cqw}
+.cmd ol b{display:block;font-size:2.6cqw;font-weight:400;margin-top:.6cqw;letter-spacing:.02em}
+.cmd ol b.k{letter-spacing:.6em}
+/* feedback */
+.fb{background:#f6f7f9;color:#1d2230;display:none;place-items:center;text-align:center}
+.fb.on{display:grid}
+.fb h3{margin:0;font-size:2.6cqw;font-weight:400}
+.fst{display:flex;justify-content:center;gap:2cqw;margin:3cqw 0 3.6cqw}
+.fst button{border:0;background:none;font-size:6cqw;color:#cdd1da;line-height:1;padding:0}
+.fst button.on{color:#2e9e50}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:1.1cqw;max-width:66cqw;margin:-1.2cqw auto 3.6cqw}
+.chips button{border:.2cqw solid #d4d8e0;background:#fff;border-radius:5cqw;padding:.9cqw 1.8cqw;font-size:1.6cqw}
+.chips button.on{background:#1d2230;color:#fff;border-color:#1d2230}
+.submit{border:0;border-radius:5cqw;background:#2e9e50;color:#fff;padding:1.4cqw 8cqw;font-size:1.9cqw;font-weight:500;letter-spacing:.06em}
+.ct2{position:absolute;left:50%;bottom:2.4cqw;transform:translateX(-50%);background:#000d;color:#fff;border-radius:.8cqw;padding:1.1cqw 2.2cqw;font-size:1.7cqw;opacity:0;transition:.3s;pointer-events:none;z-index:9;white-space:nowrap}
+.ct2.show{opacity:1}
+.tap{position:absolute;width:4cqw;height:4cqw;border-radius:50%;background:#ffffff70;transform:translate(-50%,-50%) scale(.2);pointer-events:none;animation:tp .45s ease-out forwards;z-index:10}
+@keyframes tp{to{transform:translate(-50%,-50%) scale(2.2);opacity:0}}
+</style>
+
+</head><body>
+<div class="room">
+  <div class="wallzone">
+    <div class="cam" id="cam" aria-label="Poly camera"><i></i></div>
+    <div class="tv"><div class="tvs" id="tv">
+      <section class="scr tvh on" data-s="home"><div class="sky"></div><div class="shade"></div>
+        <div class="loc"><svg class="i" viewBox="0 0 24 24"><path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg>MV-Cargo</div>
+        <div class="glass"><div class="gh">Today</div>
+          <div class="gm cur"><span class="tm">10:00 – 11:00 AM</span><span class="badge">NOW</span><span class="tt">Q3 Product Roadmap</span></div>
+          <div class="gm"><span class="tm">11:30 AM – 12:30 PM · Teams</span><span class="tt">Extended Marketing Leadership</span></div>
+          <div class="gm"><span class="tm">1:00 – 1:30 PM · Private</span><span class="tt">Budget Planning FY27</span></div>
+        </div>
+        <div class="clock"><b>9:41</b><span>Monday, January 21</span></div>
+        <div class="tvlogo">BlueJeans<small>by Verizon</small></div>
+      </section>
+      <section class="scr tvm" data-s="msg"><div class="sky blur"></div><div class="ct"><div><div class="spin" id="tSpin"></div><div class="svc" id="tSvc" hidden></div><b id="tT">Joining</b><span id="tS"></span><div class="stars" id="tStars" hidden></div></div></div></section>
+      <section class="scr" data-s="meet">
+        <div class="mbar"><span class="l">MV-Cargo</span><span id="tTitle">Q3 Product Roadmap</span><span class="via" id="tVia" hidden></span><span class="r"><svg class="i" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4.5a3.4 3.4 0 0 1 0 6.8M21 20c0-2.6-1.6-4.8-4-5.6"/></svg>7</span></div>
+        <div class="talking" id="tTalk"><svg class="i" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>Priya Nair is talking</span></div>
+        <div class="grid gallery" id="grid"></div>
+        <div class="share" id="shr" hidden><div class="board"></div><div class="side" id="side"></div></div>
+      </section>
+      <div class="vol" id="tVol"><svg class="i" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg><div class="tr"><i id="tVolB" style="height:60%"></i></div></div>
+      <div class="tvt" id="tToast"></div>
+    </div></div>
+  </div>
+  <div class="deskzone">
+    <svg class="table" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMax meet" aria-hidden="true"><path d="M140 60 H860 L960 150 H40 Z"/><path d="M40 150 V164 H960 V150"/><path d="M70 164 V200 M930 164 V200 M200 164 V190 M800 164 V190" /></svg>
+    <div class="ctl"><div class="cs" id="ctl">
+      <!-- home -->
+      <section class="scr on" data-s="home">
+        <div class="hd"><div class="lg">BlueJeans<small>by Verizon</small></div><div class="mid"><b>MV-Cargo</b><span>Mon, Jan 21 · 9:41 AM</span></div>
+          <div class="rt"><span class="ms">volume_mute</span><input type="range" class="volr" id="vol1" min="0" max="100" value="60" aria-label="Room volume"><span class="ms">volume_up</span><button class="ib" data-a="settings" aria-label="Settings"><span class="ms">settings</span></button></div></div>
+        <div class="home">
+          <div class="rows">
+            <div class="row now"><div class="nm"><div class="tg2"><em>NOW</em></div><b>Q3 Product Roadmap</b><span>Host: Dee Kim <span class="av3"><i>DK</i><i>AC</i><i>MD</i><i class="n">+7</i></span></span></div><span class="when"><span class="ms">calendar_today</span>10:00 – 11:00 AM</span><button class="jn" data-a="join" data-m="Q3 Product Roadmap">JOIN</button><div class="pg"><i></i></div></div>
+            <div class="row "><div class="nm"><div class="tg2"><span class="via"><span class="ms">groups</span>Teams</span></div><b>Extended Marketing Leadership</b><span>Host: Arvind M. <span class="av3"><i>AM</i><i>KG</i><i class="n">+6</i></span></span></div><span class="when"><span class="ms">calendar_today</span>11:30 AM – 12:30 PM</span><button class="jn" data-a="join" data-m="Extended Marketing Leadership" data-v="Microsoft Teams">JOIN</button></div>
+            <div class="row "><div class="nm"><div class="tg2"><span class="via"><span class="ms">lock</span>Private</span></div><b>Budget Planning FY27</b><span>Host: Karen Garrett <span class="av3"><i>KG</i><i>BW</i><i class="n">+3</i></span></span></div><span class="when"><span class="ms">calendar_today</span>1:00 – 1:30 PM</span><button class="jn" data-a="join" data-m="Budget Planning FY27">JOIN</button></div>
+            <div class="row "><div class="nm"><div class="tg2"><span class="via"><span class="ms">videocam</span>Zoom</span></div><b>Design Review</b><span>Host: Sarah Lin <span class="av3"><i>SL</i><i>JS</i><i class="n">+4</i></span></span></div><span class="when"><span class="ms">calendar_today</span>2:00 – 3:00 PM</span><button class="jn" data-a="join" data-m="Design Review" data-v="Zoom">JOIN</button></div>
+            <div class="row "><div class="nm"><div class="tg2"><span class="via"><span class="ms">event</span>BlueJeans</span></div><b>Oliver, Sam 1:1</b><span>Host: Oliver Dean <span class="av3"><i>OD</i><i>SC</i></span></span></div><span class="when"><span class="ms">calendar_today</span>3:00 – 3:30 PM</span><button class="jn" data-a="join" data-m="Oliver, Sam 1:1">JOIN</button></div>
+            <div class="row "><div class="nm"><div class="tg2"><span class="via"><span class="ms">event</span>BlueJeans</span></div><b>Sales Pipeline Sync</b><span>Host: Megha Vaishy <span class="av3"><i>MV</i><i>DR</i><i>KP</i><i class="n">+9</i></span></span></div><span class="when"><span class="ms">calendar_today</span>3:30 – 4:00 PM</span><button class="jn" data-a="join" data-m="Sales Pipeline Sync">JOIN</button></div>
+            <div class="row "><div class="nm"><div class="tg2"><span class="via"><span class="ms">groups</span>Teams</span></div><b>Customer Demo</b><span>Host: Jignesh Shah <span class="av3"><i>JS</i><i>AB</i><i class="n">+5</i></span></span></div><span class="when"><span class="ms">calendar_today</span>4:30 – 5:00 PM</span><button class="jn" data-a="join" data-m="Customer Demo" data-v="Microsoft Teams">JOIN</button></div>
+            <div class="row "><div class="nm"><div class="tg2"><span class="via"><span class="ms">event</span>BlueJeans</span></div><b>Weekly All Hands</b><span>Host: Dan Moderator <span class="av3"><i>DM</i><i>NK</i><i>BW</i><i class="n">+40</i></span></span></div><span class="when"><span class="ms">calendar_today</span>5:00 – 6:00 PM</span><button class="jn" data-a="join" data-m="Weekly All Hands">JOIN</button></div>
+          </div>
+          <div class="acts">
+            <button class="ac" data-a="id"><i><svg class="i" viewBox="0 0 24 24"><path d="M10 17l5-5-5-5M15 12H3M15 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/></svg></i>Join with Meeting or Event ID</button>
+            <button class="ac" data-a="other"><i><svg class="i" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V4h8v3"/></svg></i>Join with Other Services</button>
+            <button class="ac" data-a="share"><i><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></i>Share</button>
+            <button class="ac" data-a="phone"><i><svg class="i" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></i>Use Phone</button>
+          </div>
+        </div>
+      </section>
+      <!-- meeting id -->
+      <section class="scr" data-s="id">
+        <div class="hd"><button class="back" data-a="home"><svg class="i" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>Back</button><div class="mid"><b>Join with Meeting ID</b></div><span></span></div>
+        <div class="form"><div><div class="fl">Meeting or Event ID</div><div class="fv" id="idv"></div><div class="note">The TV shows each number as you type, so the room can check it together.</div></div><div class="pad" id="pad"></div></div>
+      </section>
+      <!-- other services: pick -->
+      <section class="scr" data-s="other">
+        <div class="hd"><button class="back" data-a="home"><svg class="i" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>Back</button><div class="mid"><b>Join with Other Services</b><span>Pick how this meeting was sent to you</span></div><span></span></div>
+        <div class="svcs">
+          <button class="sv" data-a="svc" data-v="Zoom"><i style="background:#2d8cff">Z</i>Zoom<small>Meeting ID</small></button>
+          <button class="sv" data-a="svc" data-v="Microsoft Teams"><i style="background:#5b5fc7">T</i>Microsoft Teams<small>Meeting ID</small></button>
+          <button class="sv" data-a="svc" data-v="Link"><i style="background:#fff;color:#1e2f4f"><svg class="i" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></i>Meeting link<small>Paste or scan</small></button>
+        </div>
+      </section>
+      <!-- other services: details -->
+      <section class="scr" data-s="svc">
+        <div class="hd"><button class="back" data-a="other"><svg class="i" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>Back</button><div class="mid"><b id="svT">Join a Zoom meeting</b></div><span></span></div>
+        <div class="form"><div id="svF"></div><div style="display:grid;gap:1.6cqw;justify-items:center"><div class="note" id="svN" style="text-align:center"></div><button class="pill g" data-a="svcjoin">Join on this room</button></div></div>
+      </section>
+      <!-- in meeting -->
+      <section class="scr" data-s="meet">
+        <div class="hd"><div class="lg">BlueJeans<small>by Verizon</small></div><div class="mid"><b>MV-Cargo</b><span>Today, Monday January 21</span></div>
+          <div class="rt"><span class="ms">volume_mute</span><input type="range" class="volr" id="vol2" min="0" max="100" value="60" aria-label="Room volume"><span class="ms">volume_up</span></div></div>
+        <div class="meet">
+          <div class="pn mpanel">
+            <div class="host" id="cHost">Dee Kim's meeting</div><h3 id="cTitle">Q3 Product Roadmap</h3>
+            <div class="ctrls">
+              <button class="cb" data-a="video" id="bV"><i><svg class="i" viewBox="0 0 24 24"><rect x="2" y="6" width="13" height="12" rx="2"/><path d="M15 10l7-4v12l-7-4"/></svg></i>Video</button>
+              <button class="cb" data-a="audio" id="bA"><i><svg class="i" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></i>Audio</button>
+              <button class="cb" data-a="content" id="bS"><i><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></i>Share Content</button>
+              <button class="cb" data-a="pip" id="bP"><i><svg class="i" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><rect x="12" y="11" width="6" height="5" rx="1" fill="currentColor"/></svg></i>PiP</button>
+              <button class="cb" data-a="layout"><i><svg class="i" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 12h18M9 12v8M15 12v8"/></svg></i>Change Layout</button>
+            </div>
+            <button class="cb lvr" data-a="leave"><i><svg class="i" viewBox="0 0 24 24"><path d="M3 14c5-4 13-4 18 0l-2 3-3-1v-2.5a11 11 0 0 0-8 0V16l-3 1z"/></svg></i>Leave</button>
+            <div class="tline"><span id="cTime">Time remaining: 30 min</span><div class="bar"><i id="cBar"></i></div></div>
+          </div>
+          <div class="pn ppl" id="ppl"></div>
+        </div>
+        <div class="modal" id="lay"><div class="sheet"><h4>Change layout</h4><div class="opts">
+          <button class="opt" data-a="lay" data-v="speaker"><i>▣</i>Speaker view</button>
+          <button class="opt sel" data-a="lay" data-v="gallery"><i>⊞</i>Gallery view</button></div>
+          <button class="done" data-a="laydone">Done</button></div></div>
+      </section>
+      <!-- share -->
+      <section class="scr" data-s="share">
+        <div class="hd"><button class="back" data-a="home"><svg class="i" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>Back</button><div class="mid"><b>Share</b></div><span></span></div>
+        <div class="center"><div id="shA"><h3>Share your laptop to this room</h3><p>On your laptop, open share.bluejeans.com and enter this code.</p><div class="code">482 913</div><button class="pill" data-a="laptop">Laptop connected (demo)</button></div>
+          <div id="shB" hidden><h3>Your screen is on the TV</h3><p>Anyone in the room can stop sharing from here.</p><br><button class="pill r" data-a="stopshare">Stop sharing</button></div></div>
+      </section>
+      <!-- settings -->
+      <section class="scr set" data-s="set">
+        <div class="sh"><button data-a="home" aria-label="Back"><svg class="i" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><b>Settings</b><span></span></div>
+        <div class="sb"><nav class="snav" id="snav"></nav><div class="sc" id="sc"></div></div>
+        <div class="cmd" id="cmd"><button class="x" data-a="cmdx" aria-label="Close">✕</button><h3>Connect to Command Center</h3>
+          <ol><li>Open a web browser and type in<b>bluejeans.com/addrooms</b></li><li>Enter this code<b class="k">1UKJWNC</b></li></ol></div>
+      </section>
+      <!-- feedback -->
+      <section class="scr fb" data-s="fb"><div><h3>How was the meeting?</h3><div class="fst" id="fst"></div>
+        <div class="chips" id="chips" hidden><button data-a="chip">Audio was breaking up</button><button data-a="chip">Couldn't hear anything</button><button data-a="chip">Video was choppy</button><button data-a="chip">Screen share problems</button><button data-a="chip">Poor network</button></div>
+        <button class="submit" data-a="submit">SUBMIT</button></div></section>
+      <div class="ct2" id="cToast"></div>
+    </div></div>
+
+  </div>
+<p class="caption" id="cap"><b>Tap the controller.</b> The TV and the 12 inch controller are one system: the room's meetings show on both, and every tap on the desk shows up on the wall.</p>
+</div>
+
+<script>
+(()=>{
+const $=id=>document.getElementById(id),tv=$('tv'),ctl=$('ctl');
+const IC={mic:'<svg class="i" viewBox="0 0 24 24"><path d="M3 3l18 18M9 9v2a3 3 0 0 0 5 2.2M15 9.3V6a3 3 0 0 0-5.7-1.3M5 11a7 7 0 0 0 11.5 5.4M19 11a7 7 0 0 1-.6 2.8M12 18v3"/></svg>',
+ cam:'<svg class="i" viewBox="0 0 24 24"><rect x="2" y="6" width="13" height="12" rx="2"/><path d="M15 10l7-4v12l-7-4"/></svg>',
+ chev:'<svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>',down:'<svg class="i" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>'};
+const P=[{n:'Priya Nair',img:'img/u1.webp'},{n:'Marcus Reed',img:'img/u2.webp'},{n:'James Carter',img:'img/u3.webp'},{n:'Emily Walsh',img:'img/u4.webp'},{n:'Arjun Mehta',img:'img/u5.webp'},{n:'Nia Thompson',img:'img/u6.webp'}];
+const S={meet:null,via:null,muted:false,video:true,layout:'gallery',vol:60,sharing:false,t0:0,id:'',stars:0,svc:'Zoom',tab:'about',def:{mv:false,ma:false,chat:true},ss:{hdmi:true,wifi:true}};
+const show=(r,s)=>r.querySelectorAll(':scope>.scr').forEach(e=>e.classList.toggle('on',e.dataset.s===s));
+const cap=(t,d)=>{$('cap').innerHTML='<b>'+t+'.</b> '+d};
+const toast=(el,m,ms=2000)=>{el.innerHTML=m;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),ms)};
+const live=on=>$('cam').style.setProperty('--live',on?1:0);
+const ini=n=>n.split(' (')[0].split(/[\s-]+/).filter(Boolean).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+let spk=1;
+function tile(p,i,c=''){
+  if(p.self){const inner=S.video?`<div class="rc"><div>${IC.cam}Room camera</div></div>`:'<div class="av"><b>MC</b></div>';
+    return `<div class="tile self ${c}">${inner}<div class="nm"><span>${p.n}</span>${S.muted?'<span class="red">'+IC.mic+'</span>':''}</div></div>`}
+  return `<div class="tile ${c} ${i===spk?'talk':''}" style="background-image:url(${p.img})" data-i="${i}"><div class="nm"><span>${p.n}</span></div></div>`}
+function renderTV(){const g=$('grid');g.className='grid '+S.layout;
+  if(S.layout==='speaker'){const o=[spk,...P.map((_,i)=>i).filter(i=>i!==spk)];g.innerHTML=o.map((i,k)=>tile(P[i],i,k?'':'spk')).join('')}else g.innerHTML=P.map((p,i)=>tile(p,i)).join('');
+  $('shr').hidden=!S.sharing;g.hidden=S.sharing;if(S.sharing)$('side').innerHTML=[spk,...[0,1,2,3,4,5].filter(i=>i!==spk)].slice(0,4).map(i=>tile(P[i],i)).join('');
+  $('tVia').hidden=!S.via;let pv=tv.querySelector('.pipv');if(!pv){pv=document.createElement('div');pv.className='pipv';tv.querySelector('[data-s=meet]').appendChild(pv)}pv.hidden=!S.pip;pv.classList.toggle('off',!S.video);pv.innerHTML=(S.video?'':'<b>MC</b>')+'<span>MV-Cargo (this room)'+(S.muted?' <span class="red">'+IC.mic+'</span>':'')+'</span>';$('tVia').textContent=S.via?'via '+S.via:''}
+function renderPpl(){const L=[...P.map(p=>p.n),'MV-Cargo (this room)'];$('ppl').innerHTML='<div class="id">Meeting ID 999 999 999<br>Passcode 9999</div><div style="opacity:.9">'+L.length+' participants</div>'+L.map((n,k)=>`<div class="w"><b>${ini(n)}</b><span>${n}</span>${k===L.length-1&&S.muted?'<span class="red">'+IC.mic+'</span>':''}</div>`).join('')}
+setInterval(()=>{if(!S.meet)return;spk=[0,2,3,4,1,5][Math.floor(Date.now()/3500)%6];$('tTalk').querySelector('span').textContent=P[spk].n+' is talking';
+  if(S.layout==='speaker'&&!S.sharing)renderTV();else tv.querySelectorAll('.tile[data-i]').forEach(t=>t.classList.toggle('talk',+t.dataset.i===spk))},3500);
+setInterval(()=>{if(!S.meet)return;const m=Math.floor((Date.now()-S.t0)/60000),left=Math.max(0,30-m);$('cTime').textContent='Time remaining: '+left+' min';$('cBar').style.width=(30+Math.min(30,m))/60*100+'%'},1000);
+function msg(t,s,o={}){$('tT').textContent=t;$('tS').textContent=s||'';$('tSpin').hidden=!o.spin;$('tSvc').hidden=!o.svc;if(o.svc)$('tSvc').textContent='via '+o.svc;$('tStars').hidden=!o.stars;show(tv,'msg')}
+const HOSTS={'Q3 Product Roadmap':'Dee Kim','Extended Marketing Leadership':'Arvind M.','Budget Planning FY27':'Karen Garrett','Design Review':'Sarah Lin','Oliver, Sam 1:1':'Oliver Dean','Sales Pipeline Sync':'Megha Vaishy','Customer Demo':'Jignesh Shah','Weekly All Hands':'Dan Moderator'};
+const el_host=n=>HOSTS[n]||'MV-Cargo';
+function join(name,via){
+  S.t0=Date.now();
+  S.meet=name;S.via=via||null;S.muted=S.def.ma;S.video=!S.def.mv;S.layout='gallery';S.sharing=false;
+  msg('Joining '+name,via?'Connecting through '+via:'Starting the room camera and microphones',{spin:1,svc:via});
+  show(ctl,'meet');$('cTitle').textContent=name;$('cHost').textContent=(el_host(name))+"'s meeting";$('bS').classList.remove('act');$('bP').classList.add('act');S.pip=true;$('tTitle').textContent=name;$('bA').classList.toggle('off',S.muted);$('bV').classList.toggle('off',!S.video);
+  cap('Joining',via?`The room joins a ${via} meeting. The TV shows which service it is using, so nobody wonders why it looks different.`:'One tap on JOIN. The TV says "Joining" right away, so the room knows something is happening.');
+  setTimeout(()=>{if(S.meet!==name)return;S.t0=Date.now();live(S.video);renderTV();renderPpl();show(tv,'meet');
+    cap('In the meeting','The camera light on the Poly comes on. The TV fills with people, with a green outline on whoever is talking. The controller shows video, audio, layout, leave and who is in the call.')},1600)}
+/* settings */
+const SEC=[['about','About Rooms'],['cmd','Connect to Command Center'],['def','Default Options'],['av','Audio and Video'],['ss','Screen Share'],['tp','Third Party Meetings']];
+const ICN={'Room name':'meeting_room','Room e-mail':'mail','Room type':'devices','Enterprise':'apartment','App version':'apps','Firmware':'memory','Manufacturer':'factory','System settings':'settings','Terms and conditions':'description','Privacy policies':'privacy_tip','Mute video on entry':'videocam_off','Mute audio on entry':'mic_off','Display in-meeting chat':'chat','Control default camera':'videocam','Camera':'videocam','Microphone':'mic','Speaker':'speaker','Primary video output':'tv','Secondary video output':'tv','HDMI connect':'settings_input_hdmi','HDMI':'settings_input_hdmi','Wireless URL connect':'wifi','SIP':'dialpad','WebRTC':'public'};
+function row(l,v,arrow){return `<div class="sr"><span class="ms si">${ICN[l]||'circle'}</span><span>${l}</span><span>${v||''} ${arrow?IC.chev:''}</span></div>`}
+function trow(l,k,grp){const on=S[grp][k];return `<div class="sr"><span class="ms si">${ICN[l]||'circle'}</span><span>${l}</span><span><button class="tg ${on?'on':''}" data-a="tg" data-g="${grp}" data-k="${k}" aria-label="${l}" aria-pressed="${on}"></button></span></div>`}
+function renderSet(){
+  const NI={about:'info',cmd:'hub',def:'tune',av:'graphic_eq',ss:'screen_share',tp:'groups'};$('snav').innerHTML=SEC.map(([k,l])=>`<button data-a="tab" data-v="${k}" class="${S.tab===k?'on':''}"><span class="ms">${NI[k]}</span>${l}</button>`).join('')+'<button class="rep" data-a="report">REPORT AN ISSUE</button>';
+  const C={about:'<h5>About Rooms</h5>'+[['Room name','MV-Cargo'],['Room e-mail','mv-cargo@rooms.example'],['Room type','Poly Studio X30 · TC8 Touch Controller'],['Enterprise','BlueJeans'],['App version','1.26.0'],['Firmware','Primary · Controller'],['Manufacturer','Poly / Yealink']].map(r=>row(r[0],r[1])).join('')+row('System settings','',1)+row('Terms and conditions','',1)+row('Privacy policies','',1),
+   cmd:'<h5>Connect to Command Center</h5><p style="font-size:1.5cqw;color:#5a5f6b;line-height:1.5">Link this room to your company\'s Command Center, so IT can watch room health and fix issues remotely.</p><button class="pill g" data-a="cmdopen" style="margin-top:1cqw">Connect</button>',
+   def:'<h5>Default Options</h5>'+trow('Mute video on entry','mv','def')+trow('Mute audio on entry','ma','def')+trow('Display in-meeting chat','chat','def')+row('Control default camera','Room',1),
+   av:'<h5>Audio and Video</h5>'+[['Camera','Poly Studio X50'],['Microphone','Poly pro'],['Speaker','Poly pro'],['Primary video output','Samsung 55" UHD'],['Secondary video output','LG 55" UHD'],['HDMI connect','Laptop']].map(r=>row(r[0],r[1]+' '+(r[0].includes('output')||r[0]=='HDMI connect'?'':IC.down))).join(''),
+   ss:'<h5>Screen Share</h5>'+trow('HDMI','hdmi','ss')+trow('Wireless URL connect','wifi','ss'),
+   tp:'<h5>Third Party Meetings</h5>'+row('SIP',IC.down)+row('WebRTC',IC.down)};
+  $('sc').innerHTML=C[S.tab]}
+function act(a,el){switch(a){
+  case 'join':join(el.dataset.m,el.dataset.v);break;
+  case 'private':toast($('cToast'),'Private meeting. Use the Meeting ID from your invite.');cap('Private meeting','The organiser hid the details, so the room shows the time only. People join it with the Meeting ID from their own invite.');break;
+  case 'home':show(ctl,'home');if(!S.meet)show(tv,'home');$('cmd').classList.remove('on');cap('Home','The controller lists the room\'s meetings for today. The TV shows the same list and the time, for people walking in.');break;
+  case 'id':S.id='';$('idv').textContent='';show(ctl,'id');msg('Join with Meeting ID','Type the ID on the controller');cap('Join with Meeting ID','A big number pad on the controller. The TV mirrors each digit, so the room can check the ID together.');break;
+  case 'key':if(S.id.length<9){S.id+=el.dataset.k;const f=S.id.replace(/(\d{3})(?=\d)/g,'$1 ');$('idv').textContent=f;$('tT').textContent=f;$('tS').textContent=(9-S.id.length)+' digits to go'}break;
+  case 'del':S.id=S.id.slice(0,-1);const f2=S.id.replace(/(\d{3})(?=\d)/g,'$1 ');$('idv').textContent=f2;$('tT').textContent=f2||'Join with Meeting ID';break;
+  case 'idjoin':if(S.id.length<6){toast($('cToast'),'Enter at least 6 digits');break}join('Meeting '+S.id.replace(/(\d{3})(?=\d)/g,'$1 '));break;
+  case 'other':show(ctl,'other');msg('Join with other services','Pick Zoom, Microsoft Teams or a meeting link on the controller');cap('Join with Other Services','The room can join Zoom and Microsoft Teams meetings too. Pick the service the invite came from, or paste the meeting link.');break;
+  case 'svc':S.svc=el.dataset.v;show(ctl,'svc');
+    if(S.svc==='Link'){$('svT').textContent='Join with a meeting link';$('svF').innerHTML='<div class="fl">Meeting link</div><div class="fv sm">https://zoom.us/j/84522109931</div><div class="note">Paste from your calendar, or scan the QR code on the TV with your phone.</div>';$('svN').textContent='We read the link and pick the right service for you.'}
+    else{$('svT').textContent='Join a '+S.svc+' meeting';$('svF').innerHTML=`<div class="fl">${S.svc} meeting ID</div><div class="fv">${S.svc==='Zoom'?'845 2210 9931':'274 118 630 52'}</div><div class="fl" style="margin-top:2cqw">Passcode</div><div class="fv" style="font-size:2.6cqw">••••••</div>`;$('svN').textContent='The room joins as "MV-Cargo", with the room camera and microphones.'}
+    msg('Join a '+(S.svc==='Link'?'meeting from a link':S.svc+' meeting'),'Check the details on the controller');cap(S.svc==='Link'?'Meeting link':S.svc,'Only what that service needs: an ID and passcode, or a single link. Then one green Join button.');break;
+  case 'svcjoin':{const svc=S.svc==='Link'?'Zoom':S.svc;join(svc==='Zoom'?'Zoom meeting 845 2210 9931':'Teams meeting',svc);break}
+  case 'video':S.video=!S.video;el.classList.toggle('off',!S.video);live(S.video);renderTV();toast($('tToast'),S.video?'Room camera on':'Room camera off');
+    cap(S.video?'Camera on':'Camera off',S.video?'The camera light comes back on and the room is visible again.':'The camera light on the Poly turns off and the room tile switches to initials. Everyone in the room can see they are off camera.');break;
+  case 'audio':S.muted=!S.muted;el.classList.toggle('off',S.muted);renderTV();renderPpl();toast($('tToast'),S.muted?'<span class="red">'+IC.mic+'</span>This room is muted':'This room is unmuted');
+    cap(S.muted?'Room muted':'Room unmuted',S.muted?'The button turns solid on the controller, and the TV says "This room is muted", so nobody talks into a muted mic.':'The red mic disappears from the room tile.');break;
+  case 'content':S.sharing=!S.sharing;el.classList.toggle('act',S.sharing);$('tTitle').textContent=S.sharing?'MV-Cargo is sharing':S.meet;renderTV();toast($('tToast'),S.sharing?'Laptop connected over HDMI':'Sharing stopped');
+    cap(S.sharing?'Sharing content':'Sharing stopped',S.sharing?'The laptop on the table appears on the TV, with people down the side. Tap Share Content again to stop.':'The TV goes back to the people view.');break;
+  case 'pip':S.pip=!S.pip;el.classList.toggle('act',S.pip);renderTV();
+    cap(S.pip?'Self view on':'Self view off',S.pip?'A small view of the room camera sits in the corner of the TV, so people see how they look to others.':'The self view is hidden, so the people on the call get the whole screen.');break;
+  case 'layout':$('lay').classList.add('on');cap('Change layout','Options open on the controller with the current one ticked. Pick one and the TV changes right away.');break;
+  case 'lay':S.layout=el.dataset.v;ctl.querySelectorAll('.opt').forEach(o=>o.classList.toggle('sel',o===el));renderTV();
+    cap(S.layout==='speaker'?'Speaker view':'Gallery view',S.layout==='speaker'?'Whoever is talking fills the TV, everyone else in a strip below.':'Everyone the same size. Good for discussions.');break;
+  case 'laydone':$('lay').classList.remove('on');break;
+  case 'leave':{const m=S.meet;S.meet=null;S.sharing=false;live(false);msg('You left '+m,'Rate the meeting on the controller',{stars:1});$('tStars').textContent='☆☆☆☆☆';show(ctl,'fb');S.stars=0;stars();$('chips').hidden=true;
+    cap('Left the meeting','Leave is red and set apart, so nobody taps it by mistake. The controller asks for a quick rating.');break}
+  case 'star':S.stars=+el.dataset.v;stars();$('chips').hidden=S.stars>3;$('tStars').textContent='★'.repeat(S.stars)+'☆'.repeat(5-S.stars);
+    cap(S.stars+' star'+(S.stars>1?'s':''),S.stars>3?'A good meeting takes one tap.':'A low rating asks what went wrong, with one-tap answers that feed IT\'s quality reports.');break;
+  case 'chip':el.classList.toggle('on');break;
+  case 'submit':show(ctl,'home');show(tv,'home');toast($('cToast'),'Thanks for the feedback');cap('Ready for the next meeting','Both screens reset. No sign out, nothing left behind.');break;
+  case 'share':show(ctl,'share');$('shA').hidden=false;$('shB').hidden=true;msg('Share to MV-Cargo','On your laptop, open share.bluejeans.com · code 482 913');cap('Share','No cables. The code shows on the controller and the TV, so anyone can share a laptop.');break;
+  case 'laptop':$('shA').hidden=true;$('shB').hidden=false;S.sharing=true;S.meet=S.meet||'Whiteboard review';S.t0=S.t0||Date.now();$('tTitle').textContent='Abhishek is sharing';renderTV();show(tv,'meet');
+    cap('Sharing on the TV','The laptop screen fills the TV with people down the side. Stop sharing is one big button.');break;
+  case 'stopshare':S.sharing=false;S.meet=null;show(ctl,'home');show(tv,'home');cap('Sharing stopped','The TV goes back to the home screen.');break;
+  case 'phone':toast($('cToast'),'Call +1 408 555 0199 · room code 4821',3000);msg('Use your phone','Call +1 408 555 0199 and enter room code 4821');setTimeout(()=>{if(!S.meet)show(tv,'home')},3200);
+    cap('Use Phone','For people dialling in: the number and room code show on both screens.');break;
+  case 'settings':S.tab='about';renderSet();show(ctl,'set');cap('Settings','A plain table for IT: what this room is, its default options, cameras and screens, and how it joins other services. The TV stays on the home screen.');break;
+  case 'tab':S.tab=el.dataset.v;renderSet();if(S.tab==='cmd')act('cmdopen');
+    const L={about:['About Rooms','Room name, hardware and versions, for whoever is fixing the room.'],def:['Default Options','How every meeting starts in this room. Try "Mute audio on entry", then join a meeting.'],av:['Audio and Video','Which camera, microphones and screens the room uses.'],ss:['Screen Share','Turn HDMI or wireless sharing on or off for this room.'],tp:['Third Party Meetings','How the room connects to other services: SIP or WebRTC.']};
+    if(L[S.tab])cap(...L[S.tab]);break;
+  case 'tg':S[el.dataset.g][el.dataset.k]=!S[el.dataset.g][el.dataset.k];renderSet();toast($('cToast'),'Saved');break;
+  case 'cmdopen':$('cmd').classList.add('on');cap('Connect to Command Center','IT opens a link and types the code. The room then shows up in their dashboard.');break;
+  case 'cmdx':$('cmd').classList.remove('on');S.tab='about';renderSet();break;
+  case 'report':toast($('cToast'),'Report sent to your IT team');cap('Report an issue','One button sends room logs to IT, so people do not have to explain what broke.');break;
+}}
+function stars(){$('fst').innerHTML=[1,2,3,4,5].map(v=>`<button data-a="star" data-v="${v}" class="${v<=S.stars?'on':''}" aria-label="${v} stars">★</button>`).join('')}
+$('pad').innerHTML=[1,2,3,4,5,6,7,8,9].map(k=>`<button data-a="key" data-k="${k}">${k}</button>`).join('')+'<button data-a="del" aria-label="Delete">⌫</button><button data-a="key" data-k="0">0</button><button class="go" data-a="idjoin">JOIN</button>';
+stars();
+ctl.addEventListener('click',e=>{const r=ctl.getBoundingClientRect(),d=document.createElement('i');d.className='tap';d.style.left=(e.clientX-r.left)+'px';d.style.top=(e.clientY-r.top)+'px';ctl.appendChild(d);setTimeout(()=>d.remove(),500);
+  const b=e.target.closest('[data-a]');if(b)act(b.dataset.a,b)});
+document.querySelectorAll('.volr').forEach(v=>{v.addEventListener('input',()=>{S.vol=+v.value;document.querySelectorAll('.volr').forEach(o=>o.value=S.vol);$('tVolB').style.height=S.vol+'%';$('tVol').classList.add('show');clearTimeout($('tVol')._t);$('tVol')._t=setTimeout(()=>$('tVol').classList.remove('show'),1200)});
+  v.addEventListener('change',()=>cap('Volume '+S.vol+'%','Drag on the controller and a volume bar shows on the TV, so the whole room sees the level change.'))});
+})();
+</script>
+
+</body></html>

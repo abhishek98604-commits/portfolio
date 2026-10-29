@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)https://abhishek98604-commits.github.io/health-feed-prototype/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Health Feed · Interactive Prototype</title>
+<meta name="description" content="Health Feed, a 2017 concept for articles written by doctors, rebuilt as a clickable prototype. Portfolio project by Abhishek Bora.">
+<script>document.documentElement.classList.add('embed')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fbfbfb; --card:#fff; --ink:#1e1e28; --ink2:#414146; --mute:#787887; --faint:#b4b4be; --line:#f0f0f5;
+  --icon:#c3c3c3; --coral:#fc7776; --coral2:#fe8b73; --heart:#fb7b74; --blue:#3e4bbe; --blue2:#6484f0; --tint:#f5f6ff;
+  --grad:linear-gradient(90deg,var(--coral),var(--coral2));
+  --shadow:0 11px 16px -4px rgba(148,148,148,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:#eef1fb;height:100%}
+body{font-family:"Open Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+img{display:block}
+svg{display:block}
+.app{position:relative;max-width:430px;margin:0 auto;min-height:100vh;background:var(--bg);overflow:hidden}
+html.embed body{background:var(--bg)}
+html.embed .app{max-width:none}
+
+/* ---------- screens ---------- */
+.screen{min-height:100vh;padding-bottom:28px;animation:in .28s ease}
+.screen.back{animation:inBack .28s ease}
+@keyframes in{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+@keyframes inBack{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:none}}
+
+/* header */
+.hdr{position:sticky;top:0;z-index:20;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:14px 20px 10px}
+.hdr h1{font-size:18px;font-weight:700;color:var(--ink2);letter-spacing:0}
+.hdr .ib{width:32px;height:32px;display:grid;place-items:center;border-radius:50%}
+.hdr .me{width:28px;height:28px;border-radius:50%;object-fit:cover}
+.hdr.scrolled{box-shadow:0 6px 12px -10px rgba(0,0,0,.25)}
+
+/* search */
+.search{margin:2px 20px 0;height:42px;background:#fff;border-radius:6px;box-shadow:0 3px 13px rgba(0,0,0,.06);display:flex;align-items:center;padding:0 12px 0 16px}
+.search input{flex:1;border:0;outline:0;font:inherit;font-size:14px;color:var(--ink);background:transparent;min-width:0}
+.search input::placeholder{color:rgba(30,30,40,.6)}
+.search .x{width:24px;height:24px;display:grid;place-items:center;color:var(--mute)}
+
+/* chips */
+.chips{display:flex;gap:10px;overflow-x:auto;padding:16px 20px 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;height:32px;padding:0 15px;border-radius:17px;font-size:13px;font-weight:700;color:var(--coral);background:#fff1ef;white-space:nowrap;transition:transform .15s}
+.chip.on{background:var(--grad);color:#fff;box-shadow:0 4px 10px -2px rgba(251,121,117,.4)}
+.chip:active{transform:scale(.96)}
+.chip .n{opacity:.85;font-weight:600}
+
+.sec{display:flex;align-items:baseline;justify-content:space-between;padding:22px 20px 0}
+.sec h2{font-size:14px;font-weight:700;color:var(--ink2)}
+.sec button{font-size:12px;font-weight:600;color:var(--coral)}
+
+/* article card */
+.list{padding:16px 20px 0;display:flex;flex-direction:column;gap:16px}
+.card{position:relative;background:var(--card);border-radius:8px;box-shadow:var(--shadow);overflow:hidden;cursor:pointer;transition:transform .15s}
+.card:active{transform:scale(.99)}
+.ph{position:relative;height:98px}
+.ph .img{position:absolute;inset:0;height:86px;overflow:hidden;background:var(--tint);clip-path:url(#curve)}
+.ph .img img{width:100%;height:100%;object-fit:cover}
+.ph .av{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 4px 8px rgba(0,0,0,.19)}
+.by{margin-top:6px;text-align:center;font-size:12px;color:var(--mute);padding:0 16px}
+.ttl{margin:4px 0 0;text-align:center;font-size:16px;line-height:22px;font-weight:400;color:var(--ink);padding:0 30px}
+.meta{display:flex;align-items:flex-end;justify-content:space-between;padding:12px 16px 14px}
+.rb .lbl{font-size:11px;color:var(--faint);margin-bottom:4px}
+.faces{display:flex;align-items:center}
+.faces img{width:19px;height:19px;border-radius:50%;object-fit:cover;border:1px solid #fff;margin-right:-4px}
+.faces .more{margin-left:0;width:24px;height:24px;border-radius:50%;background:var(--line);font-size:9px;font-weight:700;color:var(--mute);display:grid;place-items:center;position:relative;left:2px}
+.acts{display:flex;align-items:center;gap:14px;color:var(--mute);font-size:12px}
+.act{display:flex;align-items:center;gap:5px;min-height:28px}
+.act svg{width:17px;height:17px}
+.act.like.on svg path{fill:var(--heart);stroke:var(--heart)}
+.act.save.on svg path{fill:var(--blue);stroke:var(--blue)}
+.pop{animation:pop .35s ease}
+@keyframes pop{40%{transform:scale(1.35)}}
+
+/* doctors carousel */
+.docs{display:flex;gap:14px;overflow-x:auto;padding:14px 20px 20px;scrollbar-width:none;scroll-snap-type:x mandatory}
+.docs::-webkit-scrollbar{display:none}
+.doc{flex:none;width:130px;scroll-snap-align:start;background:#fff;border-radius:8px;box-shadow:var(--shadow);padding:14px 10px 14px;text-align:center;cursor:pointer}
+.doc img{width:44px;height:44px;border-radius:50%;object-fit:cover;margin:0 auto;box-shadow:0 7px 10px rgba(0,0,0,.2)}
+.doc b{display:block;margin-top:10px;font-size:12px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc span{display:block;font-size:12px;line-height:16px;color:var(--ink2)}
+.btn{height:28px;min-width:72px;padding:0 12px;border-radius:4px;background:var(--grad);color:#fff;font-size:12px;font-weight:700;box-shadow:0 3px 9px rgba(251,121,117,.35);transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:4px}
+.btn.on{background:#fff;color:var(--coral);box-shadow:inset 0 0 0 1.5px var(--coral)}
+.doc .btn{margin-top:12px}
+
+/* tip card */
+.tip{position:relative;overflow:hidden;margin:0;border-radius:8px;background:linear-gradient(120deg,#5d7cf0,#6f8df4 55%,#5b73ea);color:#fff;text-align:center;padding:20px 22px 16px}
+.tip::before,.tip::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.08)}
+.tip::before{width:170px;height:170px;right:-50px;top:-80px}
+.tip::after{width:120px;height:120px;left:-40px;bottom:-70px}
+.tip small{display:block;font-size:10.5px;font-weight:700;opacity:.75;letter-spacing:.2px}
+.tip p{position:relative;font-size:15px;line-height:20px;font-weight:700;margin-top:8px;min-height:40px}
+.tip .row{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:10px}
+.tip .row button{height:26px;padding:0 14px;border-radius:4px;background:rgba(255,255,255,.2);font-size:12px;font-weight:700}
+.tip .dots{position:relative;display:flex;gap:5px;justify-content:center;margin-top:12px}
+.tip .dots i{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4)}
+.tip .dots i.on{background:#fff}
+
+.empty{margin:30px 30px 0;text-align:center;color:var(--mute);font-size:13px;line-height:19px}
+.empty b{display:block;font-size:15px;color:var(--ink2);margin-bottom:6px}
+.empty .btn{margin-top:14px}
+.foot{margin:26px 20px 0;text-align:center;font-size:10.5px;line-height:15px;color:var(--faint)}
+
+/* ---------- article detail ---------- */
+.top{position:absolute;left:0;right:0;top:0;z-index:5;display:flex;justify-content:space-between;padding:12px 14px}
+.top .r{display:flex;gap:8px}
+.circ{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.circ.on svg path{fill:var(--blue);stroke:var(--blue)}
+.hero{position:relative;height:250px}
+.hero .img{position:absolute;inset:0;height:226px;clip-path:url(#curve);background:var(--tint)}
+.hero .img img{width:100%;height:100%;object-fit:cover}
+.hero .av{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:52px;height:52px;border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.2)}
+.art{padding:0 24px}
+.art .who{text-align:center;margin-top:8px}
+.art .who b{display:block;font-size:14px;color:var(--ink2);cursor:pointer}
+.art .who span{font-size:12px;color:var(--mute)}
+.art .who .btn{margin-top:10px}
+.art h1{font-size:21px;line-height:29px;font-weight:700;color:var(--ink);text-align:center;margin-top:18px}
+.art .info{text-align:center;font-size:12px;color:var(--faint);margin-top:6px}
+.art .body{margin-top:18px}
+.art .body p{font-size:15px;line-height:25px;color:#3a3a44;margin-top:14px}
+.art .body p:first-child{margin-top:0}
+.art .body h3{font-size:15px;font-weight:700;color:var(--ink2);margin-top:20px}
+.art .note{margin-top:22px;border-radius:8px;background:var(--tint);padding:12px 14px;font-size:12px;line-height:18px;color:var(--mute)}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.tags .chip{height:28px;font-size:12px;padding:0 12px}
+.bar{position:sticky;bottom:0;z-index:6;margin-top:22px;background:#fff;box-shadow:0 -6px 14px -8px rgba(0,0,0,.15);display:flex;align-items:center;justify-content:space-around;padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
+.bar .act{gap:6px;font-size:13px;padding:4px 8px}
+.bar .act svg{width:20px;height:20px}
+.cmts{padding:0 24px}
+.cmts h2,.morefrom h2{font-size:15px;font-weight:700;color:var(--ink2);margin-top:26px}
+.cmt{display:flex;gap:10px;margin-top:14px}
+.cmt img{width:30px;height:30px;border-radius:50%;object-fit:cover;flex:none}
+.cmt b{font-size:12px;color:var(--ink2)}
+.cmt .t{font-size:11px;color:var(--faint);margin-left:6px}
+.cmt p{font-size:13px;line-height:19px;color:#4b4b55;margin-top:2px}
+.cmt.doc-reply{margin-left:40px}
+.cmt.doc-reply b::after{content:"Author";font-size:9px;font-weight:700;color:#fff;background:var(--blue2);border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:1px}
+.add{display:flex;gap:10px;align-items:center;margin-top:16px}
+.add input{flex:1;height:40px;border-radius:20px;border:1px solid #e6e6ee;padding:0 16px;font:inherit;font-size:13px;outline:0;background:#fff}
+.add input:focus{border-color:var(--blue2)}
+.add button{height:36px;padding:0 14px;border-radius:18px;background:var(--grad);color:#fff;font-size:12px;font-weight:700}
+.morefrom{padding:0 24px}
+.mini{display:flex;gap:12px;align-items:center;margin-top:14px;cursor:pointer}
+.mini img{width:72px;height:56px;border-radius:6px;object-fit:cover;flex:none}
+.mini b{font-size:13px;line-height:18px;font-weight:600;color:var(--ink)}
+.mini span{display:block;font-size:11px;color:var(--faint);margin-top:3px}
+
+/* ---------- doctor profile ---------- */
+.plain{display:flex;align-items:center;gap:10px;padding:12px 14px}
+.plain h1{font-size:16px;font-weight:700;color:var(--ink2)}
+.pro{margin:6px 20px 0;background:#fff;border-radius:10px;box-shadow:var(--shadow);text-align:center;padding:22px 18px 18px}
+.pro img{width:78px;height:78px;border-radius:50%;object-fit:cover;margin:0 auto;box-shadow:0 8px 14px rgba(0,0,0,.2)}
+.pro h2{font-size:17px;font-weight:700;color:var(--ink2);margin-top:12px}
+.pro .sp{font-size:13px;color:var(--mute);margin-top:2px}
+.pro .bio{font-size:13px;line-height:19px;color:#4b4b55;margin-top:10px}
+.stats{display:flex;justify-content:center;gap:0;margin-top:14px}
+.stats div{padding:0 18px}
+.stats div+div{border-left:1px solid var(--line)}
+.stats b{display:block;font-size:16px;color:var(--ink2)}
+.stats span{font-size:11px;color:var(--faint)}
+.pro .btn{height:36px;min-width:150px;font-size:13px;margin-top:16px;border-radius:5px}
+.notify{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding:10px 12px;border-radius:8px;background:var(--tint);text-align:left;font-size:12px;line-height:17px;color:var(--mute)}
+.notify b{display:block;font-size:13px;color:var(--ink2)}
+.sw{flex:none;width:40px;height:24px;border-radius:12px;background:#d8d8e2;position:relative;transition:background .2s}
+.sw::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:transform .2s}
+.sw.on{background:var(--blue2)}
+.sw.on::after{transform:translateX(16px)}
+
+/* followed doctors list */
+.drow{display:flex;align-items:center;gap:12px;background:#fff;border-radius:8px;box-shadow:var(--shadow);padding:12px 14px;cursor:pointer}
+.drow img{width:44px;height:44px;border-radius:50%;object-fit:cover}
+.drow div{flex:1;min-width:0}
+.drow b{display:block;font-size:13px;color:var(--ink2)}
+.drow span{font-size:12px;color:var(--mute)}
+
+/* ---------- drawer ---------- */
+.scrim{position:fixed;inset:0;z-index:60;background:rgba(20,22,40,.35);opacity:0;pointer-events:none;transition:opacity .25s}
+.drawer{position:fixed;top:0;bottom:0;left:0;z-index:61;width:min(290px,78vw);background:#fff;transform:translateX(-102%);transition:transform .28s ease;padding:30px 0 20px;display:flex;flex-direction:column}
+.open .scrim{opacity:1;pointer-events:auto}
+.open .drawer{transform:none}
+.drawer .me{display:flex;gap:12px;align-items:center;padding:0 22px 20px;border-bottom:1px solid var(--line)}
+.drawer .me img{width:46px;height:46px;border-radius:50%;object-fit:cover}
+.drawer .me b{display:block;font-size:15px;color:var(--ink2)}
+.drawer .me span{font-size:12px;color:var(--mute)}
+.drawer nav{padding:10px 0}
+.drawer nav button{width:100%;display:flex;align-items:center;gap:14px;padding:13px 22px;font-size:14px;color:var(--ink2);text-align:left}
+.drawer nav button.on{color:var(--coral);font-weight:700;background:#fff6f5}
+.drawer nav .c{margin-left:auto;min-width:22px;height:20px;padding:0 6px;border-radius:10px;background:var(--line);font-size:11px;font-weight:700;color:var(--mute);display:grid;place-items:center}
+.drawer .fine{margin-top:auto;padding:0 22px;font-size:10.5px;line-height:15px;color:var(--faint)}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:78px;z-index:80;transform:translate(-50%,20px);opacity:0;background:#2a2c3e;color:#fff;font-size:12.5px;line-height:17px;padding:10px 16px;border-radius:20px;max-width:88%;text-align:center;transition:all .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+:focus-visible{outline:2px solid var(--blue2);outline-offset:2px;border-radius:6px}
+
+/* desktop note */
+.desk-note{display:none}
+@media (min-width:600px){
+  html:not(.embed) body{padding:28px 0}
+  html:not(.embed) .app{border-radius:24px;min-height:calc(100vh - 56px);box-shadow:0 20px 60px -20px rgba(40,50,120,.25)}
+  html:not(.embed) .desk-note{display:block;text-align:center;font-size:12px;color:#8a8fb0;margin-top:14px}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <clippath id="curve" clipPathUnits="objectBoundingBox">
+      <path d="M0,0 H1 V0.8 C1,0.8 0.78,1 0.5,1 C0.22,1 0,0.8 0,0.8 Z"></path>
+    </clippath>
+  </defs>
+</svg>
+
+<div class="app" id="app"><section class="screen" data-s="feed">
+    <header class="hdr" id="hdr"><button class="ib" data-menu="" aria-label="Open menu"><svg width="20" height="16" viewBox="0 0 20 16" fill="none" stroke="#414146" stroke-width="1.5" stroke-linecap="round"><path d="M1 1.5h18M1 8h13M1 14.5h18"></path></svg></button><h1>Health Feed</h1><img class="me" src="img/me.webp" alt="Your profile" data-menu=""></header>
+    <label class="search"><span class="sr">Search articles</span><input id="q" type="search" placeholder="Search.." value="" autocomplete="off"><button type="button" class="x" aria-label="Clear search" tabindex="-1"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#b4b4be" stroke-width="1.6"><circle cx="8.5" cy="8.5" r="6.5"></circle><path d="M13.5 13.5 18 18" stroke-linecap="round"></path></svg></button></label>
+    <div class="chips" id="chips"><button class="chip on" data-tag="all">All</button><button class="chip " data-tag="following">Following</button><button class="chip " data-tag="general health">#general health</button><button class="chip " data-tag="nutrition">#nutrition</button><button class="chip " data-tag="diabetes">#diabetes</button><button class="chip " data-tag="hypertension">#hypertension</button><button class="chip " data-tag="heart">#heart</button><button class="chip " data-tag="sleep">#sleep</button><button class="chip " data-tag="fitness">#fitness</button><button class="chip " data-tag="dental">#dental</button><button class="chip " data-tag="women’s health">#women’s health</button></div>
+    <div id="feedBody"><div class="list"><article class="card" data-open="eat-less" tabindex="0" role="link">
+    <div class="ph"><div class="img"><img src="img/a-roti.webp" alt="" loading="lazy"></div><img class="av" src="img/dr-suman.webp" alt=""></div>
+    <div class="by">By Dr Suman Singh, Physician</div>
+    <h3 class="ttl">Eating less not the best way to lose weight, study shows</h3>
+    <div class="meta"><div class="rb"><div class="lbl">Read By</div><div class="faces"><img src="img/r3.webp" alt=""><img src="img/r5.webp" alt=""><img src="img/r7.webp" alt=""><span class="more">+18</span></div></div><div class="acts">
+    <button class="act like " data-like="eat-less" aria-pressed="false" aria-label="Like"><svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>125</span></button>
+    <button class="act" data-cmt="eat-less" aria-label="Comments"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>8</span></button>
+    <button class="act save " data-save="eat-less" aria-pressed="false" aria-label="Save"><svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg></button>
+  </div></div>
+  </article><article class="card" data-open="wine" tabindex="0" role="link">
+    <div class="ph"><div class="img"><img src="img/a-wine.webp" alt="" loading="lazy"></div><img class="av" src="img/dr-harish.webp" alt=""></div>
+    <div class="by">By Dr Harish Dev, Dentist</div>
+    <h3 class="ttl">Skip the guilt: Wine could protect your oral health</h3>
+    <div class="meta"><div class="rb"><div class="lbl">Read By</div><div class="faces"><img src="img/r5.webp" alt=""><img src="img/r7.webp" alt=""><img src="img/r9.webp" alt=""><span class="more">+24</span></div></div><div class="acts">
+    <button class="act like " data-like="wine" aria-pressed="false" aria-label="Like"><svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>98</span></button>
+    <button class="act" data-cmt="wine" aria-label="Comments"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>11</span></button>
+    <button class="act save " data-save="wine" aria-pressed="false" aria-label="Save"><svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg></button>
+  </div></div>
+  </article></div><div class="sec"><h2>Doctors you may like</h2><button data-go="#/following">See all</button></div><div class="docs"><div class="doc" data-doc="fatima" tabindex="0" role="link"><img src="img/dr-fatima.webp" alt=""><b>Dr Fatima Shaikh</b><span>Dietician</span><span>27 Articles</span><button class="btn  " data-follow="fatima" aria-pressed="false">Follow</button></div><div class="doc" data-doc="nakul" tabindex="0" role="link"><img src="img/dr-nakul.webp" alt=""><b>Dr Nakul Sharma</b><span>Nutritionist</span><span>19 Articles</span><button class="btn  " data-follow="nakul" aria-pressed="false">Follow</button></div><div class="doc" data-doc="sushant" tabindex="0" role="link"><img src="img/dr-sushant.webp" alt=""><b>Dr Sushant Shah</b><span>Dentist</span><span>14 Articles</span><button class="btn  " data-follow="sushant" aria-pressed="false">Follow</button></div><div class="doc" data-doc="bindra" tabindex="0" role="link"><img src="img/dr-bindra.webp" alt=""><b>Dr Bindra Kaul</b><span>Cardiologist</span><span>22 Articles</span><button class="btn  " data-follow="bindra" aria-pressed="false">Follow</button></div><div class="doc" data-doc="sooka" tabindex="0" role="link"><img src="img/dr-sooka.webp" alt=""><b>Dr Sooka Menon</b><span>Gynecologist</span><span>18 Articles</span><button class="btn  " data-follow="sooka" aria-pressed="false">Follow</button></div><div class="doc" data-doc="arjun" tabindex="0" role="link"><img src="img/dr-arjun.webp" alt=""><b>Dr Arjun Mehta</b><span>Orthopedist</span><span>9 Articles</span><button class="btn  " data-follow="arjun" aria-pressed="false">Follow</button></div><div class="doc" data-doc="kavya" tabindex="0" role="link"><img src="img/dr-kavya.webp" alt=""><b>Dr Kavya Rao</b><span>Sleep Specialist</span><span>13 Articles</span><button class="btn  " data-follow="kavya" aria-pressed="false">Follow</button></div><div class="doc" data-doc="rohan" tabindex="0" role="link"><img src="img/dr-rohan.webp" alt=""><b>Dr Rohan Iyer</b><span>Endocrinologist</span><span>16 Articles</span><button class="btn  " data-follow="rohan" aria-pressed="false">Follow</button></div><div class="doc" data-doc="meera" tabindex="0" role="link"><img src="img/dr-meera.webp" alt=""><b>Dr Meera Nair</b><span>General Physician</span><span>24 Articles</span><button class="btn  " data-follow="meera" aria-pressed="false">Follow</button></div></div><div class="list" style="padding-top:0"><article class="card" data-open="fish-oil" tabindex="0" role="link">
+    <div class="ph"><div class="img"><img src="img/a-fishoil.webp" alt="" loading="lazy"></div><img class="av" src="img/dr-fatima.webp" alt=""></div>
+    <div class="by">By Dr Fatima Shaikh, Dietician</div>
+    <h3 class="ttl">Fish oil may not be as healthful as you think, study finds</h3>
+    <div class="meta"><div class="rb"><div class="lbl">Read By</div><div class="faces"><img src="img/r3.webp" alt=""><img src="img/r5.webp" alt=""><img src="img/r7.webp" alt=""><span class="more">+28</span></div></div><div class="acts">
+    <button class="act like " data-like="fish-oil" aria-pressed="false" aria-label="Like"><svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>212</span></button>
+    <button class="act" data-cmt="fish-oil" aria-label="Comments"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>10</span></button>
+    <button class="act save on" data-save="fish-oil" aria-pressed="true" aria-label="Save"><svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg></button>
+  </div></div>
+  </article><article class="card" data-open="vegan" tabindex="0" role="link">
+    <div class="ph"><div class="img"><img src="img/a-salad.webp" alt="" loading="lazy"></div><img class="av" src="img/dr-nakul.webp" alt=""></div>
+    <div class="by">By Dr Nakul Sharma, Nutritionist</div>
+    <h3 class="ttl">Going vegan could help to prevent type 2 diabetes</h3>
+    <div class="meta"><div class="rb"><div class="lbl">Read By</div><div class="faces"><img src="img/r6.webp" alt=""><img src="img/r8.webp" alt=""><img src="img/r10.webp" alt=""><span class="more">+64</span></div></div><div class="acts">
+    <button class="act like " data-like="vegan" aria-pressed="false" aria-label="Like"><svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>176</span></button>
+    <button class="act" data-cmt="vegan" aria-label="Comments"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>9</span></button>
+    <button class="act save " data-save="vegan" aria-pressed="false" aria-label="Save"><svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg></button>
+  </div></div>
+  </article><article class="card" data-open="walk" tabindex="0" role="link">
+    <div class="ph"><div class="img"><img src="img/photo-1529003532648-93cc0f57b7eb.jpg" alt="" loading="lazy"></div><img class="av" src="img/dr-bindra.webp" alt=""></div>
+    <div class="by">By Dr Bindra Kaul, Cardiologist</div>
+    <h3 class="ttl">A brisk 30-minute walk may lower your blood pressure</h3>
+    <div class="meta"><div class="rb"><div class="lbl">Read By</div><div class="faces"><img src="img/r5.webp" alt=""><img src="img/r7.webp" alt=""><img src="img/r9.webp" alt=""><span class="more">+41</span></div></div><div class="acts">
+    <button class="act like " data-like="walk" aria-pressed="false" aria-label="Like"><svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>341</span></button>
+    <button class="act" data-cmt="walk" aria-label="Comments"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>9</span></button>
+    <button class="act save " data-save="walk" aria-pressed="false" aria-label="Save"><svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg></button>
+  </div></div>
+  </article><div class="tip" id="tip"><small>Health Tips</small><p id="tipTxt">Dried fruit such as apricots are rich in vitamin B, iron, magnesium and calcium</p>
+    <div class="row"><button data-share-tip="">Share</button><button data-next-tip="">Next tip</button></div>
+    <div class="dots"><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></div></div><article class="card" data-open="chai" tabindex="0" role="link">
+    <div class="ph"><div class="img"><img src="img/photo-1619581073186-5b4ae1b0caad.jpg" alt="" loading="lazy"></div><img class="av" src="img/dr-rohan.webp" alt=""></div>
+    <div class="by">By Dr Rohan Iyer, Endocrinologist</div>
+    <h3 class="ttl">Two cups of sweet chai a day? Here’s what it does to your sugar</h3>
+    <div class="meta"><div class="rb"><div class="lbl">Read By</div><div class="faces"><img src="img/r5.webp" alt=""><img src="img/r7.webp" alt=""><img src="img/r9.webp" alt=""><span class="more">+52</span></div></div><div class="acts">
+    <button class="act like " data-like="chai" aria-pressed="false" aria-label="Like"><svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>287</span></button>
+    <button class="act" data-cmt="chai" aria-label="Comments"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>10</span></button>
+    <button class="act save " data-save="chai" aria-pressed="false" aria-label="Save"><svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg></button>
+  </div></div>
+  </article><article class="card" data-open="sleep" tabindex="0" role="link">
+    <div class="ph"><div class="img"><img src="img/photo-1675510183225-76c920848c29.jpg" alt="" loading="lazy"></div><img class="av" src="img/dr-kavya.webp" alt=""></div>
+    <div class="by">By Dr Kavya Rao, Sleep Specialist</div>
+    <h3 class="ttl">Scrolling in bed is costing you more sleep than you think</h3>
+    <div class="meta"><div class="rb"><div class="lbl">Read By</div><div class="faces"><img src="img/r6.webp" alt=""><img src="img/r8.webp" alt=""><img src="img/r10.webp" alt=""><span class="more">+77</span></div></div><div class="acts">
+    <button class="act like " data-like="sleep" aria-pressed="false" aria-label="Like"><svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>402</span></button>
+    <button class="act" data-cmt="sleep" aria-label="Comments"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>10</span></button>
+    <button class="act save " data-save="sleep" aria-pressed="false" aria-label="Save"><svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg></button>
+  </div></div>
+  </article><article class="card" data-open="back" tabindex="0" role="link">
+    <div class="ph"><div class="img"><img src="img/photo-1552196527-bffef41ef674.jpg" alt="" loading="lazy"></div><img class="av" src="img/dr-arjun.webp" alt=""></div>
+    <div class="by">By Dr Arjun Mehta, Orthopedist</div>
+    <h3 class="ttl">Five gentle stretches for desk-job back pain</h3>
+    <div class="meta"><div class="rb"><div class="lbl">Read By</div><div class="faces"><img src="img/r5.webp" alt=""><img src="img/r7.webp" alt=""><img src="img/r9.webp" alt=""><span class="more">+35</span></div></div><div class="acts">
+    <button class="act like " data-like="back" aria-pressed="false" aria-label="Like"><svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>233</span></button>
+    <button class="act" data-cmt="back" aria-label="Comments"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>11</span></button>
+    <button class="act save " data-save="back" aria-pressed="false" aria-label="Save"><svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg></button>
+  </div></div>
+  </article><article class="card" data-open="dengue" tabindex="0" role="link">
+    <div class="ph"><div class="img"><img src="img/photo-1698566445612-b6e552371334.jpg" alt="" loading="lazy"></div><img class="av" src="img/dr-meera.webp" alt=""></div>
+    <div class="by">By Dr Meera Nair, General Physician</div>
+    <h3 class="ttl">Monsoon fever? Warning signs of dengue you shouldn’t ignore</h3>
+    <div class="meta"><div class="rb"><div class="lbl">Read By</div><div class="faces"><img src="img/r1.webp" alt=""><img src="img/r3.webp" alt=""><img src="img/r5.webp" alt=""><span class="more">+96</span></div></div><div class="acts">
+    <button class="act like " data-like="dengue" aria-pressed="false" aria-label="Like"><svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>518</span></button>
+    <button class="act" data-cmt="dengue" aria-label="Comments"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>11</span></button>
+    <button class="act save " data-save="dengue" aria-pressed="false" aria-label="Save"><svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg></button>
+  </div></div>
+  </article><article class="card" data-open="ghee" tabindex="0" role="link">
+    <div class="ph"><div class="img"><img src="img/photo-1573812461383-e5f8b759d12e.jpg" alt="" loading="lazy"></div><img class="av" src="img/dr-bindra.webp" alt=""></div>
+    <div class="by">By Dr Bindra Kaul, Cardiologist</div>
+    <h3 class="ttl">Is ghee really bad for your heart? A cardiologist explains</h3>
+    <div class="meta"><div class="rb"><div class="lbl">Read By</div><div class="faces"><img src="img/r5.webp" alt=""><img src="img/r7.webp" alt=""><img src="img/r9.webp" alt=""><span class="more">+30</span></div></div><div class="acts">
+    <button class="act like " data-like="ghee" aria-pressed="false" aria-label="Like"><svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>189</span></button>
+    <button class="act" data-cmt="ghee" aria-label="Comments"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>12</span></button>
+    <button class="act save " data-save="ghee" aria-pressed="false" aria-label="Save"><svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg></button>
+  </div></div>
+  </article><article class="card" data-open="water" tabindex="0" role="link">
+    <div class="ph"><div class="img"><img src="img/photo-1624948465027-6f9b51067557.jpg" alt="" loading="lazy"></div><img class="av" src="img/dr-suman.webp" alt=""></div>
+    <div class="by">By Dr Suman Singh, Physician</div>
+    <h3 class="ttl">Do you really need eight glasses of water a day?</h3>
+    <div class="meta"><div class="rb"><div class="lbl">Read By</div><div class="faces"><img src="img/r6.webp" alt=""><img src="img/r8.webp" alt=""><img src="img/r10.webp" alt=""><span class="more">+22</span></div></div><div class="acts">
+    <button class="act like " data-like="water" aria-pressed="false" aria-label="Like"><svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>154</span></button>
+    <button class="act" data-cmt="water" aria-label="Comments"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>12</span></button>
+    <button class="act save " data-save="water" aria-pressed="false" aria-label="Save"><svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg></button>
+  </div></div>
+  </article><article class="card" data-open="brush" tabindex="0" role="link">
+    <div class="ph"><div class="img"><img src="img/photo-1607613009820-a29f7bb81c04.jpg" alt="" loading="lazy"></div><img class="av" src="img/dr-sushant.webp" alt=""></div>
+    <div class="by">By Dr Sushant Shah, Dentist</div>
+    <h3 class="ttl">Brushing for two minutes: the habit most of us skip</h3>
+    <div class="meta"><div class="rb"><div class="lbl">Read By</div><div class="faces"><img src="img/r6.webp" alt=""><img src="img/r8.webp" alt=""><img src="img/r10.webp" alt=""><span class="more">+19</span></div></div><div class="acts">
+    <button class="act like " data-like="brush" aria-pressed="false" aria-label="Like"><svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>97</span></button>
+    <button class="act" data-cmt="brush" aria-label="Comments"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>10</span></button>
+    <button class="act save " data-save="brush" aria-pressed="false" aria-label="Save"><svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg></button>
+  </div></div>
+  </article><article class="card" data-open="sun" tabindex="0" role="link">
+    <div class="ph"><div class="img"><img src="img/photo-1470252649378-9c29740c9fa8.jpg" alt="" loading="lazy"></div><img class="av" src="img/dr-rohan.webp" alt=""></div>
+    <div class="by">By Dr Rohan Iyer, Endocrinologist</div>
+    <h3 class="ttl">Morning sun and vitamin D: how much is enough?</h3>
+    <div class="meta"><div class="rb"><div class="lbl">Read By</div><div class="faces"><img src="img/r4.webp" alt=""><img src="img/r6.webp" alt=""><img src="img/r8.webp" alt=""><span class="more">+33</span></div></div><div class="acts">
+    <button class="act like " data-like="sun" aria-pressed="false" aria-label="Like"><svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>201</span></button>
+    <button class="act" data-cmt="sun" aria-label="Comments"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>9</span></button>
+    <button class="act save " data-save="sun" aria-pressed="false" aria-label="Save"><svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg></button>
+  </div></div>
+  </article><article class="card" data-open="iron" tabindex="0" role="link">
+    <div class="ph"><div class="img"><img src="img/photo-1574316071802-0d684efa7bf5.jpg" alt="" loading="lazy"></div><img class="av" src="img/dr-sooka.webp" alt=""></div>
+    <div class="by">By Dr Sooka Menon, Gynecologist</div>
+    <h3 class="ttl">Tired all the time? Iron-rich foods every woman should know</h3>
+    <div class="meta"><div class="rb"><div class="lbl">Read By</div><div class="faces"><img src="img/r5.webp" alt=""><img src="img/r7.webp" alt=""><img src="img/r9.webp" alt=""><span class="more">+26</span></div></div><div class="acts">
+    <button class="act like " data-like="iron" aria-pressed="false" aria-label="Like"><svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>167</span></button>
+    <button class="act" data-cmt="iron" aria-label="Comments"><svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg><span>10</span></button>
+    <button class="act save " data-save="iron" aria-pressed="false" aria-label="Save"><svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"></path></svg></button>
+  </div></div>
+  </article></div></div>
+    <p class="foot">Portfolio prototype of a 2017 concept. Sample articles written for this demo, not medical advice.<br>Photos: Unsplash.</p>
+  </section></div>
+<p class="desk-note">Health Feed · 2017 concept rebuilt as a clickable prototype. Sample articles, not medical advice.</p>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Menu">
+    <div class="me"><img src="img/me.webp" alt=""><div><b>Abhishek</b><span>Bangalore</span></div></div>
+    <nav>
+      <button data-go="#/" class="on"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="2.5" width="15" height="15" rx="3"></rect><path d="M6 7h8M6 10h8M6 13h5" stroke-linecap="round"></path></svg>Health Feed</button>
+      <button data-go="#/saved" class=""><svg width="16" height="18" viewBox="0 0 16 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke-linejoin="round"></path></svg>Saved articles<span class="c">1</span></button>
+      <button data-go="#/following" class=""><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.5" cy="7" r="3"></circle><path d="M2 17c.6-3 2.8-4.5 5.5-4.5S12.4 14 13 17" stroke-linecap="round"></path><circle cx="14.5" cy="7.5" r="2.3"></circle><path d="M14.5 12.3c2 .2 3.2 1.5 3.6 3.7" stroke-linecap="round"></path></svg>Doctors you follow<span class="c">0</span></button>
+    </nav>
+    <p class="fine">Health Feed concept, 2017. Rebuilt as an interactive portfolio prototype with sample content.</p></aside>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ---------------- data ---------------- */
+/* Photos from Unsplash (free to use), loaded from their CDN; the rest come from the original 2017 Figma file */
+const UNSPLASH = {'a-chai':'1619581073186-5b4ae1b0caad','a-dengue':'1698566445612-b6e552371334','a-ghee':'1573812461383-e5f8b759d12e','a-sleep':'1675510183225-76c920848c29','a-spinach':'1574316071802-0d684efa7bf5','a-sun':'1470252649378-9c29740c9fa8','a-teeth':'1607613009820-a29f7bb81c04','a-walk':'1529003532648-93cc0f57b7eb','a-water':'1624948465027-6f9b51067557','a-yoga':'1552196527-bffef41ef674'};
+const I = n => UNSPLASH[n] ? `img/photo-${UNSPLASH[n]}.jpg` : 'img/' + n + '.webp';
+const DOCS = {
+  suman:  {name:'Dr Suman Singh',   sp:'Physician',        img:'dr-suman',   arts:32, fol:4210, bio:'General physician with 12 years in family practice. Writes about weight, habits and everyday health.'},
+  harish: {name:'Dr Harish Dev',    sp:'Dentist',          img:'dr-harish',  arts:11, fol:1860, bio:'Dental surgeon. Believes most tooth problems start with habits we never think about.'},
+  fatima: {name:'Dr Fatima Shaikh', sp:'Dietician',        img:'dr-fatima',  arts:27, fol:5320, bio:'Clinical dietician focused on evidence over trends. Loves busting supplement myths.'},
+  nakul:  {name:'Dr Nakul Sharma',  sp:'Nutritionist',     img:'dr-nakul',   arts:19, fol:3075, bio:'Nutritionist working with people living with diabetes. Plant-forward, never preachy.'},
+  sushant:{name:'Dr Sushant Shah',  sp:'Dentist',          img:'dr-sushant', arts:14, fol:980,  bio:'Pediatric and family dentist. Short, practical tips for healthier teeth.'},
+  bindra: {name:'Dr Bindra Kaul',   sp:'Cardiologist',     img:'dr-bindra',  arts:22, fol:6140, bio:'Interventional cardiologist. Writes about keeping your heart healthy without giving up the food you love.'},
+  sooka:  {name:'Dr Sooka Menon',   sp:'Gynecologist',     img:'dr-sooka',   arts:18, fol:2890, bio:'Obstetrician and gynecologist. Writes about women’s health at every age.'},
+  arjun:  {name:'Dr Arjun Mehta',   sp:'Orthopedist',      img:'dr-arjun',   arts:9,  fol:1420, bio:'Spine and sports injury specialist. Desk workers are his favourite (and most frequent) patients.'},
+  kavya:  {name:'Dr Kavya Rao',     sp:'Sleep Specialist', img:'dr-kavya',   arts:13, fol:2250, bio:'Neurologist who runs a sleep clinic. Writes about rest, screens and why tired is not normal.'},
+  rohan:  {name:'Dr Rohan Iyer',    sp:'Endocrinologist',  img:'dr-rohan',   arts:16, fol:3380, bio:'Treats diabetes and thyroid conditions. Explains hormones in plain language.'},
+  meera:  {name:'Dr Meera Nair',    sp:'General Physician',img:'dr-meera',   arts:24, fol:4015, bio:'Internal medicine. Writes seasonal health guides and when-to-see-a-doctor checklists.'}
+};
+const TAGS = ['general health','nutrition','diabetes','hypertension','heart','sleep','fitness','dental','women’s health'];
+const FACES = ['r1','r2','r3','r4','r5','r6','r7','r8','r9','r10'];
+const ARTS = [
+ {id:'eat-less', doc:'suman', img:'a-roti', tags:['nutrition','general health'], likes:125, reads:18, mins:4, date:'2 days ago',
+  title:'Eating less not the best way to lose weight, study shows',
+  body:['Cutting portions feels like the obvious way to lose weight. A growing body of research suggests it is rarely enough on its own, and it is hard to keep up.',
+   '##What the study looked at','Researchers followed adults on calorie-restricted diets for a year. Most lost weight early, then slowed down or regained it as their bodies adapted and hunger went up.',
+   'The people who kept weight off tended to change what they ate rather than simply how much: more fibre, more protein and fewer ultra-processed snacks.',
+   '##What I tell my patients','Fill half your plate with vegetables, add a source of protein to every meal, and don’t skip breakfast if it makes you snack later. Small, steady changes beat crash diets.']},
+ {id:'wine', doc:'harish', img:'a-wine', tags:['dental'], likes:98, reads:24, mins:3, date:'3 days ago',
+  title:'Skip the guilt: Wine could protect your oral health',
+  body:['Compounds called polyphenols, found in red wine and grape seeds, may slow down some of the bacteria that cause gum disease, according to a lab study.',
+   'Before you pour a glass: this was tested on cells, not people, and alcohol also dries out your mouth and stains teeth.',
+   '##The takeaway','Enjoy wine in moderation if you already drink, but don’t start for your teeth. Brushing, flossing and regular cleanings do far more.']},
+ {id:'fish-oil', doc:'fatima', img:'a-fishoil', tags:['nutrition','heart'], likes:212, reads:28, mins:5, date:'4 days ago',
+  title:'Fish oil may not be as healthful as you think, study finds',
+  body:['Fish oil capsules are one of the most popular supplements in the country. Large reviews of the research have found they do little to prevent heart attacks in healthy people.',
+   '##Food still wins','Eating oily fish like mackerel or sardines twice a week is linked with better heart health. Capsules don’t seem to give the same benefit.',
+   'If your doctor prescribed omega-3s for a specific condition, keep taking them. Otherwise, spend the money on better food.']},
+ {id:'vegan', doc:'nakul', img:'a-salad', tags:['diabetes','nutrition'], likes:176, reads:64, mins:4, date:'5 days ago',
+  title:'Going vegan could help to prevent type 2 diabetes',
+  body:['People who eat mostly plants have a lower risk of type 2 diabetes, according to a review of studies covering more than 300,000 people.',
+   'The benefit came from healthy plant foods: whole grains, fruit, vegetables, nuts and legumes. Refined carbs and sugary drinks, even if they are vegan, did not help.',
+   '##You don’t have to go all in','Start by making two dinners a week fully plant-based, and swap white rice for millets or brown rice a few times a week.']},
+ {id:'walk', doc:'bindra', img:'a-walk', tags:['hypertension','heart','fitness'], likes:341, reads:41, mins:3, date:'Today',
+  title:'A brisk 30-minute walk may lower your blood pressure',
+  body:['You don’t need a gym to help your blood pressure. Regular brisk walking can lower it by a few points, which is similar to what some patients see with a first medicine.',
+   '##Brisk means brisk','Walk fast enough that you can talk but not sing. Aim for 30 minutes on most days. Three 10-minute walks count too.',
+   'If you already take blood pressure medicine, keep taking it and check your readings at home. Tell your doctor if you feel dizzy when you start exercising.']},
+ {id:'chai', doc:'rohan', img:'a-chai', tags:['diabetes','nutrition'], likes:287, reads:52, mins:4, date:'Today',
+  title:'Two cups of sweet chai a day? Here’s what it does to your sugar',
+  body:['Chai itself isn’t the problem. The two spoons of sugar in each cup add up to more than the added sugar many adults should have in a day.',
+   '##Try this for two weeks','Cut the sugar by half a spoon every few days. Most people stop noticing within two weeks. Skip the biscuits on the side, or switch to a handful of nuts.',
+   'If you have diabetes, check your sugar two hours after your usual chai and snack. The number often surprises people.']},
+ {id:'sleep', doc:'kavya', img:'a-sleep', tags:['sleep'], likes:402, reads:77, mins:5, date:'Yesterday',
+  title:'Scrolling in bed is costing you more sleep than you think',
+  body:['It isn’t only the blue light. Scrolling keeps your brain alert, and “one more video” pushes your bedtime later without you noticing.',
+   '##A simple wind-down','Put your phone on charge outside the bedroom. Keep the lights low for the last 30 minutes and read something on paper.',
+   'If you still lie awake most nights for more than a few weeks, talk to a doctor. Insomnia is common and very treatable.']},
+ {id:'back', doc:'arjun', img:'a-yoga', tags:['fitness'], likes:233, reads:35, mins:4, date:'Yesterday',
+  title:'Five gentle stretches for desk-job back pain',
+  body:['Sitting for hours tightens your hips and makes your back work harder. A few minutes of stretching every day can ease the stiffness.',
+   '##Try these','Cat-cow on your hands and knees. Child’s pose. A gentle seated twist. A standing hamstring stretch. A doorway chest stretch. Hold each one for 20 to 30 seconds and breathe slowly.',
+   'Stop if anything causes sharp pain, numbness or tingling in your legs, and see a doctor.']},
+ {id:'dengue', doc:'meera', img:'a-dengue', tags:['general health'], likes:518, reads:96, mins:5, date:'2 days ago',
+  title:'Monsoon fever? Warning signs of dengue you shouldn’t ignore',
+  body:['Dengue usually starts like any other fever: high temperature, headache, pain behind the eyes and body aches. Most people recover with rest and fluids.',
+   '##Go to a hospital if you notice','Severe stomach pain, vomiting that won’t stop, bleeding gums or nose, black stools, or feeling very drowsy or restless. These signs often appear as the fever is coming down.',
+   'Avoid painkillers like ibuprofen or aspirin unless a doctor says so; paracetamol is usually preferred. And empty any standing water around your home.']},
+ {id:'ghee', doc:'bindra', img:'a-ghee', tags:['heart','nutrition'], likes:189, reads:30, mins:3, date:'3 days ago',
+  title:'Is ghee really bad for your heart? A cardiologist explains',
+  body:['Ghee is mostly saturated fat, which can raise LDL cholesterol when you eat a lot of it. A teaspoon on your dal is not the same as frying everything in it.',
+   '##My rule of thumb','Use ghee for flavour, not as your everyday cooking fat. Cook with oils like mustard, groundnut or olive, and keep an eye on the total amount.',
+   'If you already have high cholesterol or heart disease, ask your doctor what amount is right for you.']},
+ {id:'water', doc:'suman', img:'a-water', tags:['general health'], likes:154, reads:22, mins:3, date:'4 days ago',
+  title:'Do you really need eight glasses of water a day?',
+  body:['The eight-glasses rule isn’t based on strong evidence. Your needs depend on the weather, how active you are and what you eat. Tea, milk and fruit count too.',
+   '##An easier check','If your urine is pale yellow and you rarely feel thirsty, you’re probably fine. In summer, or when you exercise, drink more.',
+   'People with kidney or heart conditions may need a specific limit, so follow your doctor’s advice.']},
+ {id:'brush', doc:'sushant', img:'a-teeth', tags:['dental'], likes:97, reads:19, mins:2, date:'5 days ago',
+  title:'Brushing for two minutes: the habit most of us skip',
+  body:['Most adults brush for less than a minute. Two minutes, twice a day, with a fluoride toothpaste is what actually protects your teeth.',
+   '##Make it stick','Use a timer or a song. Brush gently at the gumline, and replace your brush every three months or when the bristles splay.',
+   'Clean between your teeth once a day with floss or small brushes. Your gums will bleed less within a couple of weeks.']},
+ {id:'sun', doc:'rohan', img:'a-sun', tags:['general health'], likes:201, reads:33, mins:4, date:'1 week ago',
+  title:'Morning sun and vitamin D: how much is enough?',
+  body:['Vitamin D deficiency is surprisingly common, even in sunny countries, because many of us spend the day indoors.',
+   '##A few minutes helps','Around 15 to 20 minutes of sun on your arms and face a few times a week helps many people. Darker skin may need a little longer.',
+   'Don’t start high-dose supplements on your own. Ask your doctor for a simple blood test first.']},
+ {id:'iron', doc:'sooka', img:'a-spinach', tags:['women’s health','nutrition'], likes:167, reads:26, mins:4, date:'1 week ago',
+  title:'Tired all the time? Iron-rich foods every woman should know',
+  body:['Low iron is one of the most common reasons women feel tired, especially during the years they have periods and during pregnancy.',
+   '##Foods that help','Spinach and other greens, lentils, chana, rajma, jaggery, dates and eggs. Pair them with something rich in vitamin C, like lemon or amla, to help your body absorb the iron.',
+   'Avoid tea or coffee right after meals, as they can reduce absorption. If you feel breathless or very tired, get your haemoglobin checked.']}
+];
+const TIPS = [
+  'Dried fruit such as apricots are rich in vitamin B, iron, magnesium and calcium',
+  'Wash your hands for at least 20 seconds before every meal',
+  'Stand up and move for a few minutes for every hour you sit',
+  'Keep your phone out of the bedroom for deeper, longer sleep'
+];
+const SAMPLE_CMTS = [
+  ['r4','Priya','This was really easy to understand, thank you doctor.'],
+  ['r7','Karan','Sharing this with my parents.'],
+  ['r2','Ananya','Can you write more about this topic?']
+];
+
+/* ---------------- state ---------------- */
+const S = {
+  liked:new Set(), saved:new Set(['fish-oil']), follow:new Set(), notify:new Set(),
+  tag:'all', q:'', tip:0, comments:{}, stack:[]
+};
+const doc = id => DOCS[id];
+const art = id => ARTS.find(a=>a.id===id);
+const esc = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const fmt = n => n>=1000 ? (n/1000).toFixed(n>=10000?0:1).replace(/\.0$/,'')+'k' : String(n);
+const likes = a => a.likes + (S.liked.has(a.id)?1:0);
+const cmtCount = a => 8 + (a.likes%5) + (S.comments[a.id]||[]).length;
+const followers = id => doc(id).fol + (S.follow.has(id)?1:0);
+
+/* ---------------- icons ---------------- */
+const ic = {
+  menu:'<svg width="20" height="16" viewBox="0 0 20 16" fill="none" stroke="#414146" stroke-width="1.5" stroke-linecap="round"><path d="M1 1.5h18M1 8h13M1 14.5h18"/></svg>',
+  search:'<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#b4b4be" stroke-width="1.6"><circle cx="8.5" cy="8.5" r="6.5"/><path d="M13.5 13.5 18 18" stroke-linecap="round"/></svg>',
+  x:'<svg width="12" height="12" viewBox="0 0 12 12" stroke="#787887" stroke-width="1.6" stroke-linecap="round"><path d="M2 2l8 8M10 2l-8 8"/></svg>',
+  heart:'<svg viewBox="0 0 20 18" fill="none"><path d="M10 16.5S1.5 11.4 1.5 5.7A4.2 4.2 0 0 1 10 3.9a4.2 4.2 0 0 1 8.5 1.8c0 5.7-8.5 10.8-8.5 10.8Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+  cmt:'<svg viewBox="0 0 20 20" fill="none"><path d="M10 2a8 8 0 0 0-6.9 12L2 18l4.2-1.1A8 8 0 1 0 10 2Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+  save:'<svg viewBox="0 0 16 20" fill="none"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke="#b4b4be" stroke-width="1.4" stroke-linejoin="round"/></svg>',
+  share:'<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#414146" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13V2M6 5.5 10 2l4 3.5M4 10v7h12v-7"/></svg>',
+  back:'<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#414146" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 4 6.5 10l6 6"/></svg>',
+  check:'<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m2.5 6.2 2.3 2.3 4.7-5"/></svg>',
+  feed:'<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="2.5" width="15" height="15" rx="3"/><path d="M6 7h8M6 10h8M6 13h5" stroke-linecap="round"/></svg>',
+  bm:'<svg width="16" height="18" viewBox="0 0 16 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 1.5h12v17l-6-4.2-6 4.2v-17Z" stroke-linejoin="round"/></svg>',
+  ppl:'<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7.5" cy="7" r="3"/><path d="M2 17c.6-3 2.8-4.5 5.5-4.5S12.4 14 13 17" stroke-linecap="round"/><circle cx="14.5" cy="7.5" r="2.3"/><path d="M14.5 12.3c2 .2 3.2 1.5 3.6 3.7" stroke-linecap="round"/></svg>'
+};
+
+/* ---------------- templates ---------------- */
+function faces(a){
+  const s = a.id.length % 6;
+  const f = [FACES[s],FACES[s+2],FACES[s+4]];
+  return `<div class="rb"><div class="lbl">Read By</div><div class="faces">${f.map(x=>`<img src="${I(x)}" alt="">`).join('')}<span class="more">+${a.reads}</span></div></div>`;
+}
+function acts(a){
+  return `<div class="acts">
+    <button class="act like ${S.liked.has(a.id)?'on':''}" data-like="${a.id}" aria-pressed="${S.liked.has(a.id)}" aria-label="Like">${ic.heart}<span>${likes(a)}</span></button>
+    <button class="act" data-cmt="${a.id}" aria-label="Comments">${ic.cmt}<span>${cmtCount(a)}</span></button>
+    <button class="act save ${S.saved.has(a.id)?'on':''}" data-save="${a.id}" aria-pressed="${S.saved.has(a.id)}" aria-label="Save">${ic.save}</button>
+  </div>`;
+}
+function card(a){
+  const d = doc(a.doc);
+  return `<article class="card" data-open="${a.id}">
+    <div class="ph"><div class="img"><img src="${I(a.img)}" alt="" loading="lazy"></div><img class="av" src="${I(d.img)}" alt=""></div>
+    <div class="by">By ${esc(d.name)}, ${esc(d.sp)}</div>
+    <h3 class="ttl">${esc(a.title)}</h3>
+    <div class="meta">${faces(a)}${acts(a)}</div>
+  </article>`;
+}
+function followBtn(id, cls=''){
+  const on = S.follow.has(id);
+  return `<button class="btn ${cls} ${on?'on':''}" data-follow="${id}" aria-pressed="${on}">${on?ic.check+'Following':'Follow'}</button>`;
+}
+function docCard(id){
+  const d = doc(id);
+  return `<div class="doc" data-doc="${id}"><img src="${I(d.img)}" alt=""><b>${esc(d.name)}</b><span>${esc(d.sp)}</span><span>${d.arts} Articles</span>${followBtn(id)}</div>`;
+}
+function tipCard(){
+  return `<div class="tip" id="tip"><small>Health Tips</small><p id="tipTxt">${esc(TIPS[S.tip])}</p>
+    <div class="row"><button data-share-tip>Share</button><button data-next-tip>Next tip</button></div>
+    <div class="dots">${TIPS.map((_,i)=>`<i class="${i===S.tip?'on':''}"></i>`).join('')}</div></div>`;
+}
+
+/* ---------------- screens ---------------- */
+function filtered(){
+  const q = S.q.trim().toLowerCase();
+  return ARTS.filter(a=>{
+    if (S.tag==='following' && !S.follow.has(a.doc)) return false;
+    if (S.tag!=='all' && S.tag!=='following' && !a.tags.includes(S.tag)) return false;
+    if (!q) return true;
+    const d = doc(a.doc);
+    return (a.title+' '+d.name+' '+d.sp+' '+a.tags.join(' ')+' '+a.body.join(' ')).toLowerCase().includes(q);
+  });
+}
+function feedList(){
+  const list = filtered();
+  const plain = S.q || S.tag!=='all';
+  if (!list.length){
+    if (S.tag==='following' && !S.q) return `<div class="empty"><b>No articles yet</b>Follow doctors you trust and their new articles will show up here.<br><button class="btn" data-tag="all">Discover doctors</button></div>`;
+    return `<div class="empty"><b>Nothing found</b>Try another word, like “sleep”, “sugar” or a doctor’s name.</div>`;
+  }
+  let h = '';
+  list.forEach((a,i)=>{
+    h += card(a);
+    if (!plain && i===1) h += `</div><div class="sec"><h2>Doctors you may like</h2><button data-go="#/following">See all</button></div><div class="docs">${Object.keys(DOCS).filter(k=>!['suman','harish'].includes(k)).map(docCard).join('')}</div><div class="list" style="padding-top:0">`;
+    if (!plain && i===4) h += tipCard();
+  });
+  return h;
+}
+function chipsHtml(){
+  const all = [['all','All'],['following','Following'+(S.follow.size?` <span class="n">${S.follow.size}</span>`:'')], ...TAGS.map(t=>[t,'#'+t])];
+  return all.map(([k,l])=>`<button class="chip ${S.tag===k?'on':''}" data-tag="${esc(k)}">${l}</button>`).join('');
+}
+function feedScreen(){
+  return `<section class="screen" data-s="feed">
+    <header class="hdr" id="hdr"><button class="ib" data-menu aria-label="Open menu">${ic.menu}</button><h1>Health Feed</h1><img class="me" src="${I('me')}" alt="Your profile" data-menu></header>
+    <label class="search"><span class="sr">Search articles</span><input id="q" type="search" placeholder="Search.." value="${esc(S.q)}" autocomplete="off"><button type="button" class="x" ${S.q?'data-clear':''} aria-label="Clear search" tabindex="-1">${S.q?ic.x:ic.search}</button></label>
+    <div class="chips" id="chips">${chipsHtml()}</div>
+    <div id="feedBody"><div class="list">${feedList()}</div></div>
+    <p class="foot">Portfolio prototype of a 2017 concept. Sample articles written for this demo, not medical advice.<br>Photos: Unsplash.</p>
+  </section>`;
+}
+function articleScreen(id){
+  const a = art(id); if (!a) return feedScreen();
+  const d = doc(a.doc);
+  const body = a.body.map(p=>p.startsWith('##')?`<h3>${esc(p.slice(2))}</h3>`:`<p>${esc(p)}</p>`).join('');
+  const mine = (S.comments[id]||[]);
+  const cm = [SAMPLE_CMTS[a.likes%3], SAMPLE_CMTS[(a.likes+1)%3]];
+  const moreFrom = ARTS.filter(x=>x.doc===a.doc && x.id!==id);
+  const related = moreFrom.length ? moreFrom : ARTS.filter(x=>x.id!==id && x.tags.some(t=>a.tags.includes(t))).slice(0,3);
+  return `<section class="screen" data-s="art">
+    <div class="top"><button class="circ" data-back aria-label="Back">${ic.back}</button><div class="r"><button class="circ ${S.saved.has(id)?'on':''}" data-save="${id}" aria-label="Save">${ic.save.replace('viewBox','width="15" height="18" viewBox').replace('#b4b4be','#414146')}</button><button class="circ" data-share aria-label="Share">${ic.share}</button></div></div>
+    <div class="hero"><div class="img"><img src="${I(a.img)}" alt=""></div><img class="av" src="${I(d.img)}" alt=""></div>
+    <div class="art">
+      <div class="who"><b data-doc="${a.doc}">${esc(d.name)}</b><span>${esc(d.sp)}</span><br>${followBtn(a.doc)}</div>
+      <h1>${esc(a.title)}</h1>
+      <div class="info">${a.mins} min read · ${a.date}</div>
+      <div class="body">${body}</div>
+      <div class="tags">${a.tags.map(t=>`<button class="chip" data-tag-go="${esc(t)}">#${esc(t)}</button>`).join('')}</div>
+      <div class="note">Sample article written for this portfolio prototype. Always talk to your own doctor about your health.</div>
+    </div>
+    <div class="cmts" id="cmts"><h2>Comments (${cmtCount(a)})</h2>
+      ${cm.map(c=>`<div class="cmt"><img src="${I(c[0])}" alt=""><div><b>${c[1]}</b><span class="t">2h</span><p>${esc(c[2])}</p></div></div>`).join('')}
+      <div class="cmt doc-reply"><img src="${I(d.img)}" alt=""><div><b>${esc(d.name)}</b><p>Thank you! Glad it helped. Send me your questions and I’ll try to cover them next.</p></div></div>
+      ${mine.map(t=>`<div class="cmt"><img src="${I('me')}" alt=""><div><b>You</b><span class="t">now</span><p>${esc(t)}</p></div></div>`).join('')}
+      <form class="add" data-add="${id}"><input name="c" placeholder="Add a comment…" autocomplete="off" aria-label="Add a comment"><button>Post</button></form>
+    </div>
+    <div class="morefrom"><h2>${moreFrom.length?'More from '+esc(d.name):'Related articles'}</h2>
+      ${related.map(x=>`<div class="mini" data-open="${x.id}"><img src="${I(x.img)}" alt=""><div><b>${esc(x.title)}</b><span>${esc(doc(x.doc).name)} · ${x.mins} min read</span></div></div>`).join('')}
+    </div>
+    <div class="bar">
+      <button class="act like ${S.liked.has(id)?'on':''}" data-like="${id}" aria-pressed="${S.liked.has(id)}">${ic.heart}<span>${likes(a)}</span></button>
+      <button class="act" data-cmt="${id}">${ic.cmt}<span>${cmtCount(a)}</span></button>
+      <button class="act save ${S.saved.has(id)?'on':''}" data-save="${id}" aria-pressed="${S.saved.has(id)}">${ic.save}<span>${S.saved.has(id)?'Saved':'Save'}</span></button>
+      <button class="act" data-share>${ic.share.replace('#414146','#b4b4be')}<span>Share</span></button>
+    </div>
+  </section>`;
+}
+function doctorScreen(id){
+  const d = doc(id); if (!d) return feedScreen();
+  const list = ARTS.filter(a=>a.doc===id);
+  const on = S.follow.has(id);
+  return `<section class="screen" data-s="doc">
+    <div class="plain"><button class="circ" data-back aria-label="Back">${ic.back}</button><h1>Doctor</h1></div>
+    <div class="pro"><img src="${I(d.img)}" alt=""><h2>${esc(d.name)}</h2><div class="sp">${esc(d.sp)}</div><p class="bio">${esc(d.bio)}</p>
+      <div class="stats"><div><b>${d.arts}</b><span>Articles</span></div><div><b id="folN">${fmt(followers(id))}</b><span>Followers</span></div><div><b>4.8</b><span>Rating</span></div></div>
+      ${followBtn(id)}
+      ${on?`<div class="notify"><div><b>Notify me</b>Get an alert when ${esc(d.name.replace('Dr ','Dr. '))} posts a new article</div><button class="sw ${S.notify.has(id)?'on':''}" data-notify="${id}" role="switch" aria-checked="${S.notify.has(id)}" aria-label="Notify me"></button></div>`:''}
+    </div>
+    <div class="sec"><h2>Latest articles</h2></div>
+    <div class="list">${list.map(card).join('')}</div>
+  </section>`;
+}
+function savedScreen(){
+  const list = ARTS.filter(a=>S.saved.has(a.id));
+  return `<section class="screen" data-s="saved">
+    <div class="plain"><button class="circ" data-back aria-label="Back">${ic.back}</button><h1>Saved articles</h1></div>
+    <div class="list">${list.length?list.map(card).join(''):`<div class="empty"><b>Nothing saved yet</b>Tap the bookmark on any article to read it later.</div>`}</div>
+  </section>`;
+}
+function followingScreen(){
+  const ids = Object.keys(DOCS);
+  const mine = ids.filter(i=>S.follow.has(i)), rest = ids.filter(i=>!S.follow.has(i));
+  const row = id => { const d=doc(id); return `<div class="drow" data-doc="${id}"><img src="${I(d.img)}" alt=""><div><b>${esc(d.name)}</b><span>${esc(d.sp)} · ${d.arts} articles</span></div>${followBtn(id)}</div>`; };
+  return `<section class="screen" data-s="following">
+    <div class="plain"><button class="circ" data-back aria-label="Back">${ic.back}</button><h1>Doctors</h1></div>
+    ${mine.length?`<div class="sec" style="padding-top:6px"><h2>You follow</h2></div><div class="list">${mine.map(row).join('')}</div>`:''}
+    <div class="sec" style="padding-top:${mine.length?22:6}px"><h2>${mine.length?'More doctors':'Doctors on Health Feed'}</h2></div><div class="list">${rest.map(row).join('')}</div>
+  </section>`;
+}
+
+/* ---------------- router ---------------- */
+const app = document.getElementById('app');
+let lastDepth = 0;
+function depth(h){ return h==='#/'||h===''?0 : (h.startsWith('#/saved')||h.startsWith('#/following'))?1 : h.startsWith('#/d/')?2 : 3; }
+function render(keepScroll){
+  const h = location.hash || '#/';
+  let html;
+  if (h.startsWith('#/a/')) html = articleScreen(decodeURIComponent(h.slice(4)));
+  else if (h.startsWith('#/d/')) html = doctorScreen(h.slice(4));
+  else if (h==='#/saved') html = savedScreen();
+  else if (h==='#/following') html = followingScreen();
+  else html = feedScreen();
+  app.innerHTML = html;
+  const d = depth(h);
+  if (!keepScroll){ const s = app.firstElementChild; if (d<lastDepth) s.classList.add('back'); window.scrollTo(0, h==='#/'? (S.feedY||0) : 0); }
+  else app.firstElementChild.style.animation='none';
+  lastDepth = d;
+  renderDrawer();
+}
+window.addEventListener('hashchange', ()=>render(false));
+function go(h){ if ((location.hash||'#/')==='#/') S.feedY = window.scrollY; location.hash = h; }
+function back(){ if (history.length>1 && S.navigated) history.back(); else location.hash='#/'; }
+
+/* partial updates so the feed doesn't jump */
+function refreshFeed(){
+  const b = document.getElementById('feedBody'); if (!b) return render(true);
+  b.innerHTML = `<div class="list">${feedList()}</div>`;
+  const c = document.getElementById('chips'); if (c) c.innerHTML = chipsHtml();
+}
+function update(){
+  const h = location.hash||'#/';
+  if (h==='#/' ) refreshFeed(); else { const y=scrollY; render(true); scrollTo(0,y); }
+}
+
+/* ---------------- drawer & toast ---------------- */
+function renderDrawer(){
+  const h = location.hash||'#/';
+  document.getElementById('drawer').innerHTML = `
+    <div class="me"><img src="${I('me')}" alt=""><div><b>Abhishek</b><span>Bangalore</span></div></div>
+    <nav>
+      <button data-go="#/" class="${h==='#/'?'on':''}">${ic.feed}Health Feed</button>
+      <button data-go="#/saved" class="${h==='#/saved'?'on':''}">${ic.bm}Saved articles<span class="c">${S.saved.size}</span></button>
+      <button data-go="#/following" class="${h==='#/following'?'on':''}">${ic.ppl}Doctors you follow<span class="c">${S.follow.size}</span></button>
+    </nav>
+    <p class="fine">Health Feed concept, 2017. Rebuilt as an interactive portfolio prototype with sample content.</p>`;
+}
+function menu(open){ document.body.classList.toggle('open', open); }
+let tt;
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('show'),2200); }
+
+/* ---------------- events ---------------- */
+document.addEventListener('click', e=>{
+  const t = e.target.closest('button,[data-open],[data-doc],[data-menu]');
+  if (!t) return;
+  const ds = t.dataset;
+  if (e.target.closest('#scrim')) return;
+  if ('menu' in ds){ menu(true); return; }
+  if (ds.go){ menu(false); if ((location.hash||'#/')!==ds.go){ S.navigated=true; go(ds.go);} else window.scrollTo(0,0); return; }
+  if ('back' in ds){ back(); return; }
+  if (ds.like){ e.stopPropagation(); const id=ds.like; S.liked.has(id)?S.liked.delete(id):S.liked.add(id);
+    document.querySelectorAll(`[data-like="${id}"]`).forEach(b=>{b.classList.toggle('on',S.liked.has(id)); b.setAttribute('aria-pressed',S.liked.has(id)); b.querySelector('span').textContent=likes(art(id)); const s=b.querySelector('svg'); s.classList.remove('pop'); void s.offsetWidth; s.classList.add('pop');});
+    return; }
+  if (ds.save){ e.stopPropagation(); const id=ds.save; const on=!S.saved.has(id); on?S.saved.add(id):S.saved.delete(id);
+    if ((location.hash||'#/')==='#/saved'){ update(); } else document.querySelectorAll(`[data-save="${id}"]`).forEach(b=>{b.classList.toggle('on',on); b.setAttribute('aria-pressed',on); const sp=b.querySelector('span'); if(sp) sp.textContent=on?'Saved':'Save'; const s=b.querySelector('svg'); s.classList.remove('pop'); void s.offsetWidth; s.classList.add('pop');});
+    toast(on?'Saved. Find it under Saved articles in the menu.':'Removed from saved'); renderDrawer(); return; }
+  if (ds.cmt){ e.stopPropagation(); if (!(location.hash||'').startsWith('#/a/')){ S.navigated=true; S.jumpCmts=true; go('#/a/'+ds.cmt); } else document.getElementById('cmts').scrollIntoView({behavior:'smooth'}); return; }
+  if (ds.follow){ e.stopPropagation(); const id=ds.follow; const on=!S.follow.has(id); on?S.follow.add(id):(S.follow.delete(id),S.notify.delete(id));
+    toast(on?`Following ${doc(id).name}. New articles will show in Following.`:`Unfollowed ${doc(id).name}`);
+    const h=location.hash||'#/';
+    if (h==='#/'){ document.querySelectorAll(`[data-follow="${id}"]`).forEach(b=>{b.outerHTML=followBtn(id);}); const c=document.getElementById('chips'); if(c) c.innerHTML=chipsHtml(); if (S.tag==='following') refreshFeed(); }
+    else update();
+    renderDrawer(); return; }
+  if (ds.notify){ const id=ds.notify; const on=!S.notify.has(id); on?S.notify.add(id):S.notify.delete(id); t.classList.toggle('on',on); t.setAttribute('aria-checked',on); toast(on?'You’ll be notified about new articles':'Notifications off'); return; }
+  if (ds.tag!==undefined){ S.tag=ds.tag; refreshFeed(); window.scrollTo({top:0,behavior:'smooth'}); const on=document.querySelector('.chip.on'); if(on) on.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'}); return; }
+  if (ds.tagGo){ S.tag=ds.tagGo; S.q=''; S.feedY=0; S.navigated=true; go('#/'); return; }
+  if ('clear' in ds){ S.q=''; const q=document.getElementById('q'); q.value=''; t.removeAttribute('data-clear'); t.innerHTML=ic.search; refreshFeed(); q.focus(); return; }
+  if ('nextTip' in ds){ S.tip=(S.tip+1)%TIPS.length; const p=document.getElementById('tip'); if(p) p.outerHTML=tipCard(); return; }
+  if ('shareTip' in ds || 'share' in ds){ toast('Link copied. (Sharing is a demo in this prototype.)'); return; }
+  if (ds.open){ S.navigated=true; go('#/a/'+ds.open); return; }
+  if (ds.doc){ S.navigated=true; go('#/d/'+ds.doc); return; }
+});
+document.getElementById('scrim').addEventListener('click', ()=>menu(false));
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') menu(false); if(e.key==='Enter' && e.target.matches('[data-open],[data-doc]')) e.target.click(); });
+document.addEventListener('input', e=>{
+  if (e.target.id!=='q') return;
+  S.q = e.target.value;
+  const x = e.target.parentElement.querySelector('.x');
+  if (S.q){ x.setAttribute('data-clear',''); x.innerHTML=ic.x; } else { x.removeAttribute('data-clear'); x.innerHTML=ic.search; }
+  const b=document.getElementById('feedBody'); b.innerHTML=`<div class="list">${feedList()}</div>`;
+});
+document.addEventListener('submit', e=>{
+  const f = e.target.closest('[data-add]'); if (!f) return; e.preventDefault();
+  const v = f.c.value.trim(); if (!v) return;
+  (S.comments[f.dataset.add] = S.comments[f.dataset.add]||[]).push(v);
+  const y=scrollY; render(true); scrollTo(0,y); toast('Comment posted');
+});
+window.addEventListener('scroll', ()=>{ const h=document.getElementById('hdr'); if(h) h.classList.toggle('scrolled', scrollY>8); }, {passive:true});
+/* make cards keyboard reachable */
+new MutationObserver(()=>document.querySelectorAll('[data-open]:not([tabindex]),[data-doc]:not(button):not([tabindex])').forEach(el=>{el.tabIndex=0; el.setAttribute('role','link');})).observe(app,{childList:true,subtree:true});
+
+render(false);
+const _r = render;
+render = function(k){ _r(k); if (S.jumpCmts){ S.jumpCmts=false; setTimeout(()=>{const c=document.getElementById('cmts'); if(c) c.scrollIntoView({behavior:'smooth'});},250);} };
+</script>
+
+
+</body></html>

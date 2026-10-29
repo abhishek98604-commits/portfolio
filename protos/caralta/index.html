@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<!-- saved from url=(0058)https://abhishek98604-commits.github.io/caralta-prototype/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Caralta · Interactive Prototype</title>
+<meta name="description" content="Caralta, a car expense tracker designed at Clarice Technologies, rebuilt as a clickable prototype. Portfolio project by Abhishek Bora.">
+<script>document.documentElement.classList.add('embed')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gas:#4264fb; --svc:#33c376; --rep:#ff5353; --ink:#1e1e28; --ink2:#2d2d32; --mute:#787887; --faint:#b4b4be; --line:#eaeaea; --bg:#fff; --soft:#f6f6f6; --link:#337db3;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:#ececec;height:100%}
+body{font-family:"Nunito Sans","Avenir Next",Avenir,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink2);-webkit-font-smoothing:antialiased;font-size:15px}
+button,input,textarea,select{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+img,svg{display:block}
+.app{position:relative;max-width:430px;margin:0 auto;height:100vh;background:var(--bg);overflow:hidden;display:flex;flex-direction:column}
+html.embed body{background:#fff}
+html.embed .app{max-width:none}
+
+/* top bar */
+.bar{flex:none;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;border-bottom:1px solid var(--line);background:#fff;position:relative;z-index:5}
+.bar h1{font-size:20px;font-weight:600;color:var(--ink)}
+.carbtn{font:inherit;color:inherit;display:flex;align-items:center;gap:6px;height:40px;padding:0 10px 0 14px;border-radius:20px}
+.carbtn:active,.carbtn[aria-expanded=true]{background:var(--soft)}
+.carbtn svg{transition:transform .2s}
+.carbtn[aria-expanded=true] svg{transform:rotate(180deg)}
+.cars{margin-top:12px}
+.carrow{width:100%;display:flex;align-items:center;gap:14px;padding:10px 4px;border-bottom:1px solid var(--line);text-align:left;font:inherit;color:inherit}
+.carrow img,.carrow .th{width:72px;height:54px;border-radius:6px;object-fit:cover;flex:none;background:var(--soft);display:grid;place-items:center}
+.carrow .t{flex:1;min-width:0}
+.carrow b{display:block;font-size:16px;font-weight:700;color:var(--ink)}
+.carrow small{display:block;font-size:13px;color:var(--mute);margin-top:2px}
+.carrow .ck{width:24px;height:24px;border-radius:50%;background:var(--ink2);display:grid;place-items:center;flex:none}
+.carrow.add{border:0;color:var(--mute);font-weight:700;font-size:14px}
+.carrow.add .th{border:1.5px dashed #cfd2d8;background:#fff;color:#9aa0ab}
+.bar h1 small{font-size:11px;color:var(--faint);font-weight:700}
+.ib{width:44px;height:44px;display:grid;place-items:center;border-radius:50%;position:relative}
+.ib:active{background:var(--soft)}
+.badge{position:absolute;top:6px;right:6px;min-width:17px;height:17px;border-radius:9px;background:var(--gas);color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center;padding:0 4px;box-shadow:0 0 0 2px #fff}
+
+/* pager */
+.pager{flex:1;display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.pager::-webkit-scrollbar{display:none}
+.page{flex:none;width:100%;height:100%;overflow-y:auto;scroll-snap-align:start;scroll-snap-stop:always;position:relative}
+.dots{flex:none;display:flex;justify-content:center;gap:0;padding:6px 0 10px;background:#fff}
+.dots button{padding:6px 5px}
+.dots i{display:block;width:6px;height:6px;border-radius:50%;background:#d6d6dc;transition:all .2s}
+.dots button.on i{background:var(--ink2);width:16px;border-radius:3px}
+
+/* overview */
+.hero{text-align:center;padding:22px 16px 8px}
+.carimg{width:160px;height:120px;margin:0 auto;border-radius:6px;object-fit:cover;box-shadow:0 6px 16px -8px rgba(0,0,0,.4);background:var(--soft)}
+.carph{width:160px;height:120px;margin:0 auto;border-radius:6px;background:linear-gradient(180deg,#f3f5f8,#e4e8ee);display:grid;place-items:center}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);align-items:stretch;margin:18px 4px 0}
+.stat{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;padding:6px 4px;font:inherit;color:inherit;border-radius:8px;position:relative}
+.stat+.stat::before{content:"";position:absolute;left:0;top:10px;bottom:10px;border-left:1px solid var(--line)}
+.stat small{display:block;font-size:12px;line-height:16px;color:var(--mute);white-space:nowrap}
+.stat b{display:block;font-size:16px;line-height:22px;font-weight:700;color:var(--ink2);white-space:nowrap}
+button.stat:active{background:var(--soft)}
+.mon{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;border-top:1px solid var(--line);margin-top:16px}
+.mon h2{font-size:16px;font-weight:600;color:#000}
+.mon button{width:40px;height:40px;display:grid;place-items:center;border-radius:50%}
+.mon button:disabled{opacity:.25}
+.seg{display:flex;height:4px;background:var(--line)}
+.seg i{display:block;height:100%;transition:width .4s ease}
+.cats{padding:8px 0 4px}
+.cat{width:100%;display:flex;align-items:center;gap:14px;padding:11px 20px;text-align:left}
+.cat:active{background:var(--soft)}
+.cat .n{flex:1;font-size:15px;color:#000}
+.cat .v{font-size:15px;color:#000}
+.cat .pc{font-size:12px;color:var(--faint);width:40px;text-align:right}
+.tot{display:flex;justify-content:space-between;padding:12px 20px 18px 62px;font-size:15px;color:#000}
+.tot b{font-weight:800}
+.tip{margin:6px 16px 20px;padding:12px 14px;border-radius:10px;background:#f2fbff;font-size:13px;line-height:19px;color:#2f5f82;display:flex;gap:10px;align-items:flex-start}
+
+/* icons in circles */
+.ci{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center}
+.ci.fill.gas{background:var(--gas)} .ci.fill.service{background:var(--svc)} .ci.fill.repair{background:var(--rep)}
+.ci.line{border:1.5px solid currentColor;background:#fff}
+.ci.line.gas{color:var(--gas)} .ci.line.service{color:var(--svc)} .ci.line.repair{color:var(--rep)}
+
+/* expenses */
+.th{display:flex;justify-content:space-between;align-items:center;padding:16px 20px 14px 60px;font-size:15px;color:#000}
+.th b{font-size:16px;font-weight:800}
+.filters{display:flex;gap:8px;padding:10px 16px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.fc{flex:none;height:30px;padding:0 13px;border-radius:15px;border:1.5px solid var(--line);font-size:13px;font-weight:700;color:var(--mute);display:flex;align-items:center;gap:6px}
+.fc i{width:8px;height:8px;border-radius:50%}
+.fc.on{border-color:var(--ink2);color:var(--ink2)}
+.ex{width:100%;display:flex;align-items:center;gap:14px;padding:13px 20px;border-bottom:1px solid var(--line);text-align:left;background:#fff;animation:rowin .3s ease}
+@keyframes rowin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.ex:active{background:var(--soft)}
+.ex .t{flex:1;min-width:0}
+.ex b{display:block;font-size:15px;font-weight:600;color:#000}
+.ex small{display:block;font-size:12px;color:var(--mute);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ex .v{font-size:15px;color:#000}
+.ex.new{background:#f4fff8}
+.empty{text-align:center;color:var(--mute);font-size:14px;padding:30px 20px}
+.addwrap{position:sticky;bottom:0;display:flex;justify-content:center;padding:18px 0 16px;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 40%)}
+.pill{height:46px;padding:0 24px;border-radius:24px;border:1.5px solid #000;background:#fff;font-size:15px;font-weight:800;color:#000;display:inline-flex;align-items:center;gap:8px}
+.pill:active{transform:scale(.97)}
+.pill.dark{background:var(--ink2);color:#fff;border-color:var(--ink2)}
+
+/* picker (fab expansion) */
+.pick{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:88px;background:rgba(255,255,255,.8);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .2s}
+.pick.on{opacity:1;pointer-events:auto}
+.pick .row{display:flex;gap:14px}
+.big{width:74px;height:74px;border-radius:50%;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:700;box-shadow:0 10px 22px -8px rgba(0,0,0,.35);transform:translateY(30px) scale(.5);opacity:0;transition:transform .35s cubic-bezier(.2,.9,.3,1.3),opacity .2s}
+.big.gas{background:var(--gas)} .big.service{background:var(--svc)} .big.repair{background:var(--rep)}
+.pick.on .big{transform:none;opacity:1}
+.pick.on .big:nth-child(2){transition-delay:.04s}
+.pick.on .big:nth-child(3){transition-delay:.08s}
+.xbtn{margin-top:22px;width:46px;height:46px;border-radius:50%;border:1.5px solid #000;background:#fff;display:grid;place-items:center}
+.pick h3{font-size:14px;color:var(--mute);font-weight:700;margin-bottom:16px}
+
+/* add form (full screen) */
+.form{position:fixed;inset:0;z-index:55;max-width:430px;margin:0 auto;background:#fff;transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
+html.embed .form{max-width:none}
+.form.on{transform:none}
+.ftop{display:flex;align-items:center;justify-content:space-between;padding:22px 34px 10px}
+.circ{width:48px;height:48px;border-radius:50%;display:grid;place-items:center}
+.circ.o{border:1.5px solid #000}
+.circ.d{background:var(--ink2)}
+.circ.d:disabled{opacity:.3}
+.circ.big2{width:78px;height:78px;color:#fff;flex-direction:column;display:flex;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:700}
+.circ.big2.gas{background:var(--gas)} .circ.big2.service{background:var(--svc)} .circ.big2.repair{background:var(--rep)}
+.fields{padding:18px 38px 0}
+.f{margin-top:18px;border-bottom:1.5px solid var(--line)}
+.f:focus-within{border-color:var(--ink2)}
+.f label{display:block;font-size:11px;color:#343c4d}
+.f input,.f select{width:100%;border:0;outline:0;background:transparent;font-size:17px;color:#343c4d;padding:6px 0 8px}
+.f input::placeholder{color:#b9bcc4}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.sugs{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.sugs button{height:30px;padding:0 12px;border-radius:15px;background:var(--soft);font-size:13px;color:var(--ink2)}
+.photo{margin-top:22px;display:flex;align-items:center;gap:10px;color:var(--link);font-size:14px;font-weight:700}
+.photo .ph{width:52px;height:52px;border-radius:8px;border:1.5px dashed #c9ccd4;display:grid;place-items:center}
+.photo .ph.ok{border:0;background:linear-gradient(135deg,#e9edf4,#dfe5ee)}
+.fnote{font-size:12px;color:var(--faint);padding:20px 38px 0}
+
+/* map */
+.map{position:absolute;inset:0;overflow:hidden;background:#eef0f2}
+.world{position:absolute;left:0;top:0;transform-origin:0 0;transition:transform .55s cubic-bezier(.3,.8,.3,1)}
+.world svg.base{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.rt-case{stroke:#fff;stroke-width:9;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.rt{stroke:#4264fb;stroke-width:5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.rt.prev{stroke:#7d95ff}
+.navcar{position:absolute;z-index:3;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:#4264fb;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3);display:grid;place-items:center}
+.dir{position:absolute;left:0;right:0;bottom:0;z-index:4;background:#fff;border-radius:16px 16px 0 0;box-shadow:0 -6px 20px rgba(0,0,0,.12);padding:14px 18px 16px;max-height:52%;display:flex;flex-direction:column;transform:translateY(110%);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.dir.on{transform:none}
+.dir .hd{display:flex;align-items:flex-start;gap:10px}
+.dir .hd .t{flex:1}
+.dir .eta{font-size:20px;font-weight:800;color:var(--svc)}
+.dir .eta span{color:var(--mute);font-weight:600;font-size:15px}
+.dir .via{font-size:13px;color:var(--mute);margin-top:2px}
+.dir .x{width:32px;height:32px;border-radius:50%;background:var(--soft);display:grid;place-items:center;flex:none}
+.steps{list-style:none;overflow-y:auto;margin:10px -18px 0;padding:0 18px;border-top:1px solid var(--line)}
+.steps li{display:flex;gap:14px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink2)}
+.steps li:last-child{border:0}
+.steps li .ic{width:28px;height:28px;flex:none;display:grid;place-items:center}
+.steps li .tx{flex:1}
+.steps li small{display:block;font-size:12px;color:var(--mute);margin-top:1px}
+.steps li.cur{color:#000;font-weight:700}
+.dir .go{display:flex;gap:10px;margin-top:12px}
+.dir .go button{flex:1;height:42px;border-radius:21px;font:inherit;font-weight:800;font-size:14px}
+.dir .go .start{background:#4264fb;color:#fff}
+.dir .go .sec{border:1.5px solid var(--ink2);color:var(--ink2)}
+.banner{position:absolute;left:10px;right:10px;top:10px;z-index:5;background:#1f7a4d;color:#fff;border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;box-shadow:0 6px 16px rgba(0,0,0,.2);transform:translateY(-140%);transition:transform .3s}
+.banner.on{transform:none}
+.banner b{display:block;font-size:17px;font-weight:800;line-height:22px}
+.banner small{display:block;font-size:13px;opacity:.85}
+.mchips{position:absolute;left:12px;right:12px;top:12px;display:flex;gap:8px;z-index:3}
+.mchip{height:32px;padding:0 12px;border-radius:16px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:13px;font-weight:700;color:var(--mute);display:flex;align-items:center;gap:6px}
+.mchip i{width:9px;height:9px;border-radius:50%}
+.mchip.on{color:var(--ink2)}
+.pin{position:absolute;z-index:2;transform:translate(-50%,-50%);transition:transform .2s}
+.pin .ci{width:34px;height:34px;box-shadow:0 3px 8px rgba(0,0,0,.2)}
+.pin.sel{transform:translate(-50%,-50%) scale(1.25);z-index:3}
+.pin.hide{display:none}
+.me{position:absolute;z-index:2;transform:translate(-50%,-50%)}
+.me span{display:block;width:30px;height:30px;border-radius:50%;background:#000;border:3px solid #fff;box-shadow:0 0 0 8px rgba(66,100,251,.15);display:grid;place-items:center}
+.pcard{position:absolute;left:0;right:0;bottom:0;z-index:4;background:#fff;box-shadow:0 -4px 16px rgba(0,0,0,.08);padding:14px 18px 16px;display:flex;align-items:center;gap:10px;transform:translateY(110%);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.pcard.on{transform:none}
+.pcard .t{flex:1;min-width:0}
+.pcard b{display:block;font-size:14px;font-weight:800;color:#343c4d}
+.pcard small{display:block;font-size:13px;color:#343c4d;line-height:18px}
+.pcard .mini{width:60px;height:34px;border-radius:17px;border:1.5px solid #000;display:grid;place-items:center;background:#fff}
+
+/* sheets, drawer, toast */
+.scrim{position:fixed;inset:0;z-index:60;background:rgba(20,20,28,.4);opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:61;max-width:430px;margin:0 auto;background:#fff;border-radius:18px 18px 0 0;padding:10px 20px calc(20px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);max-height:85vh;overflow:auto}
+html.embed .sheet{max-width:none}
+.sheet.on{transform:none}
+.grab{width:40px;height:4px;border-radius:2px;background:#ddd;margin:0 auto 14px}
+.sheet h3{font-size:18px;font-weight:800;color:#000}
+.rem{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
+.rem:last-child{border:0}
+.rem b{display:block;font-size:14px;color:#000}
+.rem span{font-size:13px;color:var(--mute);line-height:18px}
+.rem .when{margin-left:auto;font-size:12px;font-weight:800;white-space:nowrap}
+.det{display:flex;align-items:center;gap:14px;margin-top:6px}
+.det .ci{width:48px;height:48px}
+.det b{font-size:20px;color:#000;font-weight:800}
+.kv{margin-top:14px}
+.kv div{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kv span{color:var(--mute)}
+.acts2{display:flex;gap:10px;margin-top:18px}
+.acts2 button{flex:1;height:44px;border-radius:22px;font-weight:800;font-size:14px}
+.acts2 .del{color:var(--rep);border:1.5px solid var(--rep)}
+.acts2 .ok{background:var(--ink2);color:#fff}
+.drawer{position:fixed;top:0;bottom:0;left:0;z-index:61;width:min(282px,80vw);background:#f7f7f7;transform:translateX(-102%);transition:transform .28s ease;display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.drawer .prof{padding:30px 24px 22px}
+.drawer .prof img{width:54px;height:54px;border-radius:50%;object-fit:cover}
+.drawer .prof b{display:block;font-size:17px;font-weight:600;color:var(--ink2);margin-top:12px}
+.drawer .prof span{font-size:13px;color:var(--ink2)}
+.drawer nav button{width:100%;display:flex;align-items:center;gap:16px;height:52px;padding:0 24px;font-size:14px;color:var(--ink2);text-align:left}
+.drawer nav button.on{background:var(--ink2);color:#fafafa}
+.drawer nav button.on svg{color:#fafafa}
+.drawer nav svg{color:#999}
+.drawer hr{border:0;border-top:1px solid #e6e6e6;margin:10px 0}
+.drawer .fine{margin-top:auto;padding:0 24px 20px;font-size:11px;line-height:16px;color:var(--faint)}
+.toast{position:fixed;left:50%;bottom:84px;z-index:95;transform:translate(-50%,16px);opacity:0;background:#1e1e28;color:#fff;font-size:13px;line-height:18px;padding:10px 16px;border-radius:20px;max-width:86%;text-align:center;transition:all .25s;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+:focus-visible{outline:2px solid var(--gas);outline-offset:2px;border-radius:8px}
+.desk-note{display:none}
+@media (min-width:600px){
+  html:not(.embed) body{padding:28px 0}
+  html:not(.embed) .app{border-radius:24px;height:calc(100vh - 56px);max-height:880px;box-shadow:0 20px 60px -20px rgba(0,0,0,.3)}
+  html:not(.embed) .desk-note{display:block;text-align:center;font-size:12px;color:#8a8a94;margin-top:14px}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="bar">
+    <button class="ib" data-menu="" aria-label="Open menu"><svg width="18" height="14" viewBox="0 0 18 14" fill="none" stroke="#2d2d32" stroke-width="1.5" stroke-linecap="round"><path d="M1 1h16M1 7h16M1 13h16"></path></svg></button>
+    <h1><button class="carbtn" data-switch="" aria-haspopup="dialog" aria-expanded="false" aria-label="Accord, switch car"><span id="carName">Accord</span><svg width="12" height="8" viewBox="0 0 12 8" fill="none" stroke="#2d2d32" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m1 1.5 5 5 5-5"></path></svg></button></h1>
+    <button class="ib" data-bell="" aria-label="Reminders"><svg width="18" height="20" viewBox="0 0 18 20" fill="#2d2d32"><path d="M9 20a2.3 2.3 0 0 0 2.3-2.3H6.7A2.3 2.3 0 0 0 9 20Zm7-6V9a7 7 0 0 0-5.3-6.8V1.7a1.7 1.7 0 0 0-3.4 0v.5A7 7 0 0 0 2 9v5l-2 2v1h18v-1l-2-2Z"></path></svg><span class="badge" id="bellN">3</span></button>
+  </header>
+  <main class="pager" id="pager" aria-label="Screens">
+    <section class="page" id="p0" aria-label="Overview">
+    <div class="hero">
+      <img class="carimg" src="img/accord.webp" alt="Honda Accord 2.4 · 2016">
+      <div class="stats">
+        <div class="stat"><small>Distance driven</small><b>19,640 Kms</b></div>
+        <button class="stat" data-page="1"><small>Spent in 2017</small><b>₹92K</b></button>
+        <div class="stat"><small>Valued at</small><b>₹21.5 Lac</b></div>
+      </div>
+    </div>
+    <div class="mon"><button data-mon="-1" aria-label="Previous month"><svg width="10" height="18" viewBox="0 0 10 18" fill="none" stroke="#b4b4be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1 1 9l8 8"></path></svg></button><h2>November</h2><button data-mon="1" aria-label="Next month"><svg width="10" height="18" viewBox="0 0 10 18" fill="none" stroke="#b4b4be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m1 1 8 8-8 8"></path></svg></button></div>
+    <div class="seg" aria-hidden="true"><i style="width:90.00285632676378%;background:#4264fb"></i><i style="width:6.426735218508997%;background:#33c376"></i><i style="width:3.5704084547272212%;background:#ff5353"></i></div>
+    <div class="cats"><button class="cat" data-cat="gas"><span class="ci fill gas"><svg width="15" height="16" viewBox="0 0 15 16" fill="none" stroke="#fff" stroke-width="1.4" stroke-linejoin="round"><path d="M2 15V2.5A1.5 1.5 0 0 1 3.5 1h5A1.5 1.5 0 0 1 10 2.5V15M1 15h10M3.5 3.5h5v3.5h-5z"></path><path d="M10 6h1.3A1.2 1.2 0 0 1 12.5 7.2v4.3a1 1 0 0 0 2 0V5L12.8 3.2" stroke-linecap="round"></path></svg></span><span class="n">Gas</span><span class="pc">90%</span><span class="v">₹6,302</span></button><button class="cat" data-cat="service"><span class="ci fill service"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h9v2.5H3zM5 9v2.5h5V9M7.5 11.5V15"></path><path d="M5 1.5l.5 1.5M8 1v1.6M11 1.5l-.5 1.5M4 4.3l.8.8M11 4.3l-.8.8"></path></svg></span><span class="n">Service</span><span class="pc">6%</span><span class="v">₹450</span></button><button class="cat" data-cat="repair"><span class="ci fill repair"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 1.5a3 3 0 0 0-2.8 4L1.8 11.4a1.4 1.4 0 0 0 2 2l5.8-5.9a3 3 0 0 0 4-2.8l-1.8 1.8-1.7-.4-.4-1.7 1.8-1.8Z"></path><path d="m2.5 2.5 4 4M1.5 4.5l3-3M10 10l4 4"></path></svg></span><span class="n">Repairs</span><span class="pc">4%</span><span class="v">₹250</span></button></div>
+    <div class="tot"><span>Total Expenses</span><b>₹7,002</b></div>
+    <div class="tip"><span>💡</span><span>Gas was your biggest cost in November. Tap a category to see every expense.</span></div></section>
+    <section class="page" id="p1" aria-label="Expenses">
+    <div class="mon" style="margin-top:0;border-top:0"><button data-mon="-1" aria-label="Previous month"><svg width="10" height="18" viewBox="0 0 10 18" fill="none" stroke="#b4b4be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1 1 9l8 8"></path></svg></button><h2>November</h2><button data-mon="1" aria-label="Next month"><svg width="10" height="18" viewBox="0 0 10 18" fill="none" stroke="#b4b4be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m1 1 8 8-8 8"></path></svg></button></div>
+    <div class="th" style="border-top:1px solid var(--line)"><span>Total Expenses</span><b>₹7,002</b></div>
+    <div class="seg" aria-hidden="true"><i style="width:90.00285632676378%;background:#4264fb"></i><i style="width:6.426735218508997%;background:#33c376"></i><i style="width:3.5704084547272212%;background:#ff5353"></i></div>
+    <div class="filters"><button class="fc on" data-filter="all">All</button><button class="fc " data-filter="gas"><i style="background:#4264fb"></i>Gas</button><button class="fc " data-filter="service"><i style="background:#33c376"></i>Service</button><button class="fc " data-filter="repair"><i style="background:#ff5353"></i>Repair</button></div>
+    <button class="ex " data-exp="33"><span class="ci line gas"><svg width="15" height="16" viewBox="0 0 15 16" fill="none" stroke="#4264fb" stroke-width="1.4" stroke-linejoin="round"><path d="M2 15V2.5A1.5 1.5 0 0 1 3.5 1h5A1.5 1.5 0 0 1 10 2.5V15M1 15h10M3.5 3.5h5v3.5h-5z"></path><path d="M10 6h1.3A1.2 1.2 0 0 1 12.5 7.2v4.3a1 1 0 0 0 2 0V5L12.8 3.2" stroke-linecap="round"></path></svg></span><span class="t"><b>Petrol · 29.0 L</b><small>Shell, Koramangala • 21 Nov</small></span><span class="v">₹2,056</span></button><button class="ex " data-exp="50"><span class="ci line repair"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#ff5353" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 1.5a3 3 0 0 0-2.8 4L1.8 11.4a1.4 1.4 0 0 0 2 2l5.8-5.9a3 3 0 0 0 4-2.8l-1.8 1.8-1.7-.4-.4-1.7 1.8-1.8Z"></path><path d="m2.5 2.5 4 4M1.5 4.5l3-3M10 10l4 4"></path></svg></span><span class="t"><b>Puncture repair</b><small>Raju Tyres • 17 Nov</small></span><span class="v">₹250</span></button><button class="ex " data-exp="32"><span class="ci line gas"><svg width="15" height="16" viewBox="0 0 15 16" fill="none" stroke="#4264fb" stroke-width="1.4" stroke-linejoin="round"><path d="M2 15V2.5A1.5 1.5 0 0 1 3.5 1h5A1.5 1.5 0 0 1 10 2.5V15M1 15h10M3.5 3.5h5v3.5h-5z"></path><path d="M10 6h1.3A1.2 1.2 0 0 1 12.5 7.2v4.3a1 1 0 0 0 2 0V5L12.8 3.2" stroke-linecap="round"></path></svg></span><span class="t"><b>Petrol · 29.3 L</b><small>HP, Adugodi • 13 Nov</small></span><span class="v">₹2,074</span></button><button class="ex " data-exp="31"><span class="ci line gas"><svg width="15" height="16" viewBox="0 0 15 16" fill="none" stroke="#4264fb" stroke-width="1.4" stroke-linejoin="round"><path d="M2 15V2.5A1.5 1.5 0 0 1 3.5 1h5A1.5 1.5 0 0 1 10 2.5V15M1 15h10M3.5 3.5h5v3.5h-5z"></path><path d="M10 6h1.3A1.2 1.2 0 0 1 12.5 7.2v4.3a1 1 0 0 0 2 0V5L12.8 3.2" stroke-linecap="round"></path></svg></span><span class="t"><b>Petrol · 30.6 L</b><small>Indian Oil, Ejipura • 6 Nov</small></span><span class="v">₹2,172</span></button><button class="ex " data-exp="44"><span class="ci line service"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#33c376" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h9v2.5H3zM5 9v2.5h5V9M7.5 11.5V15"></path><path d="M5 1.5l.5 1.5M8 1v1.6M11 1.5l-.5 1.5M4 4.3l.8.8M11 4.3l-.8.8"></path></svg></span><span class="t"><b>Car wash</b><small>Sparkle Car Spa • 5 Nov</small></span><span class="v">₹450</span></button>
+    <div class="addwrap"><button class="pill" data-add="">Add Expense</button></div></section>
+    <section class="page" id="p2" aria-label="Nearby"><div class="map" id="map">
+    <div class="world" id="world" style="width: 400px; height: 720px; transform: translate(0px, -61.5px) scale(1.075);"><svg class="base" viewBox="0 0 400 720" aria-hidden="true">
+    <style>.sl{font:700 8px 'Nunito Sans',sans-serif;fill:#9ba1ab;letter-spacing:.3px}.al{font:800 10px 'Nunito Sans',sans-serif;fill:#b3b8c1;letter-spacing:2px;text-anchor:middle}</style>
+    <rect x="-400" y="-400" width="1200" height="1520" fill="#eef0f2"></rect><rect x="-185.0" y="-185.0" width="34.2" height="36.0" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="-93.0" width="35.2" height="39.4" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="-47.0" width="31.6" height="36.2" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="-1.0" width="32.3" height="32.4" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="45.0" width="36.2" height="39.3" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="-185.0" width="33.1" height="39.9" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="-139.0" width="31.3" height="33.5" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="-93.0" width="34.3" height="34.5" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="-1.0" width="35.1" height="33.6" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="45.0" width="31.5" height="34.4" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="-185.0" width="36.3" height="37.3" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="-93.0" width="33.0" height="32.1" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="-47.0" width="31.3" height="37.2" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="-1.0" width="34.5" height="38.8" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="-185.0" width="31.5" height="32.5" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="-139.0" width="32.5" height="39.4" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="-93.0" width="36.4" height="36.2" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="-1.0" width="32.9" height="39.3" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="45.0" width="31.3" height="36.3" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="-139.0" width="34.8" height="34.5" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="-93.0" width="31.4" height="40.0" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="-47.0" width="32.6" height="33.6" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="-1.0" width="36.5" height="34.4" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="115.0" width="32.6" height="32.6" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="153.7" width="36.5" height="26.2" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="115.0" width="34.7" height="30.0" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="153.7" width="31.4" height="31.3" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="192.3" width="32.7" height="24.8" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="115.0" width="34.8" height="25.2" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="192.3" width="34.6" height="28.8" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="115.0" width="32.5" height="26.2" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="153.7" width="31.5" height="27.2" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="192.3" width="35.0" height="32.6" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="153.7" width="36.3" height="24.8" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="192.3" width="32.4" height="29.8" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="255.0" width="31.5" height="30.0" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="293.7" width="35.1" height="31.3" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="255.0" width="36.2" height="25.2" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="293.7" width="32.3" height="32.1" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="332.3" width="31.6" height="28.8" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="255.0" width="33.2" height="26.2" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="332.3" width="36.1" height="32.6" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="255.0" width="34.1" height="31.3" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="293.7" width="31.2" height="24.8" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="332.3" width="33.3" height="29.8" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="255.0" width="35.4" height="32.1" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="332.3" width="33.9" height="25.1" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="395.0" width="31.2" height="25.2" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="433.7" width="33.4" height="32.1" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="433.7" width="33.8" height="27.2" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="472.3" width="31.2" height="32.6" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="395.0" width="31.9" height="31.3" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="433.7" width="35.7" height="24.8" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="395.0" width="35.7" height="32.1" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="433.7" width="31.9" height="28.8" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="472.3" width="31.9" height="25.1" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="395.0" width="33.8" height="27.2" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="472.3" width="35.6" height="26.3" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="535.0" width="31.8" height="40.5" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="588.0" width="32.0" height="41.5" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="588.0" width="35.4" height="39.1" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="535.0" width="31.2" height="46.4" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="588.0" width="34.1" height="43.2" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="588.0" width="33.2" height="47.0" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="535.0" width="32.3" height="39.1" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="588.0" width="36.2" height="44.2" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="665.0" width="33.1" height="33.6" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="706.0" width="31.3" height="27.1" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="747.0" width="34.3" height="32.2" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="829.0" width="35.1" height="27.1" rx="3" fill="#e2e5e9"></rect><rect x="-185.0" y="870.0" width="31.5" height="32.0" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="665.0" width="36.3" height="34.4" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="747.0" width="33.0" height="27.4" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="788.0" width="31.3" height="34.3" rx="3" fill="#e2e5e9"></rect><rect x="-141.8" y="829.0" width="34.4" height="31.3" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="665.0" width="31.5" height="29.5" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="706.0" width="32.5" height="35.0" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="747.0" width="36.4" height="28.6" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="829.0" width="32.9" height="35.0" rx="3" fill="#e2e5e9"></rect><rect x="-98.6" y="870.0" width="31.3" height="28.8" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="706.0" width="34.8" height="32.2" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="747.0" width="31.4" height="33.8" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="788.0" width="32.6" height="27.1" rx="3" fill="#e2e5e9"></rect><rect x="-55.4" y="829.0" width="36.4" height="32.0" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="665.0" width="31.4" height="31.2" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="706.0" width="34.7" height="27.4" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="788.0" width="34.7" height="31.3" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="829.0" width="31.4" height="27.4" rx="3" fill="#e2e5e9"></rect><rect x="-12.2" y="870.0" width="32.7" height="34.2" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="-185.0" width="31.1" height="40.0" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="-93.0" width="27.8" height="34.4" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="-47.0" width="26.1" height="40.0" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="-1.0" width="29.2" height="33.8" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="-185.0" width="26.3" height="37.2" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="-139.0" width="27.3" height="38.8" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="-93.0" width="31.2" height="32.1" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="-1.0" width="27.7" height="38.9" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="45.0" width="26.1" height="32.2" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="115.0" width="29.6" height="29.8" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="192.3" width="29.4" height="24.8" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="115.0" width="27.3" height="25.1" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="153.7" width="26.3" height="32.0" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="192.3" width="29.7" height="29.0" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="255.0" width="28.0" height="25.1" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="332.3" width="30.9" height="29.0" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="255.0" width="28.9" height="26.3" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="293.7" width="26.0" height="27.0" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="332.3" width="28.1" height="32.7" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="535.0" width="26.0" height="45.8" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="588.0" width="28.9" height="39.1" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="588.0" width="28.0" height="43.3" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="665.0" width="26.3" height="34.3" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="706.0" width="27.3" height="31.3" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="747.0" width="31.2" height="27.4" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="829.0" width="27.7" height="31.5" rx="3" fill="#e2e5e9"></rect><rect x="55.0" y="870.0" width="26.1" height="27.3" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="706.0" width="29.7" height="35.0" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="747.0" width="26.2" height="28.8" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="788.0" width="27.4" height="29.2" rx="3" fill="#e2e5e9"></rect><rect x="93.0" y="829.0" width="31.2" height="35.0" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="-139.0" width="34.7" height="38.9" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="-93.0" width="31.2" height="32.2" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="-47.0" width="32.4" height="36.8" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="-1.0" width="36.2" height="39.0" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="-185.0" width="31.2" height="32.4" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="-139.0" width="34.5" height="39.2" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="-47.0" width="34.5" height="32.3" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="-1.0" width="31.2" height="39.1" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="45.0" width="32.5" height="36.7" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="153.7" width="36.1" height="31.9" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="192.3" width="32.2" height="29.2" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="115.0" width="31.1" height="26.4" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="153.7" width="32.9" height="26.9" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="255.0" width="35.2" height="26.4" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="332.3" width="33.8" height="32.7" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="255.0" width="31.9" height="31.6" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="293.7" width="31.6" height="24.8" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="332.3" width="35.3" height="29.5" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="535.0" width="32.1" height="46.2" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="588.0" width="36.0" height="43.5" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="535.0" width="34.9" height="41.2" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="588.0" width="31.3" height="47.0" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="665.0" width="31.2" height="29.2" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="706.0" width="34.5" height="35.0" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="788.0" width="34.5" height="29.1" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="829.0" width="31.2" height="35.0" rx="3" fill="#e2e5e9"></rect><rect x="155.0" y="870.0" width="32.5" height="29.0" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="665.0" width="36.3" height="27.2" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="706.0" width="32.5" height="31.8" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="747.0" width="31.2" height="34.0" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="788.0" width="34.6" height="27.2" rx="3" fill="#e2e5e9"></rect><rect x="198.0" y="870.0" width="34.4" height="34.1" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="-139.0" width="32.5" height="39.1" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="-93.0" width="31.2" height="36.7" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="-47.0" width="34.6" height="32.2" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="45.0" width="34.4" height="36.8" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="-185.0" width="32.6" height="33.9" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="-93.0" width="36.2" height="40.0" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="-47.0" width="32.4" height="34.0" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="-1.0" width="31.2" height="33.9" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="45.0" width="34.7" height="40.0" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="153.7" width="34.0" height="26.7" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="192.3" width="31.1" height="32.7" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="115.0" width="31.4" height="31.7" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="153.7" width="35.1" height="24.9" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="293.7" width="35.6" height="24.9" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="332.3" width="31.8" height="29.3" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="255.0" width="31.0" height="31.8" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="293.7" width="33.4" height="29.3" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="395.0" width="35.7" height="31.8" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="472.3" width="33.2" height="24.9" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="395.0" width="31.5" height="26.7" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="433.7" width="32.0" height="32.7" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="472.3" width="35.8" height="26.7" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="535.0" width="34.2" height="41.1" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="535.0" width="32.7" height="39.2" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="588.0" width="31.1" height="43.7" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="665.0" width="32.6" height="27.2" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="747.0" width="36.2" height="34.1" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="788.0" width="32.4" height="27.3" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="829.0" width="31.2" height="31.5" rx="3" fill="#e2e5e9"></rect><rect x="265.0" y="870.0" width="34.7" height="34.2" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="665.0" width="34.3" height="31.7" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="706.0" width="31.1" height="27.2" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="747.0" width="32.7" height="34.0" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="829.0" width="36.1" height="27.2" rx="3" fill="#e2e5e9"></rect><rect x="308.0" y="870.0" width="32.3" height="33.9" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="-185.0" width="34.5" height="34.0" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="-139.0" width="31.3" height="33.9" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="-93.0" width="32.9" height="40.0" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="-1.0" width="36.3" height="33.8" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="45.0" width="32.5" height="40.0" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="-185.0" width="35.0" height="39.1" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="-93.0" width="34.4" height="36.5" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="-47.0" width="31.3" height="39.2" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="-1.0" width="33.0" height="32.4" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="-185.0" width="32.4" height="39.0" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="-139.0" width="31.6" height="36.8" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="-93.0" width="35.1" height="32.2" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="-1.0" width="34.3" height="37.0" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="45.0" width="31.3" height="32.1" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="-139.0" width="36.1" height="40.0" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="-93.0" width="32.3" height="34.2" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="-47.0" width="31.6" height="33.8" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="-1.0" width="35.3" height="40.0" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="-185.0" width="31.2" height="32.3" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="-139.0" width="33.3" height="36.5" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="-47.0" width="36.0" height="32.4" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="-1.0" width="32.2" height="36.3" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="45.0" width="31.7" height="39.3" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="115.0" width="36.0" height="31.8" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="153.7" width="32.2" height="25.0" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="192.3" width="31.7" height="29.2" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="115.0" width="33.4" height="31.7" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="192.3" width="35.9" height="24.8" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="115.0" width="33.9" height="26.6" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="153.7" width="31.2" height="32.7" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="192.3" width="33.5" height="26.9" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="115.0" width="35.6" height="25.0" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="192.3" width="33.8" height="31.9" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="115.0" width="31.9" height="29.5" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="153.7" width="31.9" height="24.8" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="192.3" width="35.7" height="31.6" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="293.7" width="33.6" height="29.5" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="332.3" width="31.2" height="24.8" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="255.0" width="32.0" height="26.6" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="293.7" width="35.8" height="32.7" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="255.0" width="35.5" height="25.0" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="293.7" width="31.7" height="29.2" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="332.3" width="32.1" height="31.9" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="255.0" width="34.0" height="29.5" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="332.3" width="35.4" height="31.6" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="255.0" width="33.3" height="32.7" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="293.7" width="31.2" height="26.9" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="332.3" width="34.1" height="26.4" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="433.7" width="35.3" height="32.7" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="472.3" width="31.6" height="26.9" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="395.0" width="31.3" height="25.0" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="433.7" width="34.3" height="29.2" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="433.7" width="33.0" height="24.8" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="472.3" width="31.3" height="31.6" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="395.0" width="32.5" height="32.7" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="433.7" width="36.3" height="26.9" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="395.0" width="34.9" height="29.2" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="433.7" width="31.4" height="31.9" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="472.3" width="32.6" height="25.0" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="535.0" width="36.4" height="39.3" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="535.0" width="31.4" height="43.8" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="588.0" width="32.7" height="39.2" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="588.0" width="34.6" height="41.2" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="535.0" width="31.4" height="43.5" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="588.0" width="34.9" height="46.2" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="535.0" width="36.3" height="39.2" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="588.0" width="32.5" height="45.9" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="665.0" width="35.0" height="31.8" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="747.0" width="34.4" height="33.9" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="788.0" width="31.3" height="32.0" rx="3" fill="#e2e5e9"></rect><rect x="375.0" y="829.0" width="33.0" height="27.1" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="665.0" width="32.4" height="35.0" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="706.0" width="31.5" height="29.2" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="747.0" width="35.1" height="28.8" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="829.0" width="34.3" height="29.3" rx="3" fill="#e2e5e9"></rect><rect x="418.2" y="870.0" width="31.3" height="28.6" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="706.0" width="36.1" height="34.2" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="747.0" width="32.3" height="27.4" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="788.0" width="31.6" height="31.3" rx="3" fill="#e2e5e9"></rect><rect x="461.4" y="829.0" width="35.3" height="34.3" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="665.0" width="31.2" height="27.2" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="706.0" width="33.3" height="33.9" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="788.0" width="36.0" height="27.1" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="829.0" width="32.2" height="33.8" rx="3" fill="#e2e5e9"></rect><rect x="504.6" y="870.0" width="31.7" height="32.2" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="706.0" width="34.0" height="28.8" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="747.0" width="31.2" height="35.0" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="788.0" width="33.4" height="29.3" rx="3" fill="#e2e5e9"></rect><rect x="547.8" y="870.0" width="35.9" height="35.0" rx="3" fill="#e2e5e9"></rect><rect x="54" y="394" width="182" height="112" rx="12" fill="#d7ecd6"></rect><path d="M16.0 -220.0L26.0 113.5L33.0 253.5L40.0 393.5L47.0 533.5L54.0 663.5L64.0 940.0" stroke="#dcdfe4" stroke-width="9" fill="none"></path><path d="M116.0 -220.0L126.0 104.5L133.0 244.5L140.0 384.5L147.0 524.5L154.0 654.5L164.0 940.0" stroke="#dcdfe4" stroke-width="9" fill="none"></path><path d="M226.0 -220.0L236.0 95.5L243.0 235.5L250.0 375.5L257.0 515.5L264.0 645.5L274.0 940.0" stroke="#dcdfe4" stroke-width="13" fill="none"></path><path d="M336.0 -220.0L346.0 86.5L353.0 226.5L360.0 366.5L367.0 506.5L374.0 636.5L384.0 940.0" stroke="#dcdfe4" stroke-width="9" fill="none"></path><path d="M-220.0 133.5L26.0 113.5L126.0 104.5L236.0 95.5L346.0 86.5L620.0 62.5" stroke="#dcdfe4" stroke-width="13" fill="none"></path><path d="M-220.0 273.5L33.0 253.5L133.0 244.5L243.0 235.5L353.0 226.5L620.0 202.5" stroke="#dcdfe4" stroke-width="12" fill="none"></path><path d="M-220.0 413.5L40.0 393.5L140.0 384.5L250.0 375.5L360.0 366.5L620.0 342.5" stroke="#dcdfe4" stroke-width="13" fill="none"></path><path d="M-220.0 553.5L47.0 533.5L147.0 524.5L257.0 515.5L367.0 506.5L620.0 482.5" stroke="#dcdfe4" stroke-width="9" fill="none"></path><path d="M-220.0 683.5L54.0 663.5L154.0 654.5L264.0 645.5L374.0 636.5L620.0 612.5" stroke="#dcdfe4" stroke-width="13" fill="none"></path><path d="M16.0 -220.0L26.0 113.5L33.0 253.5L40.0 393.5L47.0 533.5L54.0 663.5L64.0 940.0" stroke="#fff" stroke-width="7" fill="none"></path><path d="M116.0 -220.0L126.0 104.5L133.0 244.5L140.0 384.5L147.0 524.5L154.0 654.5L164.0 940.0" stroke="#fff" stroke-width="7" fill="none"></path><path d="M226.0 -220.0L236.0 95.5L243.0 235.5L250.0 375.5L257.0 515.5L264.0 645.5L274.0 940.0" stroke="#fff" stroke-width="11" fill="none"></path><path d="M336.0 -220.0L346.0 86.5L353.0 226.5L360.0 366.5L367.0 506.5L374.0 636.5L384.0 940.0" stroke="#fff" stroke-width="7" fill="none"></path><path d="M-220.0 133.5L26.0 113.5L126.0 104.5L236.0 95.5L346.0 86.5L620.0 62.5" stroke="#fff" stroke-width="11" fill="none"></path><path d="M-220.0 273.5L33.0 253.5L133.0 244.5L243.0 235.5L353.0 226.5L620.0 202.5" stroke="#fff" stroke-width="10" fill="none"></path><path d="M-220.0 413.5L40.0 393.5L140.0 384.5L250.0 375.5L360.0 366.5L620.0 342.5" stroke="#fff" stroke-width="11" fill="none"></path><path d="M-220.0 553.5L47.0 533.5L147.0 524.5L257.0 515.5L367.0 506.5L620.0 482.5" stroke="#fff" stroke-width="7" fill="none"></path><path d="M-220.0 683.5L54.0 663.5L154.0 654.5L264.0 645.5L374.0 636.5L620.0 612.5" stroke="#fff" stroke-width="11" fill="none"></path><path d="M140.0 392.5L147.0 516.5" stroke="#d7ecd6" stroke-width="16" stroke-linecap="butt" fill="none"></path><ellipse cx="305" cy="524" rx="42" ry="58" fill="#cfe3f3"></ellipse>
+    <text transform="translate(45 353.5) rotate(90)" class="sl">Adugodi Main Rd</text><text transform="translate(145 294.5) rotate(90)" class="sl">8th Main Rd</text><text transform="translate(257 335.5) rotate(90)" class="sl">100 Feet Rd</text><text transform="translate(365 326.5) rotate(90)" class="sl">Ejipura Main Rd</text><text x="181" y="90.5" text-anchor="middle" class="sl">Intermediate Ring Rd</text><text x="188" y="231" text-anchor="middle" class="sl">80 Feet Rd</text><text x="195" y="370.5" text-anchor="middle" class="sl">Sarjapur Rd</text><text x="202" y="512.5" text-anchor="middle" class="sl">17th Main Rd</text><text x="209" y="640.5" text-anchor="middle" class="sl">Hosur Rd</text><text x="90" y="175" class="al">ADUGODI</text><text x="305" y="175" class="al">EJIPURA</text><text x="195" y="315" class="al">KORAMANGALA</text><text x="195" y="455" class="al">PARK</text><text x="305" y="470" class="al">LAKE</text><text x="90" y="590" class="al">S G PALYA</text><text x="305" y="595" class="al">ST BED</text>
+    <g id="routeG"></g></svg>
+      <button class="pin  " data-place="0" data-x="349.85" data-y="163.5" aria-label="Indian Oil, Ejipura" style="left: 349.85px; top: 163.5px; transform: translate(-50%, -50%) scale(0.93);"><span class="ci line gas"><svg width="15" height="16" viewBox="0 0 15 16" fill="none" stroke="#4264fb" stroke-width="1.4" stroke-linejoin="round"><path d="M2 15V2.5A1.5 1.5 0 0 1 3.5 1h5A1.5 1.5 0 0 1 10 2.5V15M1 15h10M3.5 3.5h5v3.5h-5z"></path><path d="M10 6h1.3A1.2 1.2 0 0 1 12.5 7.2v4.3a1 1 0 0 0 2 0V5L12.8 3.2" stroke-linecap="round"></path></svg></span></button><button class="pin  " data-place="1" data-x="199" data-y="239.1" aria-label="Shell, Koramangala" style="left: 199px; top: 239.1px; transform: translate(-50%, -50%) scale(0.93);"><span class="ci line gas"><svg width="15" height="16" viewBox="0 0 15 16" fill="none" stroke="#4264fb" stroke-width="1.4" stroke-linejoin="round"><path d="M2 15V2.5A1.5 1.5 0 0 1 3.5 1h5A1.5 1.5 0 0 1 10 2.5V15M1 15h10M3.5 3.5h5v3.5h-5z"></path><path d="M10 6h1.3A1.2 1.2 0 0 1 12.5 7.2v4.3a1 1 0 0 0 2 0V5L12.8 3.2" stroke-linecap="round"></path></svg></span></button><button class="pin  " data-place="2" data-x="36.5" data-y="323.5" aria-label="Raju Tyres" style="left: 36.5px; top: 323.5px; transform: translate(-50%, -50%) scale(0.93);"><span class="ci line repair"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#ff5353" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 1.5a3 3 0 0 0-2.8 4L1.8 11.4a1.4 1.4 0 0 0 2 2l5.8-5.9a3 3 0 0 0 4-2.8l-1.8 1.8-1.7-.4-.4-1.7 1.8-1.8Z"></path><path d="m2.5 2.5 4 4M1.5 4.5l3-3M10 10l4 4"></path></svg></span></button><button class="pin  " data-place="3" data-x="109" data-y="658.55" aria-label="Car Mall Repairs" style="left: 109px; top: 658.55px; transform: translate(-50%, -50%) scale(0.93);"><span class="ci line repair"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#ff5353" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 1.5a3 3 0 0 0-2.8 4L1.8 11.4a1.4 1.4 0 0 0 2 2l5.8-5.9a3 3 0 0 0 4-2.8l-1.8 1.8-1.7-.4-.4-1.7 1.8-1.8Z"></path><path d="m2.5 2.5 4 4M1.5 4.5l3-3M10 10l4 4"></path></svg></span></button><button class="pin  " data-place="4" data-x="363.15" data-y="429.5" aria-label="Sparkle Car Spa" style="left: 363.15px; top: 429.5px; transform: translate(-50%, -50%) scale(0.93);"><span class="ci line service"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#33c376" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h9v2.5H3zM5 9v2.5h5V9M7.5 11.5V15"></path><path d="M5 1.5l.5 1.5M8 1v1.6M11 1.5l-.5 1.5M4 4.3l.8.8M11 4.3l-.8.8"></path></svg></span></button><button class="pin  " data-place="5" data-x="330" data-y="640.1" aria-label="Honda Service, HSR" style="left: 330px; top: 640.1px; transform: translate(-50%, -50%) scale(0.93);"><span class="ci line service"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#33c376" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h9v2.5H3zM5 9v2.5h5V9M7.5 11.5V15"></path><path d="M5 1.5l.5 1.5M8 1v1.6M11 1.5l-.5 1.5M4 4.3l.8.8M11 4.3l-.8.8"></path></svg></span></button>
+      <div class="me" data-x="189.5" data-y="380.45" style="left: 189.5px; top: 380.45px; transform: translate(-50%, -50%) scale(0.93);"><span><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1-4 4-6 8-6s7 2 8 6z"></path></svg></span></div>
+      <div class="navcar" id="navcar" hidden="" style="transform: scale(0.93);"><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M12 2 20 21l-8-4-8 4Z"></path></svg></div>
+    </div>
+    <div class="mchips"><button class="mchip on" data-mf="all">All</button><button class="mchip " data-mf="gas"><i style="background:#4264fb"></i>Gas</button><button class="mchip " data-mf="service"><i style="background:#33c376"></i>Service</button><button class="mchip " data-mf="repair"><i style="background:#ff5353"></i>Repair</button></div>
+    <div class="banner" id="banner"></div>
+    <div class="pcard " id="pcard"></div>
+    <div class="dir " id="dir"></div>
+  </div></section>
+  </main>
+  <nav class="dots" id="dots" aria-label="Pages">
+    <button class="on" data-page="0" aria-label="Overview"><i></i></button><button data-page="1" aria-label="Expenses"><i></i></button><button data-page="2" aria-label="Nearby"><i></i></button>
+  </nav>
+</div>
+<p class="desk-note">Caralta · car expense app designed at Clarice Technologies, rebuilt as a clickable prototype. Swipe between the three screens.</p>
+
+<div class="pick" id="pick" role="dialog" aria-label="Choose a category">
+  <h3>What did you spend on?</h3>
+  <div class="row">
+    <button class="big gas" data-new="gas"></button>
+    <button class="big service" data-new="service"></button>
+    <button class="big repair" data-new="repair"></button>
+  </div>
+  <button class="xbtn" data-closepick="" aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16" stroke="#000" stroke-width="1.6" stroke-linecap="round"><path d="M2 2l12 12M14 2 2 14"></path></svg></button>
+</div>
+<form class="form" id="form" autocomplete="off" aria-label="Add expense"></form>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Menu"><div class="prof"><img src="img/me.webp" alt=""><b>Abhishek</b><span>Bangalore, India</span></div>
+    <nav><button data-car="accord" class="on"><svg width="22" height="18" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 11l2-6a2 2 0 0 1 1.9-1.4h10.2A2 2 0 0 1 19 5l2 6M2 11h20v5H2zM4 16v2.5M20 16v2.5"></path><circle cx="6.5" cy="13.5" r="1" fill="currentColor"></circle><circle cx="17.5" cy="13.5" r="1" fill="currentColor"></circle></svg>Accord</button><button data-car="camry" class=""><svg width="22" height="18" viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 11l2-6a2 2 0 0 1 1.9-1.4h10.2A2 2 0 0 1 19 5l2 6M2 11h20v5H2zM4 16v2.5M20 16v2.5"></path><circle cx="6.5" cy="13.5" r="1" fill="currentColor"></circle><circle cx="17.5" cy="13.5" r="1" fill="currentColor"></circle></svg>Camry</button>
+    <button data-demo="Adding a new car"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Add a car</button><hr>
+    <button data-demo="App settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"></path></svg>App Settings</button><button data-demo="Feedback"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 4h16v12H9l-5 4z"></path></svg>Feedback</button><button data-demo="Help"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"></path></svg>Help</button><hr>
+    <button data-demo="Logout"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 3v8M6.3 6.3a8 8 0 1 0 11.4 0"></path></svg>Logout</button></nav>
+    <p class="fine">Caralta, designed at Clarice Technologies. Rebuilt as an interactive portfolio prototype with sample data.</p></aside>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ---------------- data ---------------- */
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const CAT = {
+  gas:{label:'Gas', color:'#4264fb', sugs:['Petrol','Diesel','Full tank']},
+  service:{label:'Service', color:'#33c376', sugs:['Car wash','General service','Oil change','Wheel alignment']},
+  repair:{label:'Repair', color:'#ff5353', sugs:['Tyre fix','Battery','Brake pads','Dent repair']}
+};
+const CATS = Object.keys(CAT);
+const CARS = {
+  accord:{name:'Accord', model:'Honda Accord 2.4 · 2016', img:'img/accord.webp', km:19640, value:2150000, ins:'2 Jan', insDays:25},
+  camry:{name:'Camry', model:'Toyota Camry 2.4 · 2008', img:'img/accord.webp', km:96410, value:320000, ins:'14 Mar', insDays:96}
+};
+let uid=0;
+const E = (car,cat,title,place,m,d,amt)=>({id:++uid,car,cat,title,place,m,d,amt});
+/* sample data for 2017: fuel is litres x that month's Bangalore petrol price, so totals add up to a believable year */
+const PRICE=[70.9,71.4,71.6,70.8,69.9,68.7,66.5,68.8,71.3,70.6,70.9,71.8];
+function seeded(a){ return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function fuel(car, stations, fills, lo, hi, seed){
+  const r=seeded(seed), out=[];
+  for(let m=0;m<=11;m++){
+    const n = m===11 ? 1 : fills(m);
+    for(let k=0;k<n;k++){
+      const d = m===11 ? 3 : Math.min(28, Math.round(3 + k*(26/n) + r()*5));
+      let L = lo + r()*(hi-lo), amt = Math.round(L*PRICE[m]);
+      if(r()<.4){ amt = Math.round(amt/500)*500; }            // "fill for ₹2,000"
+      L = amt/PRICE[m];
+      out.push(E(car,'gas',`Petrol · ${L.toFixed(1)} L`, stations[Math.floor(r()*stations.length)], m, d, amt));
+    }
+  }
+  return out;
+}
+const EXP = [
+  // Accord: ~930 km a month at ~11 km/L in city traffic
+  ...fuel('accord',['Shell, Koramangala','Indian Oil, Ejipura','Shell, Koramangala','HP, Adugodi'], m=>3, 24, 33, 7),
+  ...[0,1,2,3,4,5,6,7,8,9,10].filter(m=>m!==6).map(m=>E('accord','service','Car wash','Sparkle Car Spa',m,[14,11,18,9,20,15,0,12,16,21,5][m],450)),
+  E('accord','service','10,000 km service','Honda Service, HSR',2,6,8940),
+  E('accord','service','AC service','Honda Service, HSR',4,13,2400),
+  E('accord','service','Wheel alignment','Tyre Plus, Koramangala',7,26,850),
+  E('accord','repair','Wiper blades','Car Mall Repairs',5,4,1150),
+  E('accord','repair','Dent & paint, rear door','Car Mall Repairs',8,23,4800),
+  E('accord','repair','Puncture repair','Raju Tyres',10,17,250),
+  E('accord','service','Car wash','Sparkle Car Spa',11,2,450),
+  // Camry: the older weekend car, ~620 km a month at ~9 km/L
+  ...fuel('camry',['HP, Domlur','Indian Oil, Ejipura','HP, Domlur'], m=>m%3===0?3:2, 22, 34, 21),
+  ...[1,3,5,8,10].map(m=>E('camry','service','Car wash','Shine Wash, Domlur',m,19,400)),
+  E('camry','repair','Battery (Amaron 55Ah)','Amaron Point',0,11,6400),
+  E('camry','service','95,000 km major service','Toyota Service, Koramangala',6,8,11200),
+  E('camry','repair','Suspension bushes','Car Mall Repairs',8,14,7800),
+  E('camry','repair','Front brake pads','Toyota Service, Koramangala',10,13,4200),
+  E('camry','repair','Puncture repair','Raju Tyres',3,27,200)
+];
+
+/* ---- street map: a small road graph, drawn and routed on the same data ---- */
+const WW=400, WH=720, M_PER_UNIT=8;                 // world units, ~8 m each
+const COLS=[{x:40,n:'Adugodi Main Rd',w:7},{x:140,n:'8th Main Rd',w:7},{x:250,n:'100 Feet Rd',w:11},{x:360,n:'Ejipura Main Rd',w:7}];
+const ROWS=[{y:100,n:'Intermediate Ring Rd',w:11},{y:240,n:'80 Feet Rd',w:10},{y:380,n:'Sarjapur Rd',w:11},{y:520,n:'17th Main Rd',w:7},{y:650,n:'Hosur Rd',w:11}];
+const node=(i,j)=>({x:COLS[i].x+(j-2)*7, y:ROWS[j].y-(i-1.5)*9});
+const EDGES=[];   // {a:[i,j], b:[i,j], street}
+COLS.forEach((c,i)=>{ for(let j=0;j<ROWS.length-1;j++){ if(i===1&&j===2) continue; EDGES.push({a:[i,j],b:[i,j+1],street:c.n,w:c.w}); } });  // park blocks 8th Main
+ROWS.forEach((r,j)=>{ for(let i=0;i<COLS.length-1;i++){ if(j===3&&i===2) continue; EDGES.push({a:[i,j],b:[i+1,j],street:r.n,w:r.w}); } });  // lake blocks 17th Main
+const onEdge=(ai,aj,bi,bj,t)=>{ const e=EDGES.findIndex(e=>e.a[0]===ai&&e.a[1]===aj&&e.b[0]===bi&&e.b[1]===bj); const A=node(ai,aj),B=node(bi,bj); return {e, t, x:A.x+(B.x-A.x)*t, y:A.y+(B.y-A.y)*t}; };
+const PLACES = [
+  {cat:'gas', name:'Indian Oil, Ejipura', info:'Petrol ₹71.8/L · open 24 hrs', at:onEdge(3,0,3,1,.55), phone:'+91 80 4115 2231'},
+  {cat:'gas', name:'Shell, Koramangala', info:'Petrol ₹72.1/L · car wash on site', at:onEdge(1,1,2,1,.6), phone:'+91 80 4101 7788'},
+  {cat:'repair', name:'Raju Tyres', info:'Puncture repair · from ₹150', at:onEdge(0,1,0,2,.5), phone:'+91 98450 32211'},
+  {cat:'repair', name:'Car Mall Repairs', info:'Dents, paint, batteries · 4.5★', at:onEdge(0,4,1,4,.55), phone:'+91 80 4222 9010'},
+  {cat:'service', name:'Sparkle Car Spa', info:'Car wash from ₹450 · 4.6★', at:onEdge(3,2,3,3,.45), phone:'+91 99720 11445'},
+  {cat:'service', name:'Honda Service, HSR', info:'Authorised service centre', at:onEdge(2,4,3,4,.6), phone:'+91 80 4333 6000'}
+];
+const ME = onEdge(1,2,2,2,.45);
+const TODAY = {m:11, d:8};   // prototype "today": 8 Dec
+const S = { car:'accord', m:10, filter:'all', page:0, place:null, mapFilter:'all', seen:false, draft:null, lastNew:null, dir:false, nav:null };
+
+/* ---------------- helpers ---------------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+const short=n=> n>=100000 ? '₹'+(n/100000).toFixed(2).replace(/\.?0+$/,'')+' Lac' : n>=1000 ? '₹'+(n/1000).toFixed(1).replace(/\.0$/,'')+'K' : inr(n);
+const car=()=>CARS[S.car];
+const monthExp=(m=S.m)=>EXP.filter(e=>e.car===S.car&&e.m===m);
+const sumBy=(list,cat)=>list.filter(e=>!cat||e.cat===cat).reduce((a,e)=>a+e.amt,0);
+const maxMonth=()=>TODAY.m;
+const minMonth=()=>Math.min(...EXP.filter(e=>e.car===S.car).map(e=>e.m));
+
+/* ---------------- icons ---------------- */
+const IC = {
+  gas:(c='#fff')=>`<svg width="15" height="16" viewBox="0 0 15 16" fill="none" stroke="${c}" stroke-width="1.4" stroke-linejoin="round"><path d="M2 15V2.5A1.5 1.5 0 0 1 3.5 1h5A1.5 1.5 0 0 1 10 2.5V15M1 15h10M3.5 3.5h5v3.5h-5z"/><path d="M10 6h1.3A1.2 1.2 0 0 1 12.5 7.2v4.3a1 1 0 0 0 2 0V5L12.8 3.2" stroke-linecap="round"/></svg>`,
+  service:(c='#fff')=>`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="${c}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5h9v2.5H3zM5 9v2.5h5V9M7.5 11.5V15"/><path d="M5 1.5l.5 1.5M8 1v1.6M11 1.5l-.5 1.5M4 4.3l.8.8M11 4.3l-.8.8"/></svg>`,
+  repair:(c='#fff')=>`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="${c}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 1.5a3 3 0 0 0-2.8 4L1.8 11.4a1.4 1.4 0 0 0 2 2l5.8-5.9a3 3 0 0 0 4-2.8l-1.8 1.8-1.7-.4-.4-1.7 1.8-1.8Z"/><path d="m2.5 2.5 4 4M1.5 4.5l3-3M10 10l4 4"/></svg>`,
+  left:'<svg width="10" height="18" viewBox="0 0 10 18" fill="none" stroke="#b4b4be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1 1 9l8 8"/></svg>',
+  right:'<svg width="10" height="18" viewBox="0 0 10 18" fill="none" stroke="#b4b4be" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m1 1 8 8-8 8"/></svg>',
+  x:'<svg width="16" height="16" viewBox="0 0 16 16" stroke="#000" stroke-width="1.6" stroke-linecap="round"><path d="M2 2l12 12M14 2 2 14"/></svg>',
+  check:'<svg width="20" height="15" viewBox="0 0 20 15" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m1.5 7.5 5.5 5.5L18.5 1.5"/></svg>',
+  phone:'<svg width="14" height="14" viewBox="0 0 24 24" fill="#000"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1Z"/></svg>',
+  nav:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linejoin="round"><path d="M3 11 21 3l-8 18-2-8-8-2Z"/></svg>',
+  car:(c='currentColor')=>`<svg width="22" height="18" viewBox="0 0 24 20" fill="none" stroke="${c}" stroke-width="1.6" stroke-linejoin="round"><path d="M3 11l2-6a2 2 0 0 1 1.9-1.4h10.2A2 2 0 0 1 19 5l2 6M2 11h20v5H2zM4 16v2.5M20 16v2.5"/><circle cx="6.5" cy="13.5" r="1" fill="${c}"/><circle cx="17.5" cy="13.5" r="1" fill="${c}"/></svg>`,
+  gear:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg>',
+  chat:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M4 4h16v12H9l-5 4z"/></svg>',
+  help:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/></svg>',
+  power:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 3v8M6.3 6.3a8 8 0 1 0 11.4 0"/></svg>',
+  plus:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  cam:'<svg width="22" height="20" viewBox="0 0 24 22" fill="none" stroke="#9aa0ab" stroke-width="1.6" stroke-linejoin="round"><path d="M2 6h5l2-3h6l2 3h5v13H2z"/><circle cx="12" cy="12" r="4"/></svg>'
+};
+const ci=(cat,style='fill',size)=>`<span class="ci ${style} ${cat}"${size?` style="width:${size}px;height:${size}px"`:''}>${IC[cat](style==='fill'?'#fff':CAT[cat].color)}</span>`;
+
+/* ---------------- overview ---------------- */
+function segBar(list){
+  const tot=sumBy(list)||1;
+  return `<div class="seg" aria-hidden="true">${CATS.map(c=>`<i style="width:${sumBy(list,c)/tot*100}%;background:${CAT[c].color}"></i>`).join('')}</div>`;
+}
+function overview(){
+  const c=car(), list=monthExp(), all=EXP.filter(e=>e.car===S.car), tot=sumBy(list);
+  const top = CATS.slice().sort((a,b)=>sumBy(list,b)-sumBy(list,a))[0];
+  $('#p0').innerHTML = `
+    <div class="hero">
+      ${c.img?`<img class="carimg" src="${c.img}" alt="${esc(c.model)}">`:`<div class="carph">${IC.car('#9aa0ab')}</div>`}
+      <div class="stats">
+        <div class="stat"><small>Distance driven</small><b>${c.km.toLocaleString('en-IN')} Kms</b></div>
+        <button class="stat" data-page="1"><small>Spent in 2017</small><b>${short(sumBy(all))}</b></button>
+        <div class="stat"><small>Valued at</small><b>${short(c.value)}</b></div>
+      </div>
+    </div>
+    <div class="mon"><button data-mon="-1" aria-label="Previous month" ${S.m<=minMonth()?'disabled':''}>${IC.left}</button><h2>${MONTHS[S.m]}</h2><button data-mon="1" aria-label="Next month" ${S.m>=maxMonth()?'disabled':''}>${IC.right}</button></div>
+    ${segBar(list)}
+    <div class="cats">${CATS.map(k=>`<button class="cat" data-cat="${k}">${ci(k)}<span class="n">${CAT[k].label==='Repair'?'Repairs':CAT[k].label}</span><span class="pc">${tot?Math.round(sumBy(list,k)/tot*100)+'%':''}</span><span class="v">${inr(sumBy(list,k))}</span></button>`).join('')}</div>
+    <div class="tot"><span>Total Expenses</span><b>${inr(tot)}</b></div>
+    ${tot?`<div class="tip"><span>💡</span><span>${CAT[top].label} was your biggest cost in ${MONTHS[S.m]}. Tap a category to see every expense.</span></div>`:''}`;
+}
+
+/* ---------------- expenses ---------------- */
+function expenses(){
+  const list=monthExp(), shown=list.filter(e=>S.filter==='all'||e.cat===S.filter).sort((a,b)=>b.d-a.d||b.id-a.id);
+  $('#p1').innerHTML = `
+    <div class="mon" style="margin-top:0;border-top:0"><button data-mon="-1" aria-label="Previous month" ${S.m<=minMonth()?'disabled':''}>${IC.left}</button><h2>${MONTHS[S.m]}</h2><button data-mon="1" aria-label="Next month" ${S.m>=maxMonth()?'disabled':''}>${IC.right}</button></div>
+    <div class="th" style="border-top:1px solid var(--line)"><span>Total Expenses</span><b>${inr(sumBy(shown))}</b></div>
+    ${segBar(list)}
+    <div class="filters">${['all',...CATS].map(f=>`<button class="fc ${S.filter===f?'on':''}" data-filter="${f}">${f==='all'?'All':`<i style="background:${CAT[f].color}"></i>${CAT[f].label}`}</button>`).join('')}</div>
+    ${shown.length?shown.map(e=>`<button class="ex ${S.lastNew===e.id?'new':''}" data-exp="${e.id}">${ci(e.cat,'line')}<span class="t"><b>${esc(e.title)}</b><small>${e.place?esc(e.place)+' • ':''}${e.d} ${MONTHS[e.m].slice(0,3)}</small></span><span class="v">${inr(e.amt)}</span></button>`).join('')
+      :`<div class="empty">No ${S.filter==='all'?'':CAT[S.filter].label.toLowerCase()+' '}expenses in ${MONTHS[S.m]}.</div>`}
+    <div class="addwrap"><button class="pill" data-add>Add Expense</button></div>`;
+}
+
+/* ---------------- map ---------------- */
+const P=(x,y)=>`${x.toFixed(1)} ${y.toFixed(1)}`;
+function roadLine(pts){ return pts.map((q,k)=>(k?'L':'M')+P(q.x,q.y)).join(''); }
+function mapSvg(){
+  const rnd=i=>((Math.sin(i*99.13)+1)/2);
+  let blocks='';
+  // building blocks fill the gaps between streets (extends past the edges so panning never shows a hard border)
+  const xs=[-200,...COLS.map(c=>c.x),600], ys=[-200,...ROWS.map(r=>r.y),920];
+  for(let a=0;a<xs.length-1;a++) for(let b=0;b<ys.length-1;b++){
+    const x0=xs[a]+12,x1=xs[a+1]-12,y0=ys[b]+12,y1=ys[b+1]-12, k=a*10+b;
+    if((a===1||a===2)&&b===3) continue;   // park goes here
+    const nx=Math.max(1,Math.round((x1-x0)/48)), ny=Math.max(1,Math.round((y1-y0)/44)), gw=(x1-x0)/nx, gh=(y1-y0)/ny;
+    for(let u=0;u<nx;u++) for(let v=0;v<ny;v++){ const r=rnd(k*31+u*7+v); if(r<.12) continue;
+      blocks+=`<rect x="${(x0+u*gw+3).toFixed(1)}" y="${(y0+v*gh+3).toFixed(1)}" width="${(gw-6-r*6).toFixed(1)}" height="${(gh-6-rnd(k+u+v*3)*8).toFixed(1)}" rx="3" fill="#e2e5e9"/>`; }
+  }
+  blocks+=`<rect x="${COLS[0].x+14}" y="${ROWS[2].y+14}" width="${COLS[2].x-COLS[0].x-28}" height="${ROWS[3].y-ROWS[2].y-28}" rx="12" fill="#d7ecd6"/>`;
+  const lake=`<ellipse cx="${(COLS[2].x+COLS[3].x)/2}" cy="${ROWS[3].y+4}" rx="42" ry="58" fill="#cfe3f3"/>`;
+  // roads: every column and row as one polyline through its nodes, extended off-map
+  let casing='', roads='', labels='';
+  COLS.forEach((c,i)=>{ const pts=ROWS.map((r,j)=>node(i,j)); const d=roadLine([{x:pts[0].x-10,y:-220},...pts,{x:pts[4].x+10,y:940}]);
+    casing+=`<path d="${d}" stroke="#dcdfe4" stroke-width="${c.w+2}" fill="none"/>`; roads+=`<path d="${d}" stroke="#fff" stroke-width="${c.w}" fill="none"/>`;
+    const q=node(i,1), q2=node(i,2); labels+=`<text transform="translate(${(q.x+q2.x)/2+ (c.w/2+5)} ${(q.y+q2.y)/2+ (i===1?-20:30)}) rotate(90)" class="sl">${c.n}</text>`; });
+  ROWS.forEach((r,j)=>{ const pts=COLS.map((c,i)=>node(i,j)); const d=roadLine([{x:-220,y:pts[0].y+20},...pts,{x:620,y:pts[3].y-24}]);
+    casing+=`<path d="${d}" stroke="#dcdfe4" stroke-width="${r.w+2}" fill="none"/>`; roads+=`<path d="${d}" stroke="#fff" stroke-width="${r.w}" fill="none"/>`;
+    const q=node(1,j), q2=node(2,j); labels+=`<text x="${(q.x+q2.x)/2}" y="${(q.y+q2.y)/2 - r.w/2 - 4}" text-anchor="middle" class="sl">${r.n}</text>`; });
+  // hide the removed street pieces (park, lake) by painting over them
+  const gap=(A,B,fill,w)=>`<path d="M${P(A.x,A.y)}L${P(B.x,B.y)}" stroke="${fill}" stroke-width="${w}" stroke-linecap="butt" fill="none"/>`;
+  const park=gap(node(1,2),node(1,3),'#d7ecd6',16).replace(/M([\d.]+) ([\d.]+)L([\d.]+) ([\d.]+)/,(m,a,b,c,d)=>`M${a} ${+b+8}L${c} ${+d-8}`);
+  const lab=(x,y,t)=>`<text x="${x}" y="${y}" class="al">${t}</text>`;
+  return `<svg class="base" viewBox="0 0 ${WW} ${WH}" aria-hidden="true">
+    <style>.sl{font:700 8px 'Nunito Sans',sans-serif;fill:#9ba1ab;letter-spacing:.3px}.al{font:800 10px 'Nunito Sans',sans-serif;fill:#b3b8c1;letter-spacing:2px;text-anchor:middle}</style>
+    <rect x="-400" y="-400" width="1200" height="1520" fill="#eef0f2"/>${blocks}${casing}${roads}${park}${lake}
+    ${labels}${lab(90,175,'ADUGODI')}${lab(305,175,'EJIPURA')}${lab(195,315,'KORAMANGALA')}${lab(195,455,'PARK')}${lab(305,470,'LAKE')}${lab(90,590,'S G PALYA')}${lab(305,595,'ST BED')}
+    <g id="routeG"></g></svg>`;
+}
+
+/* shortest path on the road graph (Dijkstra, a handful of nodes) */
+const key=(i,j)=>i+','+j, dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+function route(from, to){
+  const adj={}, pos={};
+  const add=(u,v,w,street)=>{ (adj[u]=adj[u]||[]).push({v,w,street}); (adj[v]=adj[v]||[]).push({v:u,w,street}); };
+  EDGES.forEach((e,k)=>{ const A=key(...e.a), B=key(...e.b); pos[A]=node(...e.a); pos[B]=node(...e.b);
+    const cuts=[from,to].filter(q=>q.e===k).sort((p,q)=>p.t-q.t);
+    let prev=A, pp=pos[A];
+    cuts.forEach(q=>{ const id=q===from?'S':'T'; pos[id]=q; add(prev,id,dist(pp,q),e.street); prev=id; pp=q; });
+    add(prev,B,dist(pp,pos[B]),e.street); });
+  const D={S:0}, prv={}, done=new Set();
+  while(true){ let u=null; for(const k in D) if(!done.has(k)&&(u===null||D[k]<D[u])) u=k; if(u===null||u==='T') break; done.add(u);
+    for(const {v,w,street} of adj[u]||[]){ if(D[u]+w<(D[v]??Infinity)){ D[v]=D[u]+w; prv[v]={u,street}; } } }
+  const ids=['T'], streets=[]; while(ids[0]!=='S'){ streets.unshift(prv[ids[0]].street); ids.unshift(prv[ids[0]].u); }
+  const pts=ids.map(id=>pos[id]);
+  // group into steps along the same street
+  const legs=[]; for(let k=0;k<streets.length;k++){ const L=dist(pts[k],pts[k+1]); const last=legs[legs.length-1];
+    if(last&&last.street===streets[k]){ last.len+=L; last.to=pts[k+1]; } else legs.push({street:streets[k],len:L,from:pts[k],to:pts[k+1]}); }
+  const heading=l=>({x:l.to.x-l.from.x,y:l.to.y-l.from.y});
+  const steps=legs.map((l,k)=>{ const h=heading(l);
+    if(k===0){ const dir=Math.abs(h.x)>Math.abs(h.y)?(h.x>0?'east':'west'):(h.y>0?'south':'north'); return {turn:'start',text:`Head ${dir} on ${l.street}`,len:l.len}; }
+    const g=heading(legs[k-1]), cr=g.x*h.y-g.y*h.x; const turn=cr>0?'right':'left';
+    return {turn,text:`Turn ${turn} onto ${l.street}`,len:l.len}; });
+  const total=legs.reduce((a,l)=>a+l.len,0)*M_PER_UNIT;
+  steps.push({turn:'end',text:'Arrive at destination',len:0});
+  return {pts, steps, meters:total, mins:Math.max(2,Math.round(total/1000/17*60 + (steps.length-2)*.7)), via:legs.slice().sort((a,b)=>b.len-a.len)[0].street};
+}
+PLACES.forEach(p=>{ p.r=route(ME,p.at); p.km=(p.r.meters/1000).toFixed(1); });
+const fmtLen=m=> m>=1000 ? (m/1000).toFixed(1)+' km' : (Math.round(m/10)*10)+' m';
+const TURN={
+  start:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2d2d32" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5M6 10l6-6 6 6"/></svg>',
+  left:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2d2d32" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-8a3 3 0 0 0-3-3H5M9 6l-4 4 4 4"/></svg>',
+  right:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2d2d32" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21v-8a3 3 0 0 1 3-3h9M15 6l4 4-4 4"/></svg>',
+  end:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff5353" stroke-width="2.2" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5" fill="#ff5353"/></svg>'
+};
+const white=s=>s.replaceAll('#2d2d32','#fff').replaceAll('#ff5353','#fff');
+
+function mapPage(){
+  $('#p2').innerHTML = `<div class="map" id="map">
+    <div class="world" id="world">${mapSvg()}
+      ${PLACES.map((p,i)=>`<button class="pin ${S.place===i?'sel':''} ${S.mapFilter!=='all'&&S.mapFilter!==p.cat?'hide':''}" data-place="${i}" data-x="${p.at.x}" data-y="${p.at.y}" aria-label="${esc(p.name)}">${ci(p.cat, i===S.place?'fill':'line')}</button>`).join('')}
+      <div class="me" data-x="${ME.x}" data-y="${ME.y}"><span><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6z"/></svg></span></div>
+      <div class="navcar" id="navcar" hidden><svg width="12" height="12" viewBox="0 0 24 24" fill="#fff"><path d="M12 2 20 21l-8-4-8 4Z"/></svg></div>
+    </div>
+    <div class="mchips">${['all',...CATS].map(f=>`<button class="mchip ${S.mapFilter===f?'on':''}" data-mf="${f}">${f==='all'?'All':`<i style="background:${CAT[f].color}"></i>${CAT[f].label}`}</button>`).join('')}</div>
+    <div class="banner" id="banner"></div>
+    <div class="pcard ${S.place!=null&&!S.dir?'on':''}" id="pcard">${S.place!=null?placeCard(PLACES[S.place]):''}</div>
+    <div class="dir ${S.dir?'on':''}" id="dir">${S.place!=null?dirPanel(PLACES[S.place]):''}</div>
+  </div>`;
+  layoutMap(false);
+}
+function placeCard(p){ return `<div class="t"><b>${esc(p.name)}</b><small>${esc(p.info)}</small><small>${p.km} km · about ${p.r.mins} min by car</small></div><button class="mini" data-call aria-label="Call">${IC.phone}</button><button class="mini" data-nav aria-label="Directions">${IC.nav}</button>`; }
+function dirPanel(p){ const r=p.r;
+  return `<div class="hd"><div class="t"><div class="eta">${r.mins} min <span>(${fmtLen(r.meters)})</span></div><div class="via">Fastest route now, via ${esc(r.via)} · light traffic</div></div><button class="x" data-dirx aria-label="Close directions">${IC.x}</button></div>
+    <ol class="steps" id="steps">${r.steps.map((st,k)=>`<li data-k="${k}"><span class="ic">${TURN[st.turn]}</span><span class="tx">${st.turn==='end'?`Arrive at ${esc(p.name)}`:esc(st.text)}${st.len?`<small>${fmtLen(st.len*M_PER_UNIT)}</small>`:''}</span></li>`).join('')}</ol>
+    <div class="go"><button class="start" data-start>${S.nav?'End':'Start'}</button><button class="sec" data-call>Call</button></div>`; }
+
+// fit the world to the map box; when a route is shown, pan/zoom so the whole route sits above the bottom panel
+function layoutMap(animate=true){
+  const m=$('#map'), w=$('#world'); if(!m||!w) return;
+  const W=m.clientWidth, H=m.clientHeight;
+  const base=Math.max(W/WW, H/WH);
+  let k=base, cx=ME.x, cy=ME.y;
+  const top=56, panel = S.place==null ? 0 : (S.dir ? $('#dir').offsetHeight : $('#pcard').offsetHeight);
+  const vis={x:12,y:top,w:W-24,h:H-top-panel-12};
+  if(S.place!=null){
+    const pts=PLACES[S.place].r.pts, xs=pts.map(q=>q.x), ys=pts.map(q=>q.y);
+    const bx0=Math.min(...xs)-24, bx1=Math.max(...xs)+24, by0=Math.min(...ys)-30, by1=Math.max(...ys)+24;
+    k=Math.min(base*1.6, vis.w/(bx1-bx0), vis.h/(by1-by0)); k=Math.max(k, base*.55);
+    cx=(bx0+bx1)/2; cy=(by0+by1)/2;
+  } else { cx=WW/2; cy=WH/2; }
+  let tx = vis.x+vis.w/2 - cx*k, ty = (S.place!=null? vis.y+vis.h/2 : H/2) - cy*k;
+  if(S.place==null){ tx=Math.min(0,Math.max(W-WW*k,tx)); ty=Math.min(0,Math.max(H-WH*k,ty)); }
+  w.style.transition = animate ? '' : 'none';
+  w.style.width=WW+'px'; w.style.height=WH+'px';
+  w.style.transform=`translate(${tx}px,${ty}px) scale(${k})`;
+  // HTML markers keep their on-screen size: position in world units, counter-scale
+  w.querySelectorAll('[data-x]').forEach(el=>{ el.style.left=el.dataset.x+'px'; el.style.top=el.dataset.y+'px'; el.style.transform=`translate(-50%,-50%) scale(${(1/k).toFixed(3)})${el.classList.contains('sel')?' scale(1.25)':''}`; });
+  const nc=$('#navcar'); if(nc) nc.style.transform=`scale(${(1/k).toFixed(3)})`;
+  S.k=k; drawRoute();
+  if(!animate) requestAnimationFrame(()=>{ w.style.transition=''; });
+}
+function drawRoute(){
+  const g=$('#routeG'); if(!g) return;
+  if(S.place==null){ g.innerHTML=''; return; }
+  const p=PLACES[S.place], d=roadLine(p.r.pts), sw=1/Math.max(.6,S.k||1);
+  g.innerHTML=`<path class="rt-case" d="${d}" style="stroke-width:${9*sw}"/><path class="rt ${S.dir?'':'prev'}" id="rtPath" d="${d}" style="stroke-width:${5*sw}"/>
+    <circle cx="${p.at.x}" cy="${p.at.y}" r="${6*sw}" fill="#fff" stroke="#2d2d32" stroke-width="${2.5*sw}"/>`;
+  const path=$('#rtPath'), L=path.getTotalLength(); path.style.strokeDasharray=L; path.style.strokeDashoffset=L;
+  path.getBoundingClientRect(); path.style.transition='stroke-dashoffset .7s ease'; path.style.strokeDashoffset=0;
+}
+function openDir(){ S.dir=true; mapPage(); }
+function closeDir(){ stopNav(); S.dir=false; mapPage(); }
+function stopNav(){ if(S.nav){ cancelAnimationFrame(S.nav.raf); S.nav=null; } }
+function startNav(){
+  const p=PLACES[S.place], path=$('#rtPath'); if(!path) return;
+  const L=path.getTotalLength(), steps=p.r.steps, car=$('#navcar'), banner=$('#banner');
+  // step boundaries along the path, in world units
+  const ends=[]; let acc=0; steps.forEach(st=>{ acc+=st.len; ends.push(acc); });
+  const dur=Math.min(14000, 3500+L*14), t0=performance.now();
+  car.hidden=false; S.nav={raf:0}; $('[data-start]').textContent='End'; $('#pcard').classList.remove('on');
+  const tick=now=>{
+    const f=Math.min(1,(now-t0)/dur), at=L*f, q=path.getPointAtLength(at), q2=path.getPointAtLength(Math.min(L,at+2));
+    car.style.left=q.x+'px'; car.style.top=q.y+'px';
+    car.firstElementChild.style.transform=`rotate(${Math.atan2(q2.y-q.y,q2.x-q.x)*180/Math.PI+90}deg)`;
+    let k=ends.findIndex(e=>at<e-0.01); if(k<0) k=steps.length-1;
+    const next=steps[Math.min(k+1,steps.length-1)], left=(ends[k]-at)*M_PER_UNIT;
+    document.querySelectorAll('#steps li').forEach((li,j)=>li.classList.toggle('cur',j===Math.min(k+1,steps.length-1)));
+    banner.innerHTML = f<1 ? `<span>${white(TURN[next.turn])}</span><div><b>${next.turn==='end'?esc(p.name):esc(next.text)}</b><small>in ${fmtLen(Math.max(10,left))} · ${Math.max(1,Math.round(p.r.mins*(1-f)))} min to go</small></div>`
+                           : `<span>${white(TURN.end)}</span><div><b>You have arrived</b><small>${esc(p.name)}</small></div>`;
+    banner.classList.add('on');
+    if(f<1) S.nav.raf=requestAnimationFrame(tick); else { S.nav=null; $('[data-start]').textContent='Done'; toast(`Arrived at ${p.name} (demo)`); }
+  };
+  S.nav.raf=requestAnimationFrame(tick);
+}
+
+/* ---------------- add form ---------------- */
+function openPick(){ $('#pick').querySelectorAll('.big').forEach(b=>{ const c=b.dataset.new; b.innerHTML=IC[c]('#fff').replace('width="15"','width="20"').replace('width="16"','width="20"')+CAT[c].label; }); $('#pick').classList.add('on'); }
+function closePick(){ $('#pick').classList.remove('on'); }
+function openForm(cat){
+  closePick();
+  const d = S.m===TODAY.m ? TODAY.d : new Date(2017,S.m+1,0).getDate();
+  S.draft={cat, title:'', place:'', amt:'', d};
+  const f=$('#form');
+  f.innerHTML = `<div class="ftop"><button type="button" class="circ o" data-cancel aria-label="Cancel">${IC.x}</button>
+      <span class="circ big2 ${cat}">${IC[cat]('#fff').replace(/width="1[56]"/,'width="22"')}${CAT[cat].label}</span>
+      <button class="circ d" id="saveBtn" aria-label="Save expense" disabled>${IC.check}</button></div>
+    <div class="fields">
+      <div class="f"><label for="fd">Description</label><input id="fd" name="t" placeholder="${CAT[cat].sugs[0]}" maxlength="40"></div>
+      <div class="sugs">${CAT[cat].sugs.map(s=>`<button type="button" data-sug="${esc(s)}">${esc(s)}</button>`).join('')}</div>
+      <div class="f"><label for="fp">Where</label><input id="fp" name="p" placeholder="Optional, e.g. Shell, Koramangala" maxlength="40"></div>
+      <div class="two"><div class="f"><label for="fa">Amount (₹)</label><input id="fa" name="a" inputmode="numeric" placeholder="Amount"></div>
+        <div class="f"><label for="fdt">Date</label><select id="fdt" name="d">${Array.from({length:new Date(2017,S.m+1,0).getDate()},(_,i)=>i+1).filter(x=>S.m!==TODAY.m||x<=TODAY.d).map(x=>`<option value="${x}" ${x===d?'selected':''}>${x} ${MONTHS[S.m].slice(0,3)}</option>`).join('')}</select></div></div>
+      <button type="button" class="photo" data-photo><span class="ph" id="ph">${IC.cam}</span><span id="phT">Add photo of the bill</span></button>
+    </div>
+    <p class="fnote">Saved to ${esc(car().name)} · ${MONTHS[S.m]}. This is a demo, nothing leaves your browser.</p>`;
+  f.classList.add('on');
+  setTimeout(()=>$('#fd').focus(),320);
+}
+function closeForm(){ $('#form').classList.remove('on'); }
+function validate(){ const f=$('#form'); const ok=+f.a.value>0; $('#saveBtn').disabled=!ok; }
+
+/* ---------------- overlays ---------------- */
+function scrim(on){ $('#scrim').classList.toggle('on',on); }
+function closeAll(){ const cb=$('.carbtn'); if(cb) cb.setAttribute('aria-expanded','false'); $('#sheet').classList.remove('on'); $('#drawer').classList.remove('on'); scrim(false); }
+function sheet(h){ const s=$('#sheet'); s.innerHTML='<div class="grab"></div>'+h; s.classList.add('on'); scrim(true); }
+let tt; function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('on'),2400); }
+function drawer(){
+  $('#drawer').innerHTML=`<div class="prof"><img src="img/me.webp" alt=""><b>Abhishek</b><span>Bangalore, India</span></div>
+    <nav>${Object.entries(CARS).map(([k,c])=>`<button data-car="${k}" class="${S.car===k?'on':''}">${IC.car()}${esc(c.name)}</button>`).join('')}
+    <button data-demo="Adding a new car">${IC.plus}Add a car</button><hr>
+    <button data-demo="App settings">${IC.gear}App Settings</button><button data-demo="Feedback">${IC.chat}Feedback</button><button data-demo="Help">${IC.help}Help</button><hr>
+    <button data-demo="Logout">${IC.power}Logout</button></nav>
+    <p class="fine">Caralta, designed at Clarice Technologies. Rebuilt as an interactive portfolio prototype with sample data.</p>`;
+}
+function reminders(){
+  const c=car(), nextSvc=Math.ceil((c.km+1)/10000)*10000;
+  sheet(`<h3>Reminders for ${esc(c.name)}</h3>
+    <div class="rem">${ci('service')}<div><b>Service due</b><span>Next general service at ${nextSvc.toLocaleString('en-IN')} Kms, about ${(nextSvc-c.km).toLocaleString('en-IN')} Kms away</span></div><span class="when" style="color:var(--svc)">${nextSvc-c.km<1000?'Soon':'Later'}</span></div>
+    <div class="rem">${ci('repair')}<div><b>Insurance renewal</b><span>Policy ends on ${c.ins}. Compare quotes before it lapses.</span></div><span class="when" style="color:var(--rep)">${c.insDays} days</span></div>
+    <div class="rem">${ci('gas')}<div><b>Fuel this month</b><span>You spent ${inr(sumBy(monthExp(),'gas'))} on petrol in ${MONTHS[S.m]}. ${esc(PLACES[0].name)}, ${PLACES[0].km} km away, is the cheapest near you.</span></div><span class="when" style="color:var(--gas)">Tip</span></div>`);
+  if(!S.seen){ S.seen=true; const b=$('#bellN'); if(b) b.remove(); }
+}
+function carSwitcher(){
+  sheet(`<h3>Your cars</h3><div class="cars">${Object.entries(CARS).map(([k,c])=>`<button class="carrow" data-car="${k}">${c.img?`<img src="${c.img}" alt="">`:`<span class="th">${IC.car('#9aa0ab')}</span>`}<span class="t"><b>${esc(c.name)}</b><small>${esc(c.model)} · ${c.km.toLocaleString('en-IN')} Kms</small></span>${S.car===k?`<span class="ck">${IC.check.replace('width="20" height="15"','width="12" height="9"')}</span>`:''}</button>`).join('')}
+    <button class="carrow add" data-demo="Adding a new car"><span class="th">${IC.plus}</span><span class="t">Add a car</span></button></div>`);
+  $('.carbtn').setAttribute('aria-expanded','true');
+}
+function detail(id){
+  const e=EXP.find(x=>x.id==id);
+  sheet(`<div class="det">${ci(e.cat,'fill')}<div><div style="font-size:13px;color:var(--mute)">${CAT[e.cat].label}</div><b>${inr(e.amt)}</b></div></div>
+    <div class="kv"><div><span>Description</span>${esc(e.title)}</div>${e.place?`<div><span>Where</span>${esc(e.place)}</div>`:''}<div><span>Date</span>${e.d} ${MONTHS[e.m]} 2017</div><div><span>Car</span>${esc(CARS[e.car].name)}</div></div>
+    <div class="acts2"><button class="del" data-del="${e.id}">Delete</button><button class="ok" data-closesheet>Done</button></div>`);
+}
+
+/* ---------------- render + paging ---------------- */
+function renderAll(){ $('#carName').textContent=car().name; $('.carbtn').setAttribute('aria-label',`${car().name}, switch car`); overview(); expenses(); mapPage(); drawer(); }
+const pager=$('#pager');
+function goPage(i,smooth=true){ pager.scrollTo({left:i*pager.clientWidth,behavior:smooth?'smooth':'auto'}); }
+pager.addEventListener('scroll',()=>{ const i=Math.round(pager.scrollLeft/pager.clientWidth); if(i!==S.page){ S.page=i; document.querySelectorAll('#dots button').forEach((b,j)=>b.classList.toggle('on',j===i)); } },{passive:true});
+addEventListener('resize',()=>{ goPage(S.page,false); layoutMap(false); });
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button'); if(e.target.id==='scrim'){ closeAll(); return; }
+  if(!t) return; const ds=t.dataset;
+  if('menu' in ds){ $('#drawer').classList.add('on'); scrim(true); return; }
+  if('bell' in ds){ reminders(); return; }
+  if('switch' in ds){ carSwitcher(); return; }
+  if(ds.page!==undefined){ goPage(+ds.page); return; }
+  if(ds.mon){ const m=S.m+ +ds.mon; if(m<minMonth()||m>maxMonth()) return; S.m=m; S.lastNew=null; overview(); expenses(); return; }
+  if(ds.cat){ S.filter=ds.cat; expenses(); goPage(1); return; }
+  if(ds.filter){ S.filter=ds.filter; expenses(); return; }
+  if('add' in ds){ openPick(); return; }
+  if('closepick' in ds){ closePick(); return; }
+  if(ds.new){ openForm(ds.new); return; }
+  if('cancel' in ds){ closeForm(); return; }
+  if(ds.sug){ const f=$('#form'); f.t.value=ds.sug; f.a.focus(); return; }
+  if('photo' in ds){ const p=$('#ph'); p.classList.add('ok'); p.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#33c376" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>'; $('#phT').textContent='Bill photo added (demo)'; return; }
+  if(ds.exp){ detail(ds.exp); return; }
+  if(ds.del){ const i=EXP.findIndex(x=>x.id==ds.del); const x=EXP.splice(i,1)[0]; closeAll(); overview(); expenses(); toast(`Deleted ${x.title} (${inr(x.amt)})`); return; }
+  if('closesheet' in ds){ closeAll(); return; }
+  if(ds.car){ if(ds.car===S.car){ closeAll(); return; } S.car=ds.car; S.m=10; S.filter='all'; S.lastNew=null; closeAll(); renderAll(); toast(`Showing ${car().name}`); return; }
+  if(ds.demo){ closeAll(); toast(`${ds.demo} isn’t part of this prototype`); return; }
+  if(ds.mf){ S.mapFilter=ds.mf; if(S.place!=null && ds.mf!=='all' && PLACES[S.place].cat!==ds.mf){ stopNav(); S.place=null; S.dir=false; } mapPage(); return; }
+  if(ds.place!==undefined){ const i=+ds.place; stopNav(); S.dir=false; S.place = S.place===i?null:i; mapPage(); return; }
+  if('dirx' in ds){ closeDir(); return; }
+  if('start' in ds){ if(S.nav||t.textContent==='Done'){ closeDir(); } else startNav(); return; }
+  if('call' in ds){ toast(`Calling ${PLACES[S.place].name} (demo)`); return; }
+  if('nav' in ds){ openDir(); return; }
+});
+document.addEventListener('input',e=>{ if(e.target.form&&e.target.form.id==='form'){ if(e.target.name==='a') e.target.value=e.target.value.replace(/\D/g,'').slice(0,6); validate(); } });
+$('#form').addEventListener('submit',e=>{
+  e.preventDefault(); const f=e.target; const amt=+f.a.value; if(!amt) return;
+  const n={id:++uid,car:S.car,cat:S.draft.cat,title:f.t.value.trim()||CAT[S.draft.cat].sugs[0],place:f.p.value.trim(),m:S.m,d:+f.d.value,amt};
+  EXP.push(n); S.lastNew=n.id; S.filter='all'; closeForm(); overview(); expenses(); goPage(1);
+  toast(`Added ${n.title} · ${inr(amt)}`);
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeAll(); closePick(); closeForm(); } });
+$('#scrim').addEventListener('click',closeAll);
+
+renderAll();
+</script>
+
+
+</body></html>

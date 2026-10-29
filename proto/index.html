@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Home Internet Plan Selection · Prototype</title>
+<meta name="description" content="Clickable mobile-first prototype of a home internet plan selection flow. Portfolio case study by Abhishek Bora.">
+<meta name="theme-color" content="#eb1d21">
+<script>document.documentElement.classList.add('embed')</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23eb1d21%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%227%22 fill=%22none%22 stroke=%22%23fff%22 stroke-width=%224%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,300,0..1,0&display=block" rel="stylesheet">
+<style>
+/* ------------------------------------------------------------------
+   Design tokens (taken from the Figma frames)
+------------------------------------------------------------------- */
+:root{
+  --red:#eb1d21;          /* red bars, active step */
+  --red-icon:#ee0000;     /* icons, badges, pills */
+  --black:#000;
+  --ink-700:#374151;
+  --ink-500:#6b7280;
+  --step-muted:rgba(60,60,67,.6);
+  --line:#d1d5db;
+  --line-soft:#e1e1e1;
+  --card:#fbfbfb;
+  --card-border:#d5d5d5;
+  --card-active:#fffafa;
+  --card-active-border:#4c4c4c;
+  --beige:#f9f1e8;
+  --green:#008a2f;
+  --pill-green:#c5edc5;
+  --promo:#ffe5e5;
+  --tray:#f4f4f4;
+  --tray-border:#ccc;
+  --cart-pill:#ffdcdc;
+  --review-bg:#f3f3f3;
+  --offer-bg:#f2ede3;
+  --page:#eeeeee;
+  --lh-auto:1.21;         /* Inter "Auto" line height */
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--page);color:var(--black);line-height:var(--lh-auto);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:2px solid #1a73e8;outline-offset:2px}
+a{color:inherit}
+.ms{font-family:"Material Symbols Outlined";font-weight:300;font-style:normal;font-size:20px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 20;flex:none;user-select:none;width:1em;height:1em;overflow:hidden}
+.ms.red{color:var(--red-icon)}
+.ms.fill{font-variation-settings:"FILL" 1,"wght" 300,"GRAD" 0,"opsz" 20}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ------------------------------------------------------------------
+   Device frame: full-bleed on phones, 360px Figma frame on desktop
+------------------------------------------------------------------- */
+.app{position:relative;width:100%;max-width:360px;margin:0 auto;background:#fff;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+@media (min-width:480px){
+  body{padding:24px 16px 40px}
+  .app{border:1px solid #989898;border-radius:16px;overflow:clip;min-height:calc(100dvh - 64px)}
+  .desk-note{display:block!important}
+}
+@media (max-width:479px){ .app{max-width:none} }
+.desk-note{display:none;text-align:center;font-size:12px;color:var(--ink-500);margin:0 auto 12px;max-width:360px}
+.desk-note a{color:var(--ink-700)}
+
+.proto-label{display:flex;align-items:center;justify-content:center;gap:6px;height:24px;background:#1f1f1f;color:#fff;font-size:11px;font-weight:500;letter-spacing:.01em}
+.proto-label .ms{font-size:14px}
+
+/* Header (54px) */
+.hdr{height:54px;display:flex;align-items:center;padding:0 16px 0 14px;border-bottom:1px solid #ececec;flex:none;background:#fff}
+.logo{display:flex;align-items:center;gap:6px;font-weight:800;font-size:21px;letter-spacing:-.04em;color:var(--red);text-decoration:none}
+.logo-mark{width:20px;height:20px;border-radius:5px;background:var(--red);display:grid;place-items:center}
+.logo-mark::after{content:"";width:8px;height:8px;border:2.5px solid #fff;border-radius:50%}
+.hdr-phone{margin-left:auto;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:800;letter-spacing:.01em;padding-right:10px;height:28px;border-right:1px solid #d9d9d9}
+.hdr-phone .ms{font-size:16px}
+.hdr-menu{width:34px;height:34px;display:grid;place-items:center;margin-right:-6px;margin-left:6px}
+.hdr-menu .ms{font-size:26px;font-variation-settings:"FILL" 0,"wght" 200,"GRAD" 0,"opsz" 24}
+
+/* Steps tracker (35px) */
+.steps{height:35px;display:flex;align-items:center;gap:8px;padding:10px 24px;flex:none;background:#fff}
+.step{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--step-muted);white-space:nowrap}
+.step::after{content:"";width:12px;height:1px;background:var(--step-muted)}
+.step:last-child::after{display:none}
+.step.on{color:var(--red);font-weight:800}
+.step.done{cursor:pointer}
+.backbar{height:35px;display:flex;align-items:center;padding:8px 16px;flex:none}
+.backlink{display:flex;align-items:center;gap:8px;font-size:12px}
+.backlink .ms{font-size:24px;font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;color:#1c1b1f}
+
+/* Red title bar */
+.redbar{background:var(--red);color:#fff;padding:16px 24px;display:flex;flex-direction:column;justify-content:center;gap:4px;flex:none}
+.redbar h1{font-size:22px;font-weight:700;line-height:var(--lh-auto)}
+.redbar p{font-size:12px;font-weight:700;display:flex;align-items:center;gap:4px}
+.redbar p.lg{font-size:14px}
+.redbar .ms{font-size:16px;color:#fff}
+
+/* Discounts / config */
+.config{padding:16px 16px 4px;display:flex;flex-direction:column;gap:12px}
+.addr{display:flex;align-items:center;gap:2px;padding-left:8px;font-size:12px}
+.addr .ms{font-size:16px;color:#1c1b1f;font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 20}
+.addr button{text-decoration:underline;margin-left:8px;font-size:12px}
+.cfg-card{background:var(--beige);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.cfg-row{display:flex;align-items:center;justify-content:space-between}
+.cfg-row b{display:block;font-size:12px;font-weight:700}
+.cfg-row span{display:block;font-size:12px;color:var(--ink-500);margin-top:2px}
+.cfg-sep{height:1px;background:var(--line)}
+.toggle{width:40px;height:24px;border-radius:12px;background:#b8bcc3;padding:2px;display:flex;justify-content:flex-start;align-items:center;transition:background .18s;flex:none}
+.toggle::after{content:"";width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .18s}
+.toggle[aria-checked="true"]{background:var(--green)}
+.toggle[aria-checked="true"]::after{transform:translateX(16px)}
+.pill-btn{border:1px solid #000;border-radius:20px;padding:6px 12px;font-size:12px;font-weight:700;white-space:nowrap;flex:none}
+
+/* Plan list + cards */
+.list{padding:12px 16px 24px;display:flex;flex-direction:column;gap:24px;flex:1}
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:12px;overflow:hidden;transition:box-shadow .2s,border-color .2s,background .2s}
+.card.open{background:var(--card-active);border-color:var(--card-active-border);box-shadow:0 0 8px 2px rgba(0,0,0,.22)}
+.card-body{padding:16px;display:flex;flex-direction:column;gap:12px}
+.card-head{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left}
+.eyebrow{font-size:12px;font-weight:600;color:var(--ink-500)}
+.pname{font-size:22px;font-weight:700;line-height:28px;letter-spacing:-.03em;margin-top:5px}
+.pname.tight{margin-top:2px}
+.price-col{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;align-self:stretch;gap:4px}
+.was{font-size:12px;color:var(--ink-500);display:flex;gap:2px}
+.was s{text-decoration:line-through}
+.now{display:flex;align-items:baseline;gap:1px}
+.now b{font-size:20px;font-weight:400}
+.now i{font-style:normal;font-size:12px;font-weight:600;color:var(--ink-700)}
+.fees{font-size:12px;color:var(--ink-500)}
+.summary-row{display:flex;justify-content:space-between;align-items:flex-end;padding-right:8px}
+.bullets{display:flex;flex-direction:column;gap:8px}
+.bl{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-700)}
+.chev{font-size:22px;color:#1c1b1f;transition:transform .2s;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24}
+.card.open .chev{transform:rotate(180deg)}
+.gift-ic{width:20px;height:20px;flex:none;color:var(--red-icon)}
+
+.details,.tvdet{display:flex;flex-direction:column;gap:12px}
+/* Smooth expand / collapse */
+.clp{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .38s cubic-bezier(.2,.7,.2,1),opacity .3s ease;margin-top:-12px}
+.clp>.in{overflow:hidden;min-height:0}
+.clp>.in>*{margin-top:12px}
+.card.open .clp{grid-template-rows:1fr;opacity:1}
+.clp.rev{grid-template-rows:1fr;opacity:1}
+.card.open .clp.rev{grid-template-rows:0fr;opacity:0}
+/* Embedded in the phone-frame showcase page */
+.embed body{background:#fff;padding:0}
+.embed .proto-label,.embed .desk-note{display:none!important}
+.embed .app{max-width:none;border:0;border-radius:0;min-height:100vh}
+.feats{display:flex;flex-direction:column;gap:16px}
+.feat{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;line-height:18px}
+.feat.top{align-items:flex-start}
+.feat small{display:block;font-size:11px;font-weight:400;line-height:16px;color:var(--ink-500)}
+.feats.g8 .feat{gap:8px}
+.hr{height:1px;background:var(--line-soft)}
+.gifts-title{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:600;line-height:18px}
+.incl{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px}
+.incl-img{width:48px;height:28px;border-radius:4px;background:#232f3e;color:#fff;display:grid;place-items:center;font-size:8px;font-weight:800;letter-spacing:.06em;flex:none;margin-left:1px}
+.incl-txt{display:flex;flex-direction:column;gap:7px;font-size:11px;padding:3px 0 2px}
+.tag{display:inline-flex;align-self:flex-start;padding:2px 4px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase;line-height:11px}
+.tag.green{background:var(--pill-green);color:var(--ink-700);margin-left:-2px}
+.tag.red{background:var(--red-icon);color:#fff}
+.choose h3{font-size:13px;font-weight:600;line-height:18px;margin-bottom:8px}
+.carousel{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin-right:-16px;padding-right:16px;scrollbar-width:none}
+.carousel::-webkit-scrollbar{display:none}
+.opt{flex:none;width:250px;min-height:131px;background:#fff;border:1px solid #d1d1d1;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;text-align:left;scroll-snap-align:start;font-size:11px;position:relative}
+.opt[aria-checked="true"]{border:1.5px solid #000;padding:9.5px 8px 8px 9.5px}
+.opt-top{display:flex;justify-content:space-between;align-items:flex-start;min-height:24px}
+.opt .ms.check{font-size:24px;color:#1c1b1f;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24;opacity:.35}
+.opt[aria-checked="true"] .ms.check{opacity:1}
+.opt ul{list-style:none;line-height:16px}
+.opt li{position:relative;padding-left:14px}
+.opt li::before{content:"•";position:absolute;left:4px}
+.opt .price{font-weight:600;line-height:16px;margin-top:auto;padding-left:14px;position:relative}
+.opt .price::before{content:"•";position:absolute;left:4px}
+.save{color:var(--green);margin-left:4px}
+.opt-img{width:59px;height:38px;border-radius:3px;flex:none}
+.opt-img.credit{background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;letter-spacing:-.02em}
+.opt-img.credit span{color:var(--red)}
+.opt-img.tv{background:linear-gradient(135deg,#3a7bd5,#8e44ad 55%,#f39c12);border:3px solid #222;border-bottom-width:5px}
+.opt-img.deal{background:#f1f1f1;display:grid;place-items:center}
+.promo{background:var(--promo);border-radius:8px;padding:8px 16px;text-align:center;color:var(--red);font-size:11px;font-weight:700}
+.cta-row{display:flex;gap:16px;align-items:center}
+.btn{height:40px;border-radius:20px;padding:6px 12px;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;flex:1;white-space:nowrap}
+.btn.dark{background:#000;color:#fff;border:1px solid #000}
+.btn.line{border:1px solid #000;color:#000;background:transparent}
+.btn.line.added,.pill-btn.added{background:#000;color:#fff}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn .ms{font-size:20px}
+.collapse{width:30px;height:40px;display:grid;place-items:center;flex:none}
+.collapse .ms{font-size:22px;transform:rotate(180deg);color:#1c1b1f}
+
+/* Add-ons hub */
+.hub-head{display:flex;justify-content:space-between;align-items:flex-start}
+.hub-title{display:flex;align-items:center;gap:8px;height:32px}
+.hub-title .ms{font-size:24px;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24}
+.hub-title h2{font-size:22px;font-weight:700;line-height:28px;letter-spacing:-.03em}
+.shop{width:80px;height:32px;border:1px solid #000;border-radius:20px;font-size:14px;font-weight:700;flex:none}
+.hub-desc{font-size:12px}
+.hub-added{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--green)}
+.hub-added .ms{font-size:16px}
+.logos{display:flex;justify-content:space-between;gap:12px}
+.logo-tile{width:64px;height:64px;border-radius:8px;flex:none;display:grid;place-items:center;text-align:center;font-weight:800;line-height:1.05}
+
+/* Perk tiles (neutral stand-ins for partner logos) */
+.lt-a{background:#000201;color:#fff;font-size:12px}
+.lt-a em{font-style:normal;display:block;width:48px;height:48px;border-radius:8px;background:linear-gradient(160deg,#0b1d5c,#101c3d 60%,#0a1a2f);display:grid;place-items:center;font-size:10px;letter-spacing:.02em}
+.lt-b{background:#fff;border:1px solid #e4e4e4;color:#222;font-size:10px;font-weight:700;text-align:left;padding-left:10px;place-items:center start}
+.lt-b span{display:block;font-weight:500;font-size:8px;line-height:1.35}
+.lt-c{background:#fff;border:1px solid #e4e4e4;color:#c40000;font-size:10px;letter-spacing:.06em}
+.lt-c span{display:block;color:#5a2ea6;font-size:8px;margin-top:3px}
+.lt-d{background:linear-gradient(160deg,#fd5b6b,#e0162b);color:#fff;font-size:13px}
+
+/* Perks list */
+.perk .card-body{flex-direction:row;gap:12px;align-items:flex-start}
+.perk .logo-tile{width:80px;height:80px}
+.perk .lt-a em{width:48px;height:48px}
+.perk-info{display:flex;flex-direction:column;gap:8px;flex:1}
+.perk-info h2{font-size:20px;font-weight:700;line-height:28px;letter-spacing:-.03em}
+.perk-price{font-size:13px;font-weight:700}
+.perk-price s{font-weight:400;margin-left:6px}
+.perk .pill-btn{width:80px;height:32px;font-size:14px;padding:6px 12px;display:flex;align-items:center;justify-content:center;gap:2px}
+.perk .pill-btn .ms{font-size:16px}
+
+/* Two-line product names (Live TV / Home Phone) */
+.card-head.tall{align-items:flex-start}
+.pname.two{max-width:152px;margin:0}
+.tv-sum{display:flex;justify-content:space-between;align-items:flex-end}
+.tv-sum .ms{font-size:22px}
+
+/* Review */
+.review-title{padding:4px 24px 8px;font-size:22px;font-weight:700;line-height:28px;letter-spacing:-.03em}
+.offer{margin:6px 13px 0;background:var(--offer-bg);border-radius:8px;padding:13px 14px;display:flex;gap:9px;align-items:center}
+.offer-logo{width:60px;height:60px;border-radius:4px;background:#111;display:grid;place-items:center;flex:none}
+.offer-logo .logo-mark{width:30px;height:30px;border-radius:8px}
+.offer-logo .logo-mark::after{width:12px;height:12px;border-width:3.5px}
+.offer small{display:block;font-size:12px;color:var(--ink-500)}
+.offer strong{display:flex;align-items:center;gap:4px;font-size:15px;font-weight:500;letter-spacing:-.02em;margin:2px 0 6px}
+.offer strong .ms{font-size:15px}
+.offer button{font-size:13px;text-decoration:underline;text-underline-offset:2px}
+.offer.applied button{text-decoration:none;color:var(--green);font-weight:700}
+.order{margin:10px 13px 16px;background:var(--review-bg);border-radius:8px;padding:0 12px 16px 12px}
+.o-row{display:flex;justify-content:space-between;align-items:flex-start;padding:17px 0 13px 2px;font-size:13px;font-weight:600;line-height:18px;border-bottom:1px solid rgba(0,0,0,.1)}
+.o-row .amt{font-weight:700}
+.o-plan{display:flex;gap:6px;padding:12px 0 17px;border-bottom:1px solid rgba(0,0,0,.1);margin-left:-10px}
+.router{width:71px;height:111px;flex:none;display:grid;place-items:center;background:#f7f7f7}
+.router i{width:34px;height:66px;border-radius:5px 5px 3px 3px;background:linear-gradient(90deg,#fff,#f4f4f4 70%,#e3e3e3);box-shadow:0 5px 5px -2px rgba(0,0,0,.18);position:relative}
+.router i::after{content:"";position:absolute;left:15px;top:30px;width:4px;height:4px;border-radius:50%;background:#e2c7c7}
+.o-plan-txt{font-size:13px;line-height:24px;padding-top:2px}
+.o-plan-txt b{display:block;font-size:20px;font-weight:700;letter-spacing:-.03em;line-height:24px}
+.o-plan-txt .p{font-size:14px}
+.o-plan-txt .d{font-size:12px;line-height:18px;margin-top:6px}
+.o-sec{padding:15px 0 13px 2px;border-bottom:1px solid rgba(0,0,0,.1);font-size:13px;line-height:20px}
+.o-sec:last-child{border-bottom:0}
+.o-sec .h{display:flex;justify-content:space-between;font-weight:600;line-height:18px;margin-bottom:1px}
+.o-sec .inc{color:var(--green);font-weight:700}
+.o-sec ul{list-style:none}
+.o-sec li{position:relative;padding-left:24px}
+.o-sec li::before{content:"•";position:absolute;left:10px}
+.o-sec .sub{font-weight:700;margin-top:20px}
+.o-line{display:flex;justify-content:space-between;gap:12px}
+.o-line button{font-size:12px;text-decoration:underline;color:var(--ink-500);margin-left:8px}
+.o-total{display:flex;justify-content:space-between;font-size:15px;font-weight:700;padding:14px 0 2px 2px}
+
+/* Checkout tray (sticky monthly total) */
+.tray{position:sticky;bottom:0;z-index:5;background:var(--tray);border:1px solid var(--tray-border);border-radius:12px;box-shadow:0 0 8px 2px rgba(0,0,0,.1);padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px;margin-top:auto;flex:none}
+.tray-sum{text-align:center;font-size:12px}
+.tray-sum b{font-weight:700}
+.tray-sum .bump{animation:bump .35s ease}
+@keyframes bump{40%{color:var(--green)}}
+.tray-row{display:flex;gap:16px;align-items:center}
+.cart{position:relative;width:56px;height:40px;border-radius:100px;background:var(--cart-pill);display:grid;place-items:center;flex:none}
+.cart .ms{font-size:24px;color:var(--red-icon);font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24}
+.badge{position:absolute;left:37px;top:-3px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--red-icon);color:#fff;font-size:9px;font-weight:700;display:grid;place-items:center}
+.badge[hidden]{display:none}
+
+/* Screens + toast + end dialog */
+.screen{display:none;flex-direction:column;flex:1}
+.screen.active{display:flex}
+.toast{position:fixed;left:50%;bottom:120px;transform:translate(-50%,20px);background:#1f1f1f;color:#fff;font-size:12px;padding:10px 14px;border-radius:8px;opacity:0;pointer-events:none;transition:.2s;z-index:50;max-width:300px;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;z-index:60}
+.sheet.show{display:flex}
+.sheet-box{background:#fff;width:100%;max-width:360px;border-radius:16px 16px 0 0;padding:24px 20px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px}
+@media (min-width:480px){.sheet{align-items:center}.sheet-box{border-radius:16px}}
+.sheet-box h2{font-size:22px;font-weight:700;letter-spacing:-.03em;line-height:28px}
+.sheet-box p{font-size:13px;color:var(--ink-700);line-height:1.45}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<p class="desk-note">Mobile prototype shown at 360px, the width of the Figma frames. Open it on a phone for the real feel.</p>
+
+<div class="app" id="app">
+  <div class="proto-label" role="note"><span class="ms" aria-hidden="true">info</span>Portfolio prototype, not a real store</div>
+
+  <header class="hdr">
+    <a class="logo" href="#plan" aria-label="Acme home (placeholder brand)"><span class="logo-mark" aria-hidden="true"></span>acme</a>
+    <button class="hdr-phone" data-toast="Calling is disabled in this prototype."><span class="ms" aria-hidden="true">call</span>1-800-000-0000</button>
+    <button class="hdr-menu" aria-label="Menu" data-toast="Menu isn't part of this prototype."><span class="ms" aria-hidden="true">menu</span></button>
+  </header>
+
+  <!-- ============ STEP 1 · PLAN ============ -->
+  <section class="screen" id="s-plan" aria-labelledby="t-plan">
+    <nav class="steps" aria-label="Checkout progress">
+      <span class="step on" aria-current="step">Plan</span><span class="step">Services</span><span class="step">Review &amp; Checkout</span>
+    </nav>
+    <div class="redbar">
+      <h1 id="t-plan">Select your plan</h1>
+      <p><span class="ms" aria-hidden="true">local_shipping</span>Get fast internet as early as June 4th</p>
+    </div>
+    <div class="config">
+      <div class="addr"><span class="ms" aria-hidden="true">location_on</span>123 Main St, Newport, RI 02840<button data-toast="Address is fixed in this prototype.">Change</button></div>
+      <div class="cfg-card">
+        <div class="cfg-row">
+          <div><b>AutoPay &amp; paper-free billing discount</b><span>Save $10/mo with paperless billing.</span></div>
+          <button class="toggle js-autopay" role="switch" aria-checked="true" aria-label="AutoPay and paper-free billing discount"></button>
+        </div>
+        <div class="cfg-sep"></div>
+        <div class="cfg-row">
+          <div><b>Acme mobile customer?</b><span>Qualify for additional bundle discounts</span></div>
+          <button class="pill-btn" data-toast="Sign in isn't available in this prototype.">Sign In</button>
+        </div>
+      </div>
+    </div>
+    <div class="list" id="plan-list"></div>
+    <div class="tray js-tray"></div>
+  </section>
+
+  <!-- ============ STEP 2 · ADD-ONS HUB ============ -->
+  <section class="screen" id="s-services" aria-labelledby="t-services">
+    <nav class="steps" aria-label="Checkout progress">
+      <button class="step done" data-go="plan">Plan</button><span class="step on" aria-current="step">Services</span><span class="step">Review &amp; Checkout</span>
+    </nav>
+    <div class="redbar">
+      <h1 id="t-services">Enhance your services</h1>
+      <p>Save on streaming services, and explore Live TV <br>and home phone options</p>
+    </div>
+    <div class="list">
+      <article class="card"><div class="card-body">
+        <div class="hub-head">
+          <div class="hub-title"><span class="ms red" aria-hidden="true">forms_add_on</span><h2>Perks</h2></div>
+          <button class="shop" data-go="perks" aria-label="Shop perks">Shop</button>
+        </div>
+        <p class="hub-desc">Save on popular perks and add them for as little as $10/month per line.</p>
+        <div class="hub-added" data-added="perks" hidden></div>
+        <div class="logos" aria-hidden="true">
+          <span class="logo-tile lt-a"><em>D+ H E+</em></span>
+          <span class="logo-tile lt-b"><div>One<span>Music<br>TV+<br>Arcade<br>iCloud+</span></div></span>
+          <span class="logo-tile lt-c"><div>N·HBO<span>MAX</span></div></span>
+          <span class="logo-tile lt-d">♫</span>
+        </div>
+      </div></article>
+      <article class="card"><div class="card-body">
+        <div class="hub-head">
+          <div class="hub-title"><span class="ms red" aria-hidden="true">desktop_windows</span><h2>Live TV</h2></div>
+          <button class="shop" data-go="tv" aria-label="Shop Live TV">Shop</button>
+        </div>
+        <p class="hub-desc">Select a plan and customize it to fit your viewing preferences.</p>
+        <div class="hub-added" data-added="tv" hidden></div>
+      </div></article>
+      <article class="card"><div class="card-body">
+        <div class="hub-head">
+          <div class="hub-title"><span class="ms red" aria-hidden="true">call</span><h2>Home Phone</h2></div>
+          <button class="shop" data-go="phone" aria-label="Shop Home Phone">Shop</button>
+        </div>
+        <p class="hub-desc">Access international calling to 98% of the world. Nationwide coverage with calling features.</p>
+        <div class="hub-added" data-added="phone" hidden></div>
+      </div></article>
+    </div>
+    <div class="tray js-tray"></div>
+  </section>
+
+  <!-- ============ ADD-ON · PERKS ============ -->
+  <section class="screen" id="s-perks" aria-labelledby="t-perks">
+    <div class="backbar"><button class="backlink" data-go="services"><span class="ms" aria-hidden="true">arrow_back</span>Back to Services</button></div>
+    <div class="redbar">
+      <h1 id="t-perks">Popular perks</h1>
+      <p class="lg">Save on every one. Starting at just $10/mo.</p>
+    </div>
+    <div class="list" id="perk-list"></div>
+    <div class="tray js-tray"></div>
+  </section>
+
+  <!-- ============ ADD-ON · LIVE TV ============ -->
+  <section class="screen" id="s-tv" aria-labelledby="t-tv">
+    <div class="backbar"><button class="backlink" data-go="services"><span class="ms" aria-hidden="true">arrow_back</span>Back to Services</button></div>
+    <div class="redbar">
+      <h1 id="t-tv">Explore Live TV</h1>
+      <p>Join the 500+ customers who choose Live TV <br>for their home entertainment</p>
+    </div>
+    <div class="config">
+      <div class="cfg-card">
+        <div class="cfg-row">
+          <div><b>AutoPay &amp; paper-free billing discount</b><span>Save $10/mo with paperless billing.</span></div>
+          <button class="toggle js-autopay" role="switch" aria-checked="true" aria-label="AutoPay and paper-free billing discount"></button>
+        </div>
+      </div>
+    </div>
+    <div class="list" id="tv-list"></div>
+    <div class="tray js-tray"></div>
+  </section>
+
+  <!-- ============ ADD-ON · HOME PHONE ============ -->
+  <section class="screen" id="s-phone" aria-labelledby="t-phone">
+    <div class="backbar"><button class="backlink" data-go="services"><span class="ms" aria-hidden="true">arrow_back</span>Back to Services</button></div>
+    <div class="redbar">
+      <h1 id="t-phone">Acme Home Phone</h1>
+      <p>Access international calling to 98% of the world, and 30+ premium features</p>
+    </div>
+    <div class="list">
+      <article class="card open"><div class="card-body" style="gap:16px">
+        <div class="card-head tall">
+          <h2 class="pname two">Acme Home Phone</h2>
+          <div class="price-col" style="justify-content:flex-start">
+            <div class="now"><b>$30</b><i>/mo</i></div>
+            <span class="fees">Plus taxes and fees</span>
+          </div>
+        </div>
+        <div class="feats g8">
+          <div class="feat top"><span class="ms red" aria-hidden="true">language</span><div>International calls to one country<small>Change your selected country once per billing cycle</small></div></div>
+          <div class="feat top"><span class="ms red" aria-hidden="true">call_log</span><div>Unlimited calling<small>Available across the US and to Puerto Rico and Canada.</small></div></div>
+          <div class="feat top"><span class="ms red" aria-hidden="true">stack_star</span><div>30+ calling features<small>Voice Mail, Caller ID, Call Waiting, Call Filter and more.</small></div></div>
+          <div class="feat top"><span class="ms red" aria-hidden="true">contact_mail</span><div>Online account manager<small>Helps you access voice mail and set up your calling features.</small></div></div>
+          <div class="feat top"><span class="ms red" aria-hidden="true">paid</span><div>Fixed monthly rate<small>Your rate stays the same each month</small></div></div>
+        </div>
+        <button class="btn line js-phone">Select and continue</button>
+      </div></article>
+    </div>
+    <div class="tray js-tray"></div>
+  </section>
+
+  <!-- ============ STEP 3 · REVIEW ============ -->
+  <section class="screen" id="s-review" aria-labelledby="t-review">
+    <nav class="steps" aria-label="Checkout progress">
+      <button class="step done" data-go="plan">Plan</button><button class="step done" data-go="services">Services</button><span class="step on" aria-current="step">Review &amp; Checkout</span>
+    </nav>
+    <h1 class="review-title" id="t-review">Review your order</h1>
+    <div class="offer" id="offer">
+      <div class="offer-logo" aria-hidden="true"><span class="logo-mark"></span></div>
+      <div>
+        <small>Online exclusive</small>
+        <strong>Unlock a $100 Acme Gift Card! <span class="ms" aria-hidden="true">info</span></strong>
+        <button class="js-offer">Apply offer</button>
+      </div>
+    </div>
+    <div class="order" id="order"></div>
+    <div class="tray js-tray"></div>
+  </section>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-t">
+    <div class="sheet-box">
+      <h2 id="sheet-t">That's the end of the prototype</h2>
+      <p>Payment is out of scope for this case study, so no order was placed.</p>
+      <p id="sheet-sum"></p>
+      <button class="btn dark js-restart">Start over</button>
+      <button class="btn line js-close">Back to review</button>
+    </div>
+  </div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></symbol>
+</svg>
+
+<script>
+/* ------------------------------------------------------------------
+   Data (copy from the Figma frames; brand names neutralised)
+------------------------------------------------------------------- */
+const PLANS = [
+  {id:'300', name:'300 Mbps', was:59.99, now:49.99, years:3, speed:'300 Mbps', router:'Router included', devices:50, card:'$100 Acme Gift Card.¹'},
+  {id:'500', name:'500 Mbps', was:89.99, now:79.99, years:3, speed:'500 Mbps', router:'Router included', devices:50, card:'$100 Acme Gift Card.¹'},
+  {id:'1g',  name:'1 Gig',    was:99.99, now:89.99, years:5, speed:'940 Mbps', router:'Router and Whole-Home Wi-Fi included', devices:50, card:'$200 Amazon Gift Card.¹'},
+  {id:'2g',  name:'2 Gig',    was:119.99,now:109.99,years:5, speed:'2.3 Gig',  router:'Router and Whole-Home Wi-Fi included', devices:70, card:'$200 Amazon Gift Card.¹'},
+  {id:'5g',  name:'5 Gig',    was:129.99,now:119.99,years:5, speed:'5.3 Gig',  router:'Router and Whole-Home Wi-Fi included', devices:70, card:'$200 Amazon Gift Card.¹'},
+];
+const GIFTS = [
+  {id:'triple', label:'Triple Deal', img:'deal', lines:['$400 off select Samsung products','FOX One Perk for 3 months','Home Device Protect for $0.99 for 3 months.²'], save:'532.00'},
+  {id:'credit', label:'$15/mo bill credit', img:'credit', text:'Get $15 credit per month for 36 months.²', save:'540.00'},
+  {id:'tv', label:'Samsung 43" Class Q7F QLED TV', img:'tv', text:'Samsung 43" Class Q7F QLED TV. Retail price: $399.99', save:'399.99'},
+];
+const PERKS = [
+  {id:'dhe', name:'Disney+, Hulu, ESPN+ (With Ads)', price:10, label:'$10/mo', was:'$19.99/mo', tile:'<span class="logo-tile lt-a"><em>D+ H E+</em></span>'},
+  {id:'one', name:'Apple One', price:15, label:'$15-20/mo', was:'$24.99/mo', tile:'<span class="logo-tile lt-b"><div>One<span>Music<br>TV+<br>Arcade<br>iCloud+</span></div></span>', short:true},
+  {id:'nhm', name:'Netflix &amp; HBO Max (With Ads)', price:13, label:'$13/mo', was:'$20.99/mo', tile:'<span class="logo-tile lt-c"><div>N·HBO<span>MAX</span></div></span>'},
+  {id:'amf', name:'Apple Music Family', price:13, label:'$13/mo', was:'$19.99/mo', tile:'<span class="logo-tile lt-d">♫</span>', short:true, big:true},
+];
+const TV = [
+  {id:'ess', name:'Acme TV Essentials', was:75, now:86, feats:[
+     ['subscriptions','125+ Channels','Includes Hallmark, Food Network, TV Land, Comedy Central Paramount'],
+     ['router','1 Set top Box'],
+     ['devices','Stream unlimited, 2 months on us']], gift:true},
+  {id:'test', name:'Acme TV Test Drive', was:116, now:105, feats:[
+     ['subscriptions','425+ Channels','Try it all for 60 days, then pick what you love.']]},
+];
+const PHONE_PRICE = 30;
+
+/* ------------------------------------------------------------------
+   State
+------------------------------------------------------------------- */
+const S = {plan:null, open:'1g', autopay:true, gift:'triple', perks:new Set(), tv:null, tvOpen:'ess', phone:false, offer:false};
+const $ = (s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const money = n => '$'+n.toFixed(2);
+const planById = id => PLANS.find(p=>p.id===id);
+const planPrice = p => S.autopay ? p.now : p.was;
+function monthly(){
+  let t = 0;
+  if(S.plan) t += planPrice(planById(S.plan));
+  S.perks.forEach(id=> t += PERKS.find(p=>p.id===id).price);
+  if(S.tv) t += TV.find(x=>x.id===S.tv).now;
+  if(S.phone) t += PHONE_PRICE;
+  return t;
+}
+const itemCount = () => (S.plan?1:0) + S.perks.size + (S.tv?1:0) + (S.phone?1:0);
+const giftSvg = '<svg class="gift-ic" aria-hidden="true"><use href="#gift"/></svg>';
+
+/* ------------------------------------------------------------------
+   Renderers
+------------------------------------------------------------------- */
+function renderPlans(){
+  $('#plan-list').innerHTML = PLANS.map(p=>{
+    const open = S.open===p.id, inCart = S.plan===p.id;
+    const opts = GIFTS.map(g=>`
+      <button class="opt" role="radio" aria-checked="${S.gift===g.id}" data-gift="${g.id}">
+        <div class="opt-top">
+          ${g.img==='deal' ? '<span class="tag red">Triple deal</span>' : `<span class="opt-img ${g.img}">${g.img==='credit'?'$<span>15</span>':''}</span>`}
+          <span class="ms check" aria-hidden="true">check_circle</span>
+        </div>
+        ${g.lines ? `<ul>${g.lines.map(l=>`<li>${l}</li>`).join('')}</ul>` : `<div>${g.text}</div>`}
+        <div class="price">Price: $0.00 <span class="save">Save $${g.save}</span></div>
+      </button>`).join('');
+    return `
+    <article class="card ${open?'open':''}" data-plan="${p.id}">
+      <div class="card-body">
+        <button class="card-head js-toggle" aria-expanded="${open}" aria-controls="d-${p.id}">
+          <div><div class="eyebrow">Acme Fiber</div><div class="pname">${p.name}</div></div>
+          <div class="price-col">
+            <div class="was">${S.autopay?`<s>${money(p.was)}</s> /mo`:'&nbsp;'}</div>
+            <div class="now"><b>${money(planPrice(p))}</b><i>/mo</i></div>
+          </div>
+        </button>
+        <div class="clp rev"><div class="in"><div class="summary-row js-toggle" role="button" tabindex="-1">
+          <div class="bullets">
+            <div class="bl"><span class="ms red" aria-hidden="true">handshake</span>${p.years}-year price guarantee*</div>
+            <div class="bl">${giftSvg}2 special gifts</div>
+          </div>
+          <span class="ms chev" aria-hidden="true">keyboard_arrow_down</span>
+        </div></div></div>
+        <div class="clp"><div class="in"><div class="details" id="d-${p.id}">
+          <div class="feats">
+            <div class="feat"><span class="ms red" aria-hidden="true">handshake</span>${p.years}-year price guarantee*</div>
+            <div class="feat"><span class="ms red" aria-hidden="true">avg_pace</span><div>Download and upload speeds of <br>up to ${p.speed}</div></div>
+            <div class="feat"><span class="ms red" aria-hidden="true">router</span><div>${p.router}<small>Supports up to ${p.devices} devices</small></div></div>
+          </div>
+          <div class="hr"></div>
+          <div class="gifts-title">${giftSvg}2 special gifts on us</div>
+          <div class="incl">
+            <span class="incl-img" aria-hidden="true">GIFT CARD</span>
+            <div class="incl-txt"><span class="tag green">Included with plan</span><span>${p.card}</span></div>
+          </div>
+          <div class="choose">
+            <h3 id="g-${p.id}">Choose 1 additional gift</h3>
+            <div class="carousel" role="radiogroup" aria-labelledby="g-${p.id}">${opts}</div>
+          </div>
+          <div class="promo">Online only: $99 professional setup fee waived</div>
+          <div class="cta-row">
+            <button class="btn dark js-add" data-add="${p.id}">${inCart?'Continue':'Add to cart'}</button>
+            <button class="collapse js-toggle" aria-label="Collapse ${p.name}"><span class="ms" aria-hidden="true">keyboard_arrow_down</span></button>
+          </div>
+        </div></div></div>
+      </div>
+    </article>`;
+  }).join('');
+}
+
+function renderPerks(){
+  $('#perk-list').innerHTML = PERKS.map(p=>{
+    const on = S.perks.has(p.id);
+    return `<article class="card perk"><div class="card-body">
+      ${p.tile}
+      <div class="perk-info">
+        <h2>${p.name}</h2>
+        <div class="perk-price" ${p.big?'style="font-size:14px"':''}>${p.label}<s>${p.was}</s></div>
+        <button class="pill-btn js-perk ${on?'added':''}" data-perk="${p.id}" aria-pressed="${on}">${on?'<span class="ms" aria-hidden="true">check</span>Added':'Add'}</button>
+      </div></div></article>`;
+  }).join('');
+}
+
+function renderTV(){
+  $('#tv-list').innerHTML = TV.map(t=>{
+    const open = S.tvOpen===t.id, on = S.tv===t.id;
+    const feats = t.feats.map(f=>`<div class="feat ${f[2]?'top':''}"><span class="ms red" aria-hidden="true">${f[0]}</span><div>${f[1]}${f[2]?`<small>${f[2]}</small>`:''}</div></div>`).join('');
+    return `<article class="card ${open?'open':''}" data-tvcard="${t.id}"><div class="card-body">
+      <button class="card-head tall js-tvtoggle" data-tv="${t.id}" aria-expanded="${open}">
+        <h2 class="pname two">${t.name}</h2>
+        <div class="price-col" style="gap:1px">
+          <div class="was"><s>$${t.was}</s> /mo</div>
+          <div class="now"><b>$${t.now}</b><i>/mo</i></div>
+          <span class="fees">Plus taxes and fees</span>
+        </div>
+      </button>
+      <div class="clp rev"><div class="in"><div class="tv-sum js-tvtoggle" data-tv="${t.id}" role="button" tabindex="-1">${feats}<span class="ms chev" aria-hidden="true">keyboard_arrow_down</span></div></div></div>
+      <div class="clp"><div class="in"><div class="tvdet">
+        <div class="feats">${feats}</div>
+        ${t.gift ? `<div class="hr"></div>
+        <div class="gifts-title">${giftSvg}1 special gift on us</div>
+        <div class="incl"><span class="incl-img" aria-hidden="true">GIFT CARD</span><div class="incl-txt"><span class="tag green">Included with plan</span><span>$200 Amazon Gift Card.¹</span></div></div>`:''}
+        <div class="cta-row">
+          <button class="btn line js-tvadd ${on?'added':''}" data-tv="${t.id}" aria-pressed="${on}">${on?'<span class="ms" aria-hidden="true">check</span>Added':'Add to cart'}</button>
+          <button class="collapse js-tvtoggle" data-tv="${t.id}" aria-label="Collapse ${t.name}"><span class="ms" aria-hidden="true">keyboard_arrow_down</span></button>
+        </div>
+      </div></div></div>
+    </div></article>`;
+  }).join('');
+}
+
+function renderHub(){
+  const lines = {
+    perks: [...S.perks].map(id=>PERKS.find(p=>p.id===id).name).join(', '),
+    tv: S.tv ? TV.find(t=>t.id===S.tv).name : '',
+    phone: S.phone ? 'Acme Home Phone' : ''
+  };
+  $$('[data-added]').forEach(el=>{
+    const v = lines[el.dataset.added];
+    el.hidden = !v;
+    el.innerHTML = v ? `<span class="ms" aria-hidden="true">check_circle</span><span>Added: ${v}</span>` : '';
+    const shop = el.closest('.card-body').querySelector('.shop');
+    shop.textContent = v ? 'Edit' : 'Shop';
+  });
+}
+
+function renderReview(){
+  const p = planById(S.plan);
+  const g = GIFTS.find(x=>x.id===S.gift);
+  const addOns = [];
+  S.perks.forEach(id=>{const k=PERKS.find(x=>x.id===id); addOns.push({name:k.name, price:k.price, rm:()=>S.perks.delete(id)});});
+  if(S.tv){const t=TV.find(x=>x.id===S.tv); addOns.push({name:t.name, price:t.now, rm:()=>S.tv=null});}
+  if(S.phone) addOns.push({name:'Acme Home Phone', price:PHONE_PRICE, rm:()=>S.phone=false});
+  window.__rm = addOns.map(a=>a.rm);
+  $('#order').innerHTML = `
+    <div class="o-row"><span>Internet &amp; perks</span><span class="amt">${money(planPrice(p))}/mo</span></div>
+    <div class="o-plan">
+      <div class="router" aria-hidden="true"><i></i></div>
+      <div class="o-plan-txt">Plan<b>Acme Fiber ${p.name}</b><span class="p">${money(planPrice(p))}/mo</span>
+        <div class="d">${S.autopay?'With AutoPay &amp; paper-free billing discount':'Without AutoPay discount'}<br>${p.years}-year price guarantee*</div></div>
+    </div>
+    <div class="o-sec"><div class="h"><span>Equipment &amp; Connections</span><span class="inc">Included</span></div>${p.router.replace(' included','').replace('Router and','Router +')}</div>
+    <div class="o-sec"><div class="h"><span>Special gifts, on us</span><span class="inc">Included</span></div>${p.card.replace('.¹','')}
+      <div class="sub">Additional gift</div>${g.label}
+      ${g.lines?`<ul>${g.lines.map(l=>`<li>${l.replace('.²','')}</li>`).join('')}</ul>`:''}
+      ${S.offer?'<div class="sub">Online exclusive</div>$100 Acme Gift Card':''}
+      <div class="sub">Setup</div>Professional setup $0
+    </div>
+    ${addOns.length?`<div class="o-sec"><div class="h"><span>Add-on services</span></div>
+      ${addOns.map((a,i)=>`<div class="o-line"><span>${a.name}<button class="js-rm" data-i="${i}">Remove</button></span><span>${money(a.price)}/mo</span></div>`).join('')}</div>`:''}
+    <div class="o-total"><span>Est. monthly total</span><span>${money(monthly())}/mo</span></div>`;
+  $('#offer').classList.toggle('applied', S.offer);
+  $('.js-offer').textContent = S.offer ? '✓ Offer applied' : 'Apply offer';
+}
+
+let lastTotal = null;
+function renderTrays(){
+  const t = money(monthly()), n = itemCount(), route = current();
+  const bump = lastTotal!==null && lastTotal!==t;
+  lastTotal = t;
+  $$('.js-tray').forEach(el=>{
+    const inReview = el.closest('#s-review');
+    const btn = inReview
+      ? `<button class="btn dark js-pay">Proceed to payment</button>`
+      : `<button class="btn dark" data-go="review" ${S.plan?'':'disabled'}>Review &amp; checkout</button>`;
+    el.innerHTML = `
+      <div class="tray-sum" aria-live="polite"><span class="${bump?'bump':''}"><b>Due Today: </b>${t}&nbsp;&nbsp;•&nbsp;&nbsp;<b>Est monthly:</b>${t}/mo</span></div>
+      <div class="tray-row">
+        ${inReview?'':`<button class="cart" data-go="review" ${S.plan?'':'disabled'} aria-label="Cart, ${n} item${n===1?'':'s'}"><span class="ms" aria-hidden="true">shopping_cart</span><span class="badge" ${n?'':'hidden'}>${n}</span></button>`}
+        ${btn}
+      </div>`;
+  });
+}
+
+function renderAll(){
+  $$('.js-autopay').forEach(b=>b.setAttribute('aria-checked', S.autopay));
+  renderPlans(); renderPerks(); renderTV(); renderHub();
+  if(S.plan) renderReview();
+  renderTrays();
+  $('.js-phone').textContent = S.phone ? 'Remove Home Phone' : 'Select and continue';
+  $('.js-phone').classList.toggle('added', S.phone);
+}
+
+/* ------------------------------------------------------------------
+   Routing (hash based, so browser Back works on GitHub Pages)
+------------------------------------------------------------------- */
+const ROUTES = ['plan','services','perks','tv','phone','review'];
+function current(){ const h = location.hash.slice(1); return ROUTES.includes(h) ? h : 'plan'; }
+function go(r){ if(location.hash.slice(1)===r) show(); else location.hash = r; }
+function show(){
+  let r = current();
+  if(r!=='plan' && !S.plan){ r='plan'; history.replaceState(null,'','#plan'); }
+  $$('.screen').forEach(s=>s.classList.toggle('active', s.id==='s-'+r));
+  renderAll();
+  window.scrollTo(0,0);
+  document.title = ({plan:'Select your plan',services:'Enhance your services',perks:'Popular perks',tv:'Explore Live TV',phone:'Home Phone',review:'Review your order'})[r] + ' · Prototype';
+}
+window.addEventListener('hashchange', show);
+
+/* ------------------------------------------------------------------
+   Events
+------------------------------------------------------------------- */
+let toastTimer;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2200); }
+
+document.addEventListener('click', e=>{
+  const el = e.target.closest('button,[data-go],[role="button"]'); if(!el) return;
+  if(el.disabled) return;
+  if(el.dataset.toast){ toast(el.dataset.toast); return; }
+  if(el.dataset.go){ go(el.dataset.go); return; }
+
+  if(el.classList.contains('js-autopay')){ S.autopay=!S.autopay; renderAll(); toast(S.autopay?'AutoPay discount applied: -$10/mo':'AutoPay discount removed'); return; }
+
+  if(el.classList.contains('js-toggle')){
+    const id = el.closest('[data-plan]').dataset.plan;
+    const wasOpen = S.open===id;
+    S.open = wasOpen ? null : id;
+    $$('#plan-list .card').forEach(c=>{ const on=c.dataset.plan===S.open; c.classList.toggle('open',on); c.querySelector('.card-head').setAttribute('aria-expanded',on); });
+    if(!wasOpen){ const c=$(`[data-plan="${id}"]`); setTimeout(()=>c.scrollIntoView({block:'nearest',behavior:'smooth'}),400); }
+    return;
+  }
+  if(el.dataset.gift){ S.gift=el.dataset.gift; $$('.opt').forEach(o=>o.setAttribute('aria-checked', o.dataset.gift===S.gift)); return; }
+  if(el.classList.contains('js-add')){ S.plan=el.dataset.add; go('services'); return; }
+
+  if(el.classList.contains('js-perk')){ const id=el.dataset.perk; S.perks.has(id)?S.perks.delete(id):S.perks.add(id); renderPerks(); renderHub(); renderTrays(); return; }
+
+  if(el.classList.contains('js-tvtoggle')){ const id=el.dataset.tv; S.tvOpen = S.tvOpen===id?null:id; $$('#tv-list .card').forEach(c=>{ const on=c.dataset.tvcard===S.tvOpen; c.classList.toggle('open',on); c.querySelector('.card-head').setAttribute('aria-expanded',on); }); return; }
+  if(el.classList.contains('js-tvadd')){ const id=el.dataset.tv; S.tv = S.tv===id?null:id; renderTV(); renderHub(); renderTrays(); if(S.tv) toast('Live TV added to your order'); return; }
+
+  if(el.classList.contains('js-phone')){ S.phone=!S.phone; renderAll(); if(S.phone) go('services'); return; }
+
+  if(el.classList.contains('js-offer')){ S.offer=!S.offer; renderReview(); return; }
+  if(el.classList.contains('js-rm')){ window.__rm[+el.dataset.i](); renderAll(); return; }
+  if(el.classList.contains('js-pay')){ $('#sheet-sum').textContent = `Your order: Acme Fiber ${planById(S.plan).name} + ${itemCount()-1} add-on${itemCount()===2?'':'s'}, ${money(monthly())}/mo.`; $('#sheet').classList.add('show'); $('.js-restart').focus(); return; }
+  if(el.classList.contains('js-close')){ $('#sheet').classList.remove('show'); return; }
+  if(el.classList.contains('js-restart')){ Object.assign(S,{plan:null,open:'1g',autopay:true,gift:'triple',perks:new Set(),tv:null,tvOpen:'ess',phone:false,offer:false}); $('#sheet').classList.remove('show'); lastTotal=null; go('plan'); return; }
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') $('#sheet').classList.remove('show'); });
+
+show();
+</script>
+</body>
+</html>

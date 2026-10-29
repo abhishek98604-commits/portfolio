@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<!-- saved from url=(0068)https://abhishek98604-commits.github.io/onquest-logistics-prototype/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Onquest · Logistics Dashboard Prototype</title>
+<meta name="description" content="Onquest, a freight forwarding dashboard that matches purchase orders to ship space. Interactive portfolio prototype by Abhishek Bora.">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#5b75e6; --blue-d:#4a63d6; --blue-soft:#eef3ff; --purple:#9d5cf3; --purple-soft:#f6edff;
+  --ink:#333338; --ink2:#4a4a50; --mute:#9b9ba3; --faint:#c3c6d6; --line:#ececf1; --bg:#f8f9fe; --card:#fff;
+  --green:#2fb67c; --green-soft:#e6f7ef; --amber:#e39a1b; --amber-soft:#fff4e0; --red:#e5484d; --red-soft:#fdecec;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg)}
+body{font-family:"Nunito Sans","Avenir Next",Avenir,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;font-size:16px;min-width:1200px}
+button,input,textarea,select{font:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+svg,img{display:block}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px;border-radius:4px}
+
+/* ---------- top bar ---------- */
+.top{height:78px;background:#fff;display:flex;align-items:center;padding:0 56px;position:sticky;top:0;z-index:30;box-shadow:0 1px 0 rgba(20,30,90,.04)}
+.brand{display:flex;align-items:center;gap:12px;width:360px}
+.brand b{font-size:20px;font-weight:700;letter-spacing:4px;color:#c3c7d9}
+.nav{display:flex;gap:6px;height:100%;flex:1;justify-content:center;margin-right:170px}
+.nav button{position:relative;height:100%;padding:0 26px;font-size:18px;color:#a0a2ae;font-weight:600}
+.nav button.on{color:#2e2f36}
+.nav button.on::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;border-radius:2px;background:linear-gradient(90deg,#5e79eb,#9c64e9)}
+.nav button:hover{color:#55576a}
+.tr{display:flex;align-items:center;gap:16px;position:relative}
+.circ{width:36px;height:36px;border-radius:50%;background:#eef0ff;display:grid;place-items:center;position:relative;color:#6c7fe6}
+.circ .dot{position:absolute;top:1px;right:3px;width:9px;height:9px;border-radius:50%;background:#5b75e6;border:2px solid #fff}
+.me{display:flex;align-items:center;gap:10px;margin-left:8px;font-size:17px;color:#55576a;padding:4px 6px;border-radius:20px}
+.me img{width:34px;height:34px;border-radius:50%}
+.pop{position:absolute;top:52px;right:0;background:#fff;border-radius:8px;box-shadow:0 14px 40px -10px rgba(30,40,110,.25),0 0 0 1px rgba(30,40,110,.05);width:340px;padding:8px 0;display:none;z-index:40}
+.pop.on{display:block}
+.pop h4{font-size:13px;font-weight:800;color:var(--mute);letter-spacing:1px;text-transform:uppercase;padding:8px 18px}
+.pop .it{display:flex;gap:12px;padding:10px 18px;font-size:14px;line-height:20px;color:var(--ink2);width:100%;text-align:left}
+.pop .it:hover{background:#f6f7fd}
+.pop .it small{display:block;color:var(--mute);font-size:12px}
+.pop .it i{flex:none;width:8px;height:8px;border-radius:50%;margin-top:6px;background:var(--blue)}
+.pop .it i.read{background:transparent}
+.pop.menu{width:200px}
+.pop dl{padding:4px 18px 10px;font-size:13px;line-height:19px;color:var(--ink2)}
+.pop dt{font-weight:800;margin-top:10px}
+.pop dd{color:var(--mute)}
+
+/* ---------- layout ---------- */
+.wrap{max-width:1434px;margin:0 auto;padding:40px 59px 60px}
+.grid{display:grid;grid-template-columns:repeat(3,420px);gap:28px;justify-content:center;align-items:start}
+.card{background:#fff;border-radius:6px;box-shadow:0 10px 30px -18px rgba(40,50,120,.18)}
+
+/* hero cards */
+.hero{position:relative;height:223px;border-radius:6px 6px 0 0;color:#fff;padding:26px 25px;overflow:hidden}
+.hero.blue{background:linear-gradient(90deg,#5f7aed,#5972e2)}
+.hero.purple{background:linear-gradient(115deg,#b17eed 0%,#a56df2 45%,#9357ec 100%)}
+.hero .deco{position:absolute;pointer-events:none}
+.hero h2{position:relative;display:flex;align-items:baseline;gap:10px;font-weight:600;font-size:25px;line-height:1}
+.hero h2 span{font-size:46px;font-weight:700}
+.hero p{position:relative;font-size:16.5px;line-height:25px;opacity:.75;margin-top:10px}
+.hero .btn{position:absolute;left:22px;top:162px;height:39px;padding:0 14px;border-radius:4px;font-size:17px;color:#fff;font-weight:600}
+.hero.blue .btn{background:#4b61bf}
+.hero.purple .btn{background:#8a4fcf}
+.hero .btn:hover{filter:brightness(1.08)}
+
+/* PO list */
+.po{position:relative;padding:28px 28px 26px;border-top:1px solid #e8e8ec;min-height:147px}
+.po:first-of-type{border-top:0}
+.po h3{font-size:20px;font-weight:800;color:#2e2e33;margin-bottom:6px}
+.po h3.lt{font-weight:600}
+.po .meta{font-size:16.5px;line-height:24px;color:var(--mute);max-width:250px}
+.po .ill{position:absolute;right:28px;top:44px}
+.po .flag{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;border-radius:4px;padding:3px 8px;margin-top:8px}
+.btn-s{display:inline-flex;align-items:center;height:40px;padding:0 14px;border-radius:4px;font-size:17px;font-weight:600;margin-top:14px}
+.btn-s.b{background:var(--blue-soft);color:#5b72e0}
+.btn-s.p{background:var(--purple-soft);color:#9d5cf2}
+.btn-s:hover{filter:brightness(.97)}
+.btn-s.solid{background:var(--blue);color:#fff}
+.btn-s.solid:hover{background:var(--blue-d)}
+.btn-s.ghost{border:1.5px solid var(--line);color:var(--ink2)}
+
+/* ship rows */
+.sh{padding:26px 28px 24px;border-top:1px solid #e8e8ec;cursor:pointer}
+.sh:first-of-type{border-top:0}
+.sh:hover{background:#fcfbff}
+.leg{display:grid;grid-template-columns:150px 50px 1fr;align-items:center}
+.leg b{display:block;font-size:19px;font-weight:600;color:#2e2e33}
+.leg small{display:block;font-size:16px;color:var(--mute);margin-top:2px}
+.dots3{display:flex;gap:3px}
+.dots3 i{width:6px;height:6px;border-radius:50%;background:#b98cf6}
+.dots3 i:nth-child(2){background:#a26ef4}.dots3 i:nth-child(3){background:#8d58ee}
+.cap{font-size:16px;color:var(--mute);margin-top:10px}
+.cut{font-size:13px;font-weight:700;margin-top:6px;display:flex;gap:6px;align-items:center}
+
+/* stats */
+.stats{padding:18px 28px 16px;height:223px}
+.stats table{width:100%;border-collapse:collapse}
+.stats th{font-weight:400;font-size:16px;color:var(--mute);text-align:left;padding:0 0 14px;border-bottom:1px solid #eee}
+.stats td{padding:18px 0 16px;vertical-align:top;border-bottom:1px solid #eee}
+.stats tr:last-child td{border:0}
+.stats td.l{font-size:16px;color:var(--mute);line-height:21px;width:125px}
+.stat{position:relative;display:inline-block;cursor:default}
+.stat b{display:block;font-size:22px;font-weight:600;color:#5b75e6}
+.stat.pp b{color:#8f5fe8}
+.stat i{display:block;height:3px;border-radius:2px;margin-top:6px;background:#5b75e6}
+.stat.pp i{background:#8f5fe8}
+.tip{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);background:#2b2d3a;color:#fff;font-size:12px;line-height:17px;padding:8px 10px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s;z-index:5}
+.stat:hover .tip{opacity:1}
+
+/* chat */
+.chat{margin-top:22px;height:687px;display:flex;flex-direction:column}
+.chd{height:66px;display:flex;align-items:center;border-bottom:1px solid #ededf0;padding:0 18px;position:relative}
+.chd h3{position:absolute;left:0;right:0;text-align:center;font-size:20px;font-weight:600;color:#2e2e33;pointer-events:none}
+.chd small{position:absolute;left:0;right:0;top:44px;text-align:center;font-size:11px;color:var(--mute)}
+.chd button{position:relative;z-index:1;width:36px;height:36px;display:grid;place-items:center;border-radius:50%}
+.chd button:hover{background:#f4f5fb}
+.msgs{flex:1;overflow-y:auto;padding:18px 22px 10px;display:flex;flex-direction:column;gap:18px}
+.m{display:flex;align-items:flex-end;gap:12px}
+.m img{width:34px;height:34px;border-radius:50%;flex:none}
+.m .bb{padding:14px 18px;border-radius:10px;font-size:16px;line-height:23px;color:#56565e;max-width:300px;white-space:pre-line}
+.m .bb small{display:block;font-size:13px;color:var(--mute);margin-top:4px}
+.m.out .bb{background:#fff;border:1px solid #e5e5ea;margin-left:0}
+.m.in{flex-direction:row-reverse}
+.m.in .bb{background:#f4f4f5}
+.m .att{display:flex;align-items:center;gap:10px;margin-top:10px;padding:8px 10px;border-radius:6px;background:#fff;border:1px solid #e6e6ea;font-size:14px;color:var(--ink2);cursor:pointer;white-space:normal}
+.m .att:hover{border-color:#cfd3ea}
+.m.status .bb{border-left:3px solid var(--purple)}
+.typing{display:flex;justify-content:flex-end;align-items:center;gap:12px;font-size:16px;color:#77777f}
+.typing img{width:34px;height:34px;border-radius:50%}
+.comp{margin:10px 22px 22px;height:56px;border-radius:4px;background:#f5f5f7;display:flex;align-items:center;padding:0 12px 0 20px;gap:8px;position:relative}
+.comp input{flex:1;border:0;outline:0;background:transparent;font-size:17px;color:#444}
+.comp input::placeholder{color:#9b9ba3}
+.comp button{width:34px;height:34px;display:grid;place-items:center;border-radius:50%}
+.comp button:hover{background:#ebebf0}
+.emo{position:absolute;right:8px;bottom:62px;background:#fff;border-radius:8px;box-shadow:0 10px 30px -8px rgba(30,40,110,.25);padding:6px;display:none;gap:2px}
+.emo.on{display:flex}
+.emo button{font-size:20px;width:36px;height:36px}
+.threads{flex:1;overflow:auto}
+.th{display:flex;gap:14px;align-items:center;padding:14px 22px;border-bottom:1px solid #f0f0f3;width:100%;text-align:left}
+.th:hover{background:#fafaff}
+.th .av{width:40px;height:40px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font-weight:800;font-size:14px}
+.th b{display:block;font-size:16px;color:#2e2e33}
+.th span{display:block;font-size:13px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:260px}
+
+/* pills */
+.pill{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:12px;font-size:12px;font-weight:800;white-space:nowrap}
+.pill.match{background:var(--green-soft);color:#1f8d5d}
+.pill.pend{background:var(--amber-soft);color:#b8740a}
+.pill.book{background:var(--blue-soft);color:#4a63d6}
+.pill.transit{background:var(--purple-soft);color:#8447e0}
+.pill.done{background:#f0f0f3;color:#6d6d78}
+.pill.open{background:#f0f0f3;color:#6d6d78}
+.pill.full{background:var(--red-soft);color:#c43a3f}
+.pill.closing{background:var(--amber-soft);color:#b8740a}
+
+/* list pages */
+.phead{display:flex;align-items:flex-end;justify-content:space-between;margin:0 auto 18px;max-width:1316px}
+.phead h1{font-size:28px;font-weight:700;color:#2e2e33}
+.phead p{font-size:15px;color:var(--mute);margin-top:4px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tabs button{height:36px;padding:0 14px;border-radius:18px;background:#fff;border:1px solid #e3e4ee;font-size:14px;font-weight:700;color:#6b6d7c}
+.tabs button.on{background:#2e2f36;border-color:#2e2f36;color:#fff}
+.tabs button em{font-style:normal;opacity:.6;margin-left:4px}
+.tbl{max-width:1316px;margin:0 auto;overflow:hidden}
+.tbl table{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;font-size:12px;font-weight:800;color:var(--mute);letter-spacing:.8px;text-transform:uppercase;padding:16px 20px;border-bottom:1px solid #ececf1;background:#fcfcfe}
+.tbl td{padding:16px 20px;border-bottom:1px solid #f0f0f4;font-size:15px;color:var(--ink2);vertical-align:middle}
+.tbl tr.row{cursor:pointer}
+.tbl tr.row:hover td{background:#fafaff}
+.tbl td small{display:block;font-size:13px;color:var(--mute);margin-top:2px}
+.tbl td b{font-weight:700;color:#2e2e33}
+.bar{width:140px;height:6px;border-radius:3px;background:#efeff4;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#b17eed,#9357ec)}
+.search{height:36px;width:260px;border-radius:18px;border:1px solid #e3e4ee;background:#fff;padding:0 16px;font-size:14px;outline:0}
+.search:focus{border-color:#b9c2f0}
+.empty{padding:40px;text-align:center;color:var(--mute)}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(28,30,52,.35);opacity:0;pointer-events:none;transition:opacity .2s;z-index:50}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:560px;background:#fff;z-index:51;transform:translateX(102%);transition:transform .28s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;box-shadow:-20px 0 50px -20px rgba(20,30,80,.3)}
+.drawer.on{transform:none}
+.dh{padding:24px 28px 18px;border-bottom:1px solid #eeeef2;display:flex;gap:14px;align-items:flex-start}
+.dh .t{flex:1}
+.dh h2{font-size:24px;font-weight:700;color:#2e2e33;display:flex;align-items:center;gap:12px}
+.dh p{font-size:15px;color:var(--mute);margin-top:4px}
+.dh .x{width:36px;height:36px;border-radius:50%;background:#f4f5f9;display:grid;place-items:center;flex:none}
+.db{flex:1;overflow-y:auto;padding:6px 28px 28px}
+.sec{margin-top:22px}
+.sec h4{font-size:12px;font-weight:800;color:var(--mute);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.route{display:grid;grid-template-columns:1fr 50px 1fr;align-items:center;padding:16px 18px;border-radius:6px;background:#f8f9fe}
+.route b{display:block;font-size:18px;font-weight:700;color:#2e2e33}
+.route small{display:block;font-size:13px;color:var(--mute);margin-top:2px}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px}
+.kv div span{display:block;font-size:12px;color:var(--mute)}
+.kv div b{display:block;font-size:15px;font-weight:600;color:#2e2e33;margin-top:2px}
+.box{border-radius:6px;padding:14px 16px;font-size:14px;line-height:21px}
+.box.match{background:var(--green-soft);color:#205c43}
+.box.pend{background:var(--amber-soft);color:#6f4a0a}
+.box b{font-weight:800}
+.box ul{margin:8px 0 0 18px}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid #e8e8ef;border-radius:6px;margin-top:8px;cursor:pointer;font-size:14px}
+.opt input{accent-color:var(--blue)}
+.opt.on{border-color:#aebcf6;background:#f8faff}
+.opt .t{flex:1}
+.opt b{font-size:15px;color:#2e2e33}
+.opt small{display:block;color:var(--mute);font-size:13px}
+.docs li{list-style:none;display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f1f1f4;font-size:14px;color:var(--ink2)}
+.docs li:last-child{border:0}
+.docs li span{margin-left:auto;font-size:12px;font-weight:800}
+.ck{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;flex:none}
+.ck.y{background:var(--green)} .ck.n{border:1.5px dashed #c8cad6} .ck.w{background:var(--amber)}
+.trk{list-style:none;position:relative}
+.trk li{position:relative;padding:0 0 16px 32px;font-size:14px;color:var(--mute)}
+.trk li::before{content:"";position:absolute;left:8px;top:18px;bottom:-2px;width:2px;background:#e6e7ef}
+.trk li:last-child::before{display:none}
+.trk li i{position:absolute;left:0;top:2px;width:18px;height:18px;border-radius:50%;border:2px solid #d5d7e3;background:#fff}
+.trk li.d{color:var(--ink2)} .trk li.d i{background:var(--blue);border-color:var(--blue)}
+.trk li.d::before{background:var(--blue)}
+.trk li.c{color:#2e2e33;font-weight:700} .trk li.c i{border-color:var(--blue);box-shadow:0 0 0 4px rgba(91,117,230,.18)}
+.trk li small{display:block;font-weight:400;font-size:12px;color:var(--mute)}
+.df{padding:16px 28px;border-top:1px solid #eeeef2;display:flex;gap:10px;align-items:center}
+.df .btn-s{margin-top:0;white-space:nowrap}
+.df .note{font-size:13px;color:var(--mute);margin-left:auto;text-align:right}
+.spc{display:grid;grid-template-columns:70px 1fr 90px;align-items:center;gap:12px;font-size:14px;margin-top:8px}
+.spc .bar{width:auto;margin:0;height:8px}
+.log li{list-style:none;font-size:13px;color:var(--ink2);padding:6px 0;display:flex;gap:10px}
+.log li time{color:var(--mute);flex:none;width:92px}
+.link{color:#5b72e0;font-weight:700;font-size:14px}
+.link:hover{text-decoration:underline}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:#2b2d3a;color:#fff;font-size:14px;padding:12px 18px;border-radius:8px;opacity:0;transition:all .25s;z-index:80;pointer-events:none;max-width:560px;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.foot{text-align:center;font-size:12px;color:#a6a8b8;margin-top:28px}
+@keyframes flash{from{background:#f3fff8}to{background:transparent}}
+.flash{animation:flash 1.6s ease}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <svg width="45" height="45" viewBox="0 0 45 45" fill="none"><path d="M22.4 0C34.77 0 44.8 10.03 44.8 22.4 44.8 34.77 34.77 44.8 22.4 44.8 10.03 44.8 0 34.77 0 22.4 0 10.03 10.03 0 22.4 0Z" fill="url(#lg0)"></path><g filter="url(#lgf)"><path fill-rule="evenodd" clip-rule="evenodd" d="M11.96 13.83l5.98 5.99-.04-4.17c-.03-1.17.92-2.2 2.08-2.23 1.17-.03 2.07 1.06 2.11 2.23v8.94c.03 1.17-.83 2.24-2 2.28-.18 0-.35-.01-.51-.04H11.2c-1.16.03-2.3-.88-2.33-2.04-.04-1.16.89-2.12 2.05-2.15l3.9.02-5.75-5.77c-.85-.8-.89-2.13-.09-2.98.8-.85 2.13-.89 2.98-.09ZM24.36 19.64c-.3.29-.5.64-.59 1.02-.06.19-.1.39-.1.58v8.66c-.03 1.16 1.09 2.48 2.23 2.51 1.15.04 1.92-1.08 1.96-2.23v-3.97l5.52 5.54c.79.84 2.1.88 2.94.09.83-.79.87-2.12.09-2.96l-5.67-5.7 4.39.02c1.15.03 1.92-.86 1.96-2.01.03-1.16-.97-2.15-2.13-2.18h-8.91l-.19.01c-.36 0-.71.11-1.02.3-.17.09-.33.2-.47.34Z" fill="#fff"></path></g><defs><filter id="lgf" x="5.4" y="10.25" width="34.7" height="25.2" filterUnits="userSpaceOnUse"><fegaussianblur in="SourceAlpha" stdDeviation="1.5"></fegaussianblur><fecolormatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .17 0"></fecolormatrix><feblend in="SourceGraphic"></feblend></filter><lineargradient id="lg0" x1="21.6" y1="52.4" x2="53" y2="21.2" gradientUnits="userSpaceOnUse"><stop stop-color="#5E79EB"></stop><stop offset=".49" stop-color="#7C6FEA"></stop><stop offset="1" stop-color="#9C64E9"></stop></lineargradient></defs></svg>
+    <b>ONQUEST</b>
+  </div>
+  <nav class="nav" id="nav">
+    <button data-go="dash" class="on">Dashboard</button>
+    <button data-go="ships">Ship Schedule</button>
+    <button data-go="pos">Purchase Orders</button>
+  </nav>
+  <div class="tr">
+    <button class="circ" data-pop="help" aria-label="Help"><svg width="12" height="18" viewBox="0 0 12 18" fill="none" stroke="#6c7fe6" stroke-width="1.8" stroke-linecap="round"><path d="M1.5 5a4.5 4.5 0 1 1 6.2 4.2C6.6 9.7 6 10.6 6 11.8V12.5M6 16.5v.1"></path></svg></button>
+    <button class="circ" data-pop="bell" aria-label="Notifications"><svg width="16" height="18" viewBox="0 0 16 18" fill="none" stroke="#6c7fe6" stroke-width="1.6" stroke-linejoin="round"><path d="M3 7a5 5 0 0 1 10 0v4l2 3H1l2-3V7ZM6 16.5a2 2 0 0 0 4 0"></path></svg><span class="dot" id="bellDot"></span></button>
+    <button class="me" data-pop="menu"><img src="img/john.webp" alt=""><span>John Doe</span><svg width="12" height="7" viewBox="0 0 12 7" fill="none" stroke="#b8bac8" stroke-width="1.6" stroke-linecap="round"><path d="m1 1 5 5 5-5"></path></svg></button>
+    <div class="pop" id="pop-help"><h4>Quick glossary</h4><dl>
+      <dt>PO match</dt><dd>A purchase order whose cargo, route and ready date fit a sailing that still has space.</dd>
+      <dt>TEU / 20ft / 40ft</dt><dd>Container slots we hold on each vessel. A 40ft uses two TEU.</dd>
+      <dt>Gate-in cut-off</dt><dd>Last time a loaded container can enter the port for that sailing.</dd>
+      <dt>SI &amp; VGM cut-off</dt><dd>Deadline for shipping instructions and the verified gross mass of each container.</dd>
+      <dt>LEO</dt><dd>Let Export Order, customs clearance for the shipping bill.</dd></dl></div>
+    <div class="pop" id="pop-bell"></div>
+    <div class="pop menu" id="pop-menu"><button class="it" data-demo="Profile">Profile</button><button class="it" data-demo="Team settings">Team settings</button><button class="it" data-demo="Log out">Log out</button></div>
+  </div>
+</header>
+
+<div class="wrap" id="view"><div class="grid">
+    <section class="card">
+      <div class="hero blue">
+        <div class="deco" style="left:64px;top:84px"><svg width="301" height="142" viewBox="0 0 301 142" fill="none"><path opacity=".3" d="M.59 140.55s32.98-32.27 92.11-37.61c59.14-5.34 133.33 18.74 179.13-12.76C317.63 58.68 292.2.34 292.2.34" stroke="#fff" stroke-width="1.68" stroke-dasharray="5.6"></path></svg></div><div class="deco" style="left:330px;top:67px"><svg width="52" height="52"><circle opacity=".6" cx="25.9" cy="25.9" r="25.9" fill="#5671E6"></circle></svg></div><div class="deco" style="left:327px;top:46px"><svg width="48" height="76" viewBox="0 0 48 76" fill="none"><path fill-rule="evenodd" d="M10.5 28.05C7.6 18.93 8.71 9.98 9.39 6.29c.17-.9 1.14-1.32 1.92-.83 3.32 2.09 11.22 7.54 16.01 14.75 5.03 7.58 11.17 25.7 13.27 32.14.44 1.33-.2 2.77-1.47 3.36l-9.03 4.21c-1.27.59-2.77.16-3.51-1.02-3.5-5.57-13.02-21.19-16.08-30.85Z" fill="#7A92FF"></path><rect opacity=".2" x="13.71" y="26.53" width="4.79" height="14.13" transform="rotate(-25 13.71 26.53)" fill="#fff"></rect><rect opacity=".3" x="24.2" y="38.82" width="4.79" height="11.33" transform="rotate(-25 24.2 38.82)" fill="#F3F5FF"></rect><rect opacity=".4" x="19.24" y="23.44" width="4.79" height="14.13" transform="rotate(-25 19.24 23.44)" fill="#F3F5FF"></rect></svg></div>
+        <h2><span>4</span>Purchase Orders</h2>
+        <p>3 Orders available for shipping<br>1 Order pending action</p>
+        <button class="btn" data-go="pos">All Purchase Orders</button>
+      </div>
+      <div class="po" id="c-PO-4452"><h3>Purchase order match!</h3>
+      <div class="meta">Mumbai to Dubai on Thu, 4 Apr<br>Cargo Type: Container<br>Content Type: Food</div>
+      <button class="btn-s b" data-po="PO-4452">Check Details</button><div class="ill"><svg width="111" height="114" viewBox="0 0 111 114" fill="none"><circle opacity=".5" cx="30.8" cy="43.4" r="21" fill="#DDE3FF"></circle><circle opacity=".5" cx="13.3" cy="13.3" r="13.3" fill="#DDE3FF"></circle><path fill-rule="evenodd" d="M7.98 84.88l7.41 22.4h72.63l15.16-22.4H57.92l-4.23 3.83H26.92l-3.7-3.83H7.98Z" fill="#5C76E7"></path><path fill-rule="evenodd" d="M22.37 69.38c0-.78.62-1.4 1.4-1.4h27.85c.77 0 1.4.62 1.4 1.4v3.93c0 .78.63 1.4 1.4 1.4h4.35c.77 0 1.4.63 1.4 1.4v14.27H22.37V69.38Z" fill="#5E78EA"></path><path opacity=".6" d="M25.2 58.8h5.6l1.4 11.2h-7V58.8ZM33.6 60.2h5.6l1.4 11.2h-7V60.2Z" fill="#5C76E7"></path><rect opacity=".6" x="65.8" y="70" width="11.2" height="11.2" fill="#FF7800"></rect><rect opacity=".4" x="78.4" y="70" width="11.2" height="11.2" fill="#FF7800"></rect><rect opacity=".7" x="91" y="70" width="11.2" height="11.2" fill="#FF7800"></rect><rect opacity=".2" x="84" y="58.8" width="11.2" height="11.2" fill="#FF7800"></rect><rect opacity=".4" x="71.4" y="58.8" width="11.2" height="11.2" fill="#FF7800"></rect><path d="M5.41 82.13h18.8l3.75 4.23h25.27l4.48-4.23h49.21" stroke="#3E61DA" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><g fill="#DDE3FF"><ellipse cx="15.4" cy="108.5" rx="9.8" ry="4.9"></ellipse><ellipse cx="33.6" cy="108.5" rx="9.8" ry="4.9"></ellipse><ellipse cx="51.8" cy="108.5" rx="9.8" ry="4.9"></ellipse><ellipse cx="70" cy="108.5" rx="9.8" ry="4.9"></ellipse><ellipse cx="88.2" cy="108.5" rx="9.8" ry="4.9"></ellipse></g><g fill="#fff"><circle cx="86.1" cy="91.7" r="2.1"></circle><circle cx="79.1" cy="91.7" r="2.1"></circle><circle cx="72.1" cy="91.7" r="2.1"></circle></g></svg></div></div><div class="po" id="c-PO-4460"><h3>Purchase order match!</h3>
+      <div class="meta">Mumbai to Kuala Lumpur on Fri, 5 Apr<br>Cargo Type: Drums<br>Content Type: Lubricating oil</div>
+      <button class="btn-s b" data-po="PO-4460">Check Details</button><div class="ill"><svg width="111" height="114" viewBox="0 0 111 114" fill="none"><circle opacity=".5" cx="30.8" cy="43.4" r="21" fill="#DDE3FF"></circle><circle opacity=".5" cx="13.3" cy="13.3" r="13.3" fill="#DDE3FF"></circle><path fill-rule="evenodd" d="M7.98 84.88l7.41 22.4h72.63l15.16-22.4H57.92l-4.23 3.83H26.92l-3.7-3.83H7.98Z" fill="#5C76E7"></path><path fill-rule="evenodd" d="M22.37 69.38c0-.78.62-1.4 1.4-1.4h27.85c.77 0 1.4.62 1.4 1.4v3.93c0 .78.63 1.4 1.4 1.4h4.35c.77 0 1.4.63 1.4 1.4v14.27H22.37V69.38Z" fill="#5E78EA"></path><path opacity=".6" d="M25.2 58.8h5.6l1.4 11.2h-7V58.8ZM33.6 60.2h5.6l1.4 11.2h-7V60.2Z" fill="#5C76E7"></path><rect opacity=".6" x="65.8" y="70" width="11.2" height="11.2" fill="#FF7800"></rect><rect opacity=".4" x="78.4" y="70" width="11.2" height="11.2" fill="#FF7800"></rect><rect opacity=".7" x="91" y="70" width="11.2" height="11.2" fill="#FF7800"></rect><rect opacity=".2" x="84" y="58.8" width="11.2" height="11.2" fill="#FF7800"></rect><rect opacity=".4" x="71.4" y="58.8" width="11.2" height="11.2" fill="#FF7800"></rect><path d="M5.41 82.13h18.8l3.75 4.23h25.27l4.48-4.23h49.21" stroke="#3E61DA" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><g fill="#DDE3FF"><ellipse cx="15.4" cy="108.5" rx="9.8" ry="4.9"></ellipse><ellipse cx="33.6" cy="108.5" rx="9.8" ry="4.9"></ellipse><ellipse cx="51.8" cy="108.5" rx="9.8" ry="4.9"></ellipse><ellipse cx="70" cy="108.5" rx="9.8" ry="4.9"></ellipse><ellipse cx="88.2" cy="108.5" rx="9.8" ry="4.9"></ellipse></g><g fill="#fff"><circle cx="86.1" cy="91.7" r="2.1"></circle><circle cx="79.1" cy="91.7" r="2.1"></circle><circle cx="72.1" cy="91.7" r="2.1"></circle></g></svg></div></div><div class="po" id="c-PO-4471"><h3>Purchase order match!</h3>
+      <div class="meta">Mumbai to Dubai on Thu, 4 Apr<br>Cargo Type: Container<br>Content Type: Food</div>
+      <button class="btn-s b" data-po="PO-4471">Check Details</button><div class="ill"><svg width="111" height="114" viewBox="0 0 111 114" fill="none"><circle opacity=".5" cx="30.8" cy="43.4" r="21" fill="#DDE3FF"></circle><circle opacity=".5" cx="13.3" cy="13.3" r="13.3" fill="#DDE3FF"></circle><path fill-rule="evenodd" d="M7.98 84.88l7.41 22.4h72.63l15.16-22.4H57.92l-4.23 3.83H26.92l-3.7-3.83H7.98Z" fill="#5C76E7"></path><path fill-rule="evenodd" d="M22.37 69.38c0-.78.62-1.4 1.4-1.4h27.85c.77 0 1.4.62 1.4 1.4v3.93c0 .78.63 1.4 1.4 1.4h4.35c.77 0 1.4.63 1.4 1.4v14.27H22.37V69.38Z" fill="#5E78EA"></path><path opacity=".6" d="M25.2 58.8h5.6l1.4 11.2h-7V58.8ZM33.6 60.2h5.6l1.4 11.2h-7V60.2Z" fill="#5C76E7"></path><rect opacity=".6" x="65.8" y="70" width="11.2" height="11.2" fill="#FF7800"></rect><rect opacity=".4" x="78.4" y="70" width="11.2" height="11.2" fill="#FF7800"></rect><rect opacity=".7" x="91" y="70" width="11.2" height="11.2" fill="#FF7800"></rect><rect opacity=".2" x="84" y="58.8" width="11.2" height="11.2" fill="#FF7800"></rect><rect opacity=".4" x="71.4" y="58.8" width="11.2" height="11.2" fill="#FF7800"></rect><path d="M5.41 82.13h18.8l3.75 4.23h25.27l4.48-4.23h49.21" stroke="#3E61DA" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><g fill="#DDE3FF"><ellipse cx="15.4" cy="108.5" rx="9.8" ry="4.9"></ellipse><ellipse cx="33.6" cy="108.5" rx="9.8" ry="4.9"></ellipse><ellipse cx="51.8" cy="108.5" rx="9.8" ry="4.9"></ellipse><ellipse cx="70" cy="108.5" rx="9.8" ry="4.9"></ellipse><ellipse cx="88.2" cy="108.5" rx="9.8" ry="4.9"></ellipse></g><g fill="#fff"><circle cx="86.1" cy="91.7" r="2.1"></circle><circle cx="79.1" cy="91.7" r="2.1"></circle><circle cx="72.1" cy="91.7" r="2.1"></circle></g></svg></div></div><div class="po" id="c-PO-4475"><h3 class="lt">Purchase order</h3>
+    <div class="meta">Mumbai to Dubai, ready Thu, 4 Apr</div>
+    <span class="flag" style="background:var(--amber-soft);color:#b8740a"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3 2 20h20L12 3Z" stroke-linejoin="round"></path><path d="M12 10v4M12 17v.1"></path></svg> Packing list missing</span><br>
+    <button class="btn-s b" data-po="PO-4475">Check Details</button></div>
+      
+    </section>
+    <section class="card">
+      <div class="hero purple">
+        <div class="deco" style="left:84px;top:1px"><svg width="288" height="158" viewBox="0 0 288 158" fill="none"><path opacity=".3" d="M285.31 157.76C303.88 30.23 74.05 121.69 28.25 90.18-17.55 58.68 7.87.34 7.87.34" stroke="#fff" stroke-width="1.68" stroke-dasharray="5.6"></path></svg></div><div class="deco" style="left:332px;top:147px"><svg width="52" height="52"><circle cx="25.9" cy="25.9" r="25.9" fill="#9F5CF3"></circle></svg></div><div class="deco" style="left:319px;top:152px"><svg width="61" height="65" viewBox="0 0 61 65" fill="none"><path fill-rule="evenodd" d="M29.28 40.99c-7.58 5.84-16.37 7.86-20.07 8.49-.9.15-1.63-.62-1.44-1.52.83-3.84 3.25-13.12 8.39-20.09 5.4-7.32 20.32-19.29 25.66-23.47 1.1-.86 2.67-.76 3.66.23l7.04 7.05c.99.98 1.1 2.54.24 3.65-4.04 5.19-15.46 19.48-23.48 25.66Z" fill="#BE8BFF"></path><rect opacity=".2" x="26.75" y="38.5" width="4.79" height="14.13" transform="rotate(-135 26.75 38.5)" fill="#fff"></rect><rect opacity=".3" x="34.71" y="24.44" width="4.79" height="11.33" transform="rotate(-135 34.71 24.44)" fill="#F3F5FF"></rect><rect opacity=".4" x="21.95" y="34.35" width="4.79" height="14.13" transform="rotate(-135 21.95 34.35)" fill="#F3F5FF"></rect></svg></div>
+        <h2><span>3</span>Ships with available space</h2>
+        <p>1 Ship leaving for Dubai tomorrow<br>2 Ships leaving for Kuala Lumpur this week</p>
+        <button class="btn" data-go="ships">All Ship Schedule</button>
+      </div>
+      <div class="sh" data-ship="S1">
+    <div class="leg"><div><b>Mumbai</b><small>Tomorrow, 4 Apr</small></div><span class="dots3"><i></i><i></i><i></i></span><div><b>Dubai</b><small>Mon, 8 Apr</small></div></div>
+    <div class="cap">Space: 8 × 20ft, 2 × 40ft · MV Sea Harmony</div>
+    <div class="cut" style="color:#b8740a"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg> Gate-in closes today 11:59 PM</div>
+    <button class="btn-s p" data-share="S1">Share Status</button></div><div class="sh" data-ship="S2">
+    <div class="leg"><div><b>Mumbai</b><small>Fri, 5 Apr</small></div><span class="dots3"><i></i><i></i><i></i></span><div><b>Kuala Lumpur</b><small>Sun, 14 Apr</small></div></div>
+    <div class="cap">Space: 14 × 20ft, 6 × 40ft · MV Andaman Star</div>
+    <div class="cut" style="color:var(--mute)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg> Cut-off Tomorrow, 4 Apr, 6:00 PM</div>
+    <button class="btn-s p" data-share="S2">Send Status</button></div><div class="sh" data-ship="S3">
+    <div class="leg"><div><b>Mumbai</b><small>Sat, 6 Apr</small></div><span class="dots3"><i></i><i></i><i></i></span><div><b>Kuala Lumpur</b><small>Mon, 15 Apr</small></div></div>
+    <div class="cap">Space: 20 × 20ft, 10 × 40ft · MV Malacca Pride</div>
+    <div class="cut" style="color:var(--mute)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg> Cut-off Fri, 5 Apr, 8:00 PM</div>
+    <button class="btn-s p" data-share="S3">Send Status</button></div>
+    </section>
+    <section>
+      <div class="card stats"><table>
+        <tbody><tr><th></th><th>Mar</th><th>Apr (Till Date)</th></tr>
+        <tr><td class="l">Orders<br>Approved</td>
+          <td><span class="stat"><b>120</b><i style="width:102px"></i><span class="tip">120 POs approved in March<br>98 shipped, 22 rolled to April</span></span></td>
+          <td><span class="stat"><b id="aprOrders">14</b><i style="width:20px"></i><span class="tip">14 POs approved, 1–3 Apr<br>On pace for ~140 this month</span></span></td></tr>
+        <tr><td class="l">Goods<br>Transported</td>
+          <td><span class="stat pp"><b>2,860 Tn</b><i style="width:102px"></i><span class="tip">184 TEU on 11 sailings</span></span></td>
+          <td><span class="stat pp"><b>310 Tn</b><i style="width:20px"></i><span class="tip">21 TEU so far, loaded on MV Coral Bay</span></span></td></tr>
+      </tbody></table></div>
+      <div class="card chat" id="chat"><div class="chd"><button data-threads="" aria-label="All conversations"><svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="#333" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7H1M7 1 1 7l6 6"></path></svg></button><h3>Jamie Aniston</h3><small>Konkan Foods Pvt Ltd</small></div>
+    <div class="msgs" id="msgs"><div class="m out "><img src="img/john.webp" alt=""><div class="bb">Hey did you get the status for the dubai order i sent you<small>3.20 PM</small></div></div><div class="m in "><img src="img/jamie.webp" alt=""><div class="bb">yep i did…but there is a change in the order. might have to send another purchase order<small>3.40 PM</small></div></div><div class="m out "><img src="img/john.webp" alt=""><div class="bb">Ok..send me the new purchase order as soon as possible<small>3.45 PM</small></div></div><div class="m in "><img src="img/jamie.webp" alt=""><div class="bb">Sent it just now. Quantity goes up to 3 × 20ft, same ready date (Fri). Phytosanitary cert is attached with it.<div class="att" data-po="PO-4471"><svg width="18" height="20" viewBox="0 0 18 20" fill="none" stroke="#5b75e6" stroke-width="1.5" stroke-linejoin="round"><path d="M3 1h8l5 5v13H3z"></path><path d="M11 1v5h5"></path></svg><span>PO-4471-R1.pdf</span></div><small>3.48 PM</small></div></div></div>
+    <form class="comp" id="comp"><input id="mi" placeholder="Message Jamie" autocomplete="off"><button type="button" data-emo="" aria-label="Emoji"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9b9ba3" stroke-width="1.4"><circle cx="12" cy="12" r="10.3"></circle><path d="M8 14.3c1 1.4 2.4 2.1 4 2.1s3-.7 4-2.1" stroke-linecap="round"></path><circle cx="8.8" cy="9.4" r=".9" fill="#9b9ba3"></circle><circle cx="15.2" cy="9.4" r=".9" fill="#9b9ba3"></circle></svg></button>
+      <div class="emo" id="emo"><button type="button" data-e="👍">👍</button><button type="button" data-e="🙏">🙏</button><button type="button" data-e="✅">✅</button><button type="button" data-e="🚢">🚢</button><button type="button" data-e="📄">📄</button></div></form></div>
+    </section>
+  </div>
+  <p class="foot">Onquest · freight forwarding dashboard · interactive prototype with sample data · today is Wed, 3 Apr 2019</p></div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-modal="true" role="dialog"></aside>
+<div class="toast" id="toast" role="status" aria-live="polite">Revised PO-4471 received. It now matches MV Sea Harmony 014W.</div>
+
+<script>
+/* ============ time & helpers ============ */
+// Prototype "now": Wed 3 Apr 2019, 3:46 PM (Mumbai)
+const NOW = new Date(2019,3,3,15,46);
+const DAY=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const D=(d,h=0,m=0)=>new Date(2019,3,d,h,m);
+const sameDay=(a,b)=>a.toDateString()===b.toDateString();
+const fDay=d=>{ const t=new Date(NOW); if(sameDay(d,t)) return `Today, ${d.getDate()} ${MON[d.getMonth()]}`; t.setDate(t.getDate()+1); if(sameDay(d,t)) return `Tomorrow, ${d.getDate()} ${MON[d.getMonth()]}`; return `${DAY[d.getDay()]}, ${d.getDate()} ${MON[d.getMonth()]}`; };
+const fTime=d=>{ let h=d.getHours(), m=d.getMinutes(); const ap=h>=12?'PM':'AM'; h=h%12||12; return `${h}:${String(m).padStart(2,'0')} ${ap}`; };
+const fDT=d=>`${fDay(d)}, ${fTime(d)}`;
+const fChat=d=>{ let h=d.getHours()%12||12; return `${h}.${String(d.getMinutes()).padStart(2,'0')} ${d.getHours()>=12?'PM':'AM'}`; };
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+let clock=new Date(NOW); const tick=(min=1)=>{ clock=new Date(clock.getTime()+min*60000); return new Date(clock); };
+let tt; function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('on'),2800); }
+
+/* ============ data ============ */
+const PORT={
+  INNSA:{city:'Mumbai',port:'Nhava Sheva'},
+  AEJEA:{city:'Dubai',port:'Jebel Ali'},
+  MYPKG:{city:'Kuala Lumpur',port:'Port Klang'},
+  LKCMB:{city:'Colombo',port:'Colombo'},
+  SGSIN:{city:'Singapore',port:'Singapore'}
+};
+// our slot allocation on each sailing (containers), and what is already booked
+const SHIPS=[
+  {id:'S1', vessel:'MV Sea Harmony', voy:'014W', line:'Blue Anchor Lines', from:'INNSA', to:'AEJEA', etd:D(4,20), eta:D(8,6), si:D(3,17), gate:D(3,23,59), alloc:{20:24,40:8}, booked:{20:16,40:6}, via:'Direct'},
+  {id:'S2', vessel:'MV Andaman Star', voy:'207E', line:'Seaways Asia', from:'INNSA', to:'MYPKG', etd:D(5,14), eta:D(14,8), si:D(4,10), gate:D(4,18), alloc:{20:30,40:12}, booked:{20:16,40:6}, via:'via Colombo'},
+  {id:'S3', vessel:'MV Malacca Pride', voy:'031E', line:'Blue Anchor Lines', from:'INNSA', to:'MYPKG', etd:D(6,22), eta:D(15,12), si:D(5,12), gate:D(5,20), alloc:{20:30,40:12}, booked:{20:10,40:2}, via:'Direct'},
+  {id:'S4', vessel:'MV Lanka Express', voy:'118S', line:'Seaways Asia', from:'INNSA', to:'LKCMB', etd:D(8,18), eta:D(11,9), si:D(7,10), gate:D(7,18), alloc:{20:12,40:4}, booked:{20:12,40:4}, via:'Direct'},
+  {id:'S5', vessel:'MV Straits Bridge', voy:'045E', line:'Orient Link', from:'INNSA', to:'SGSIN', etd:D(9,16), eta:D(16,7), si:D(8,10), gate:D(8,18), alloc:{20:20,40:10}, booked:{20:14,40:8}, via:'via Colombo'},
+  {id:'S6', vessel:'MV Gulf Trader', voy:'022W', line:'Orient Link', from:'INNSA', to:'AEJEA', etd:D(10,21), eta:D(14,10), si:D(9,10), gate:D(9,20), alloc:{20:24,40:8}, booked:{20:6,40:2}, via:'Direct'},
+  {id:'S0', vessel:'MV Coral Bay', voy:'012W', line:'Blue Anchor Lines', from:'INNSA', to:'AEJEA', etd:D(1,19), eta:D(5,7), si:D(0,10), gate:D(0,20), alloc:{20:24,40:8}, booked:{20:22,40:8}, via:'Direct'}
+];
+const ship=id=>SHIPS.find(s=>s.id===id);
+const space=s=>({20:s.alloc[20]-s.booked[20], 40:s.alloc[40]-s.booked[40]});
+const shipState=s=> s.etd<NOW ? 'sailed' : (space(s)[20]<=0&&space(s)[40]<=0) ? 'full' : sameDay(s.gate,NOW) ? 'closing' : 'open';
+
+const STEPS=[
+  ['Booking confirmed','Carrier booking number issued'],
+  ['Empty containers picked up','From the carrier depot at Nhava Sheva'],
+  ['Stuffed and sealed','At the shipper’s factory, seal numbers recorded'],
+  ['Shipping bill filed, LEO received','Export customs clearance by our CHA'],
+  ['VGM filed and gated in at JNPT','Before the gate-in cut-off'],
+  ['Loaded on vessel',''],
+  ['Sailed','Bill of lading released to shipper'],
+  ['Arrived at destination',''],
+  ['Delivered to consignee','Import clearance done by the buyer’s agent']
+];
+const CT=['BLAU','SEAU','ONQU','TGHU'];
+let bkSeq=412;
+const POS=[
+  {id:'PO-4452', shipper:'Konkan Foods Pvt Ltd', contact:'jamie', buyer:'Al Noor Foodstuff Trading LLC', from:'INNSA', to:'AEJEA', ready:D(3,12),
+   cargo:'Container', content:'Food', desc:'Basmati rice, 1,600 bags × 25 kg', cont:{20:2}, weight:'41.6 t', vol:'58 CBM', hs:'1006.30', inco:'CIF Jebel Ali',
+   status:'match', match:'S1', alts:['S6'], docs:{'Commercial invoice':1,'Packing list':1,'Phytosanitary certificate':1,'Certificate of origin':1,'Shipping bill':0}},
+  {id:'PO-4460', shipper:'Deccan Lubes Ltd', contact:'rahul', buyer:'Klang Lube Distributors Sdn Bhd', from:'INNSA', to:'MYPKG', ready:D(4,10),
+   cargo:'Drums', content:'Lubricating oil (non-hazardous)', desc:'80 steel drums × 210 L, palletised in 1 × 20ft', cont:{20:1}, weight:'16.4 t', vol:'28 CBM', hs:'2710.19', inco:'FOB Nhava Sheva',
+   status:'match', match:'S2', alts:['S3'], docs:{'Commercial invoice':1,'Packing list':1,'MSDS (non-haz declaration)':1,'Shipping bill':0}},
+  {id:'PO-4471', shipper:'Konkan Foods Pvt Ltd', contact:'jamie', buyer:'Al Noor Foodstuff Trading LLC', from:'INNSA', to:'AEJEA', ready:D(5,12),
+   cargo:'Container', content:'Food', desc:'Turmeric and chilli powder, 1,400 cartons', cont:{20:2}, weight:'29.8 t', vol:'52 CBM', hs:'0910.30', inco:'CIF Jebel Ali',
+   status:'pend', issue:'rev', docs:{'Commercial invoice':1,'Packing list':1,'Phytosanitary certificate':0,'Certificate of origin':1,'Shipping bill':0}},
+  {id:'PO-4475', shipper:'Vasai Electricals', contact:'jamie', buyer:'Gulf Lighting FZE', from:'INNSA', to:'AEJEA', ready:D(4,16),
+   cargo:'Cartons', content:'Electronics', desc:'LED panel lights, 620 cartons', cont:{40:1}, weight:'9.1 t', vol:'64 CBM', hs:'9405.40', inco:'FOB Nhava Sheva',
+   status:'pend', issue:'pl', docs:{'Commercial invoice':1,'Packing list':0,'BIS certificate':1,'Shipping bill':0}},
+  // older orders (Purchase Orders page)
+  {id:'PO-4431', shipper:'Sai Cotspin', contact:'rahul', buyer:'Emirates Textiles LLC', from:'INNSA', to:'AEJEA', ready:D(2,10),
+   cargo:'Container', content:'Cotton yarn', desc:'Cotton yarn, 480 bales', cont:{20:4}, weight:'78.2 t', vol:'112 CBM', hs:'5205.12', inco:'FOB Nhava Sheva',
+   status:'book', sailing:'S1', bk:'ONQ/BK/19/0398', step:4, docs:{'Commercial invoice':1,'Packing list':1,'Certificate of origin':1,'Shipping bill':1}},
+  {id:'PO-4418', shipper:'Konkan Foods Pvt Ltd', contact:'jamie', buyer:'Al Noor Foodstuff Trading LLC', from:'INNSA', to:'AEJEA', ready:D(0,10),
+   cargo:'Container', content:'Food', desc:'Basmati rice, 800 bags × 25 kg', cont:{20:1}, weight:'20.8 t', vol:'29 CBM', hs:'1006.30', inco:'CIF Jebel Ali',
+   status:'transit', sailing:'S0', bk:'ONQ/BK/19/0371', step:6, docs:{'Commercial invoice':1,'Packing list':1,'Phytosanitary certificate':1,'Certificate of origin':1,'Shipping bill':1}},
+  {id:'PO-4402', shipper:'Deccan Lubes Ltd', contact:'rahul', buyer:'Klang Lube Distributors Sdn Bhd', from:'INNSA', to:'MYPKG', ready:new Date(2019,2,14),
+   cargo:'Drums', content:'Lubricating oil (non-hazardous)', desc:'160 drums × 210 L in 2 × 20ft', cont:{20:2}, weight:'32.6 t', vol:'56 CBM', hs:'2710.19', inco:'FOB Nhava Sheva',
+   status:'done', sailing:null, bk:'ONQ/BK/19/0322', step:9, arrived:'Delivered 28 Mar', docs:{'Commercial invoice':1,'Packing list':1,'Shipping bill':1}},
+  {id:'PO-4480', shipper:'Shree Granites', contact:'rahul', buyer:'Lanka Build Supplies', from:'INNSA', to:'LKCMB', ready:D(8,10),
+   cargo:'Container', content:'Granite slabs', desc:'Polished granite slabs, 38 crates', cont:{20:2}, weight:'49.0 t', vol:'30 CBM', hs:'6802.93', inco:'CFR Colombo',
+   status:'open', note:'Cargo ready on 8 Apr. MV Lanka Express is full, next Colombo sailing opens on Fri.', docs:{'Commercial invoice':1,'Packing list':1,'Shipping bill':0}}
+];
+POS.forEach(p=>{ p.log=p.log||[]; if(p.step) p.events=STEPS.slice(0,p.step).map((s,i)=>({t:new Date(p.ready.getTime()+ (i-1)*9*3600000)})); });
+const po=id=>POS.find(p=>p.id===id);
+const cText=c=>Object.entries(c).filter(([,n])=>n).map(([k,n])=>`${n} × ${k}ft`).join(' + ');
+const route=p=>`${PORT[p.from].city} to ${PORT[p.to].city}`;
+
+const PEOPLE={
+  jamie:{name:'Jamie Aniston', org:'Konkan Foods Pvt Ltd', img:'img/jamie.webp'},
+  rahul:{name:'Rahul Mehta', org:'Mehta Customs Brokers (CHA)', color:'#2fb67c'},
+  desk:{name:'Blue Anchor Lines · Booking desk', org:'Carrier', color:'#e39a1b'}
+};
+const THREADS={
+  jamie:[
+    {me:1,text:'Hey did you get the status for the dubai order i sent you',t:D(3,15,20)},
+    {me:0,text:'yep i did…but there is a change in the order. might have to send another purchase order',t:D(3,15,40)},
+    {me:1,text:'Ok..send me the new purchase order as soon as possible',t:D(3,15,45)}
+  ],
+  rahul:[
+    {me:0,text:'Shipping bill for PO-4431 filed. LEO received at 11:20.',t:D(3,11,24)},
+    {me:1,text:'Thanks Rahul. Konkan’s rice (PO-4452) will come to you once booked.',t:D(3,11,30)}
+  ],
+  desk:[
+    {me:0,text:'Reminder: SI and VGM cut-off for MV Sea Harmony 014W is today 5:00 PM, gate-in closes 11:59 PM.',t:D(3,9,5)}
+  ]
+};
+const NOTES=[
+  {t:'SI & VGM cut-off for MV Sea Harmony 014W at 5:00 PM today',s:'Blue Anchor Lines · 9:05 AM',go:()=>openShip('S1')},
+  {t:'MV Coral Bay 012W is 42 NM off Jebel Ali, ETA Fri 7:00 AM',s:'Vessel tracking · 2:10 PM',go:()=>openShip('S0')},
+  {t:'LEO received for PO-4431 (Sai Cotspin)',s:'Rahul Mehta, CHA · 11:24 AM',go:()=>openPO('PO-4431')}
+];
+const STATS={mar:{orders:120,teu:184,tn:2860},apr:{orders:14,teu:21,tn:310}};
+
+const S={view:'dash', chat:'jamie', threadList:false, poTab:'all', q:'', shipTab:'all', drawer:null, revised:false, seenBell:false};
+
+/* ============ artwork (from the original file) ============ */
+const ART={
+  path1:`<svg width="301" height="142" viewBox="0 0 301 142" fill="none"><path opacity=".3" d="M.59 140.55s32.98-32.27 92.11-37.61c59.14-5.34 133.33 18.74 179.13-12.76C317.63 58.68 292.2.34 292.2.34" stroke="#fff" stroke-width="1.68" stroke-dasharray="5.6"/></svg>`,
+  path2:`<svg width="288" height="158" viewBox="0 0 288 158" fill="none"><path opacity=".3" d="M285.31 157.76C303.88 30.23 74.05 121.69 28.25 90.18-17.55 58.68 7.87.34 7.87.34" stroke="#fff" stroke-width="1.68" stroke-dasharray="5.6"/></svg>`,
+  oval1:`<svg width="52" height="52"><circle opacity=".6" cx="25.9" cy="25.9" r="25.9" fill="#5671E6"/></svg>`,
+  oval2:`<svg width="52" height="52"><circle cx="25.9" cy="25.9" r="25.9" fill="#9F5CF3"/></svg>`,
+  boat1:`<svg width="48" height="76" viewBox="0 0 48 76" fill="none"><path fill-rule="evenodd" d="M10.5 28.05C7.6 18.93 8.71 9.98 9.39 6.29c.17-.9 1.14-1.32 1.92-.83 3.32 2.09 11.22 7.54 16.01 14.75 5.03 7.58 11.17 25.7 13.27 32.14.44 1.33-.2 2.77-1.47 3.36l-9.03 4.21c-1.27.59-2.77.16-3.51-1.02-3.5-5.57-13.02-21.19-16.08-30.85Z" fill="#7A92FF"/><rect opacity=".2" x="13.71" y="26.53" width="4.79" height="14.13" transform="rotate(-25 13.71 26.53)" fill="#fff"/><rect opacity=".3" x="24.2" y="38.82" width="4.79" height="11.33" transform="rotate(-25 24.2 38.82)" fill="#F3F5FF"/><rect opacity=".4" x="19.24" y="23.44" width="4.79" height="14.13" transform="rotate(-25 19.24 23.44)" fill="#F3F5FF"/></svg>`,
+  boat2:`<svg width="61" height="65" viewBox="0 0 61 65" fill="none"><path fill-rule="evenodd" d="M29.28 40.99c-7.58 5.84-16.37 7.86-20.07 8.49-.9.15-1.63-.62-1.44-1.52.83-3.84 3.25-13.12 8.39-20.09 5.4-7.32 20.32-19.29 25.66-23.47 1.1-.86 2.67-.76 3.66.23l7.04 7.05c.99.98 1.1 2.54.24 3.65-4.04 5.19-15.46 19.48-23.48 25.66Z" fill="#BE8BFF"/><rect opacity=".2" x="26.75" y="38.5" width="4.79" height="14.13" transform="rotate(-135 26.75 38.5)" fill="#fff"/><rect opacity=".3" x="34.71" y="24.44" width="4.79" height="11.33" transform="rotate(-135 34.71 24.44)" fill="#F3F5FF"/><rect opacity=".4" x="21.95" y="34.35" width="4.79" height="14.13" transform="rotate(-135 21.95 34.35)" fill="#F3F5FF"/></svg>`,
+  ship:`<svg width="111" height="114" viewBox="0 0 111 114" fill="none"><circle opacity=".5" cx="30.8" cy="43.4" r="21" fill="#DDE3FF"/><circle opacity=".5" cx="13.3" cy="13.3" r="13.3" fill="#DDE3FF"/><path fill-rule="evenodd" d="M7.98 84.88l7.41 22.4h72.63l15.16-22.4H57.92l-4.23 3.83H26.92l-3.7-3.83H7.98Z" fill="#5C76E7"/><path fill-rule="evenodd" d="M22.37 69.38c0-.78.62-1.4 1.4-1.4h27.85c.77 0 1.4.62 1.4 1.4v3.93c0 .78.63 1.4 1.4 1.4h4.35c.77 0 1.4.63 1.4 1.4v14.27H22.37V69.38Z" fill="#5E78EA"/><path opacity=".6" d="M25.2 58.8h5.6l1.4 11.2h-7V58.8ZM33.6 60.2h5.6l1.4 11.2h-7V60.2Z" fill="#5C76E7"/><rect opacity=".6" x="65.8" y="70" width="11.2" height="11.2" fill="#FF7800"/><rect opacity=".4" x="78.4" y="70" width="11.2" height="11.2" fill="#FF7800"/><rect opacity=".7" x="91" y="70" width="11.2" height="11.2" fill="#FF7800"/><rect opacity=".2" x="84" y="58.8" width="11.2" height="11.2" fill="#FF7800"/><rect opacity=".4" x="71.4" y="58.8" width="11.2" height="11.2" fill="#FF7800"/><path d="M5.41 82.13h18.8l3.75 4.23h25.27l4.48-4.23h49.21" stroke="#3E61DA" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><g fill="#DDE3FF"><ellipse cx="15.4" cy="108.5" rx="9.8" ry="4.9"/><ellipse cx="33.6" cy="108.5" rx="9.8" ry="4.9"/><ellipse cx="51.8" cy="108.5" rx="9.8" ry="4.9"/><ellipse cx="70" cy="108.5" rx="9.8" ry="4.9"/><ellipse cx="88.2" cy="108.5" rx="9.8" ry="4.9"/></g><g fill="#fff"><circle cx="86.1" cy="91.7" r="2.1"/><circle cx="79.1" cy="91.7" r="2.1"/><circle cx="72.1" cy="91.7" r="2.1"/></g></svg>`
+};
+const I={
+  x:'<svg width="14" height="14" viewBox="0 0 14 14" stroke="#555" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l12 12M13 1 1 13"/></svg>',
+  back:'<svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="#333" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19 7H1M7 1 1 7l6 6"/></svg>',
+  smile:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9b9ba3" stroke-width="1.4"><circle cx="12" cy="12" r="10.3"/><path d="M8 14.3c1 1.4 2.4 2.1 4 2.1s3-.7 4-2.1" stroke-linecap="round"/><circle cx="8.8" cy="9.4" r=".9" fill="#9b9ba3"/><circle cx="15.2" cy="9.4" r=".9" fill="#9b9ba3"/></svg>',
+  send:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5b75e6" stroke-width="1.8" stroke-linejoin="round"><path d="M3 11 21 3l-8 18-2-8-8-2Z"/></svg>',
+  tick:'<svg width="11" height="9" viewBox="0 0 11 9" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m1 4.5 3 3L10 1"/></svg>',
+  doc:'<svg width="18" height="20" viewBox="0 0 18 20" fill="none" stroke="#5b75e6" stroke-width="1.5" stroke-linejoin="round"><path d="M3 1h8l5 5v13H3z"/><path d="M11 1v5h5"/></svg>',
+  warn:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3 2 20h20L12 3Z" stroke-linejoin="round"/><path d="M12 10v4M12 17v.1"/></svg>',
+  clock:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'
+};
+const dots='<span class="dots3"><i></i><i></i><i></i></span>';
+const avatar=k=>PEOPLE[k].img?`<img src="${PEOPLE[k].img}" alt="">`:`<span class="av" style="background:${PEOPLE[k].color}">${PEOPLE[k].name.split(' ').map(w=>w[0]).slice(0,2).join('')}</span>`;
+
+/* ============ dashboard ============ */
+const attentionPOs=()=>POS.filter(p=>p.status==='match'||p.status==='pend');
+const upcoming=()=>SHIPS.filter(s=>s.etd>NOW && s.etd<D(7) && shipState(s)!=='full').sort((a,b)=>a.etd-b.etd);
+function poCard(p){
+  if(p.status==='match'){ const s=ship(p.match);
+    return `<div class="po" id="c-${p.id}"><h3>Purchase order match!</h3>
+      <div class="meta">${route(p)} on ${DAY[s.etd.getDay()]}, ${s.etd.getDate()} ${MON[3]}<br>Cargo Type: ${p.cargo}<br>Content Type: ${esc(p.content.split(' (')[0])}</div>
+      <button class="btn-s b" data-po="${p.id}">Check Details</button><div class="ill">${ART.ship}</div></div>`; }
+  if(p.status==='book'&&p.fresh){ const s=ship(p.sailing);
+    return `<div class="po flash" id="c-${p.id}"><h3>Space booked</h3>
+      <div class="meta">${cText(p.cont)} on ${s.vessel} ${s.voy}<br>Booking ${p.bk}</div>
+      <span class="flag" style="background:var(--blue-soft);color:#4a63d6">${I.clock} Next: empty pickup, gate-in by ${fTime(s.gate)} ${sameDay(s.gate,NOW)?'today':DAY[s.gate.getDay()]}</span><br>
+      <button class="btn-s b" data-po="${p.id}">Track Shipment</button></div>`; }
+  const why = p.issue==='rev' ? (S.revised?'Revised PO received, check space':'Buyer is revising quantity') : p.issue==='pl' ? (p.requested?'Packing list requested from shipper':'Packing list missing') : '';
+  return `<div class="po" id="c-${p.id}"><h3 class="lt">Purchase order</h3>
+    <div class="meta">${route(p)}, ready ${DAY[p.ready.getDay()]}, ${p.ready.getDate()} ${MON[3]}</div>
+    <span class="flag" style="background:var(--amber-soft);color:#b8740a">${I.warn} ${why}</span><br>
+    <button class="btn-s b" data-po="${p.id}">Check Details</button></div>`;
+}
+function shipRow(s,i){
+  const sp=space(s), st=shipState(s);
+  return `<div class="sh" data-ship="${s.id}">
+    <div class="leg"><div><b>${PORT[s.from].city}</b><small>${fDay(s.etd)}</small></div>${dots}<div><b>${PORT[s.to].city}</b><small>${fDay(s.eta)}</small></div></div>
+    <div class="cap">Space: ${sp[20]} × 20ft, ${sp[40]} × 40ft · ${s.vessel}</div>
+    ${st==='closing'?`<div class="cut" style="color:#b8740a">${I.clock} Gate-in closes today ${fTime(s.gate)}</div>`:`<div class="cut" style="color:var(--mute)">${I.clock} Cut-off ${fDT(s.gate)}</div>`}
+    <button class="btn-s p" data-share="${s.id}">${i===0?'Share Status':'Send Status'}</button></div>`;
+}
+function dash(){
+  const A=attentionPOs(), ready=A.filter(p=>p.status==='match').length, pend=A.filter(p=>p.status==='pend').length;
+  const booked=POS.filter(p=>p.status==='book'&&p.fresh);
+  const U=upcoming(), byCity={}; U.forEach(s=>{ const c=PORT[s.to].city; byCity[c]=(byCity[c]||0)+1; });
+  const cityLines=Object.entries(byCity).map(([c,n])=>{ const first=U.find(s=>PORT[s.to].city===c); return `${n} Ship${n>1?'s':''} leaving for ${c} ${n>1?'this week':sameDay(first.etd,new Date(2019,3,4))?'tomorrow':fDay(first.etd).split(',')[0]}`; });
+  const st=STATS;
+  $('#view').innerHTML=`<div class="grid">
+    <section class="card">
+      <div class="hero blue">
+        <div class="deco" style="left:64px;top:84px">${ART.path1}</div><div class="deco" style="left:330px;top:67px">${ART.oval1}</div><div class="deco" style="left:327px;top:46px">${ART.boat1}</div>
+        <h2><span>${A.length}</span>Purchase Orders</h2>
+        <p>${ready} Order${ready===1?'':'s'} available for shipping<br>${pend} Order${pend===1?'':'s'} pending action</p>
+        <button class="btn" data-go="pos">All Purchase Orders</button>
+      </div>
+      ${booked.map(poCard).join('')}${A.map(poCard).join('')}
+      ${!A.length&&!booked.length?'<div class="empty">All caught up. No orders need action.</div>':''}
+    </section>
+    <section class="card">
+      <div class="hero purple">
+        <div class="deco" style="left:84px;top:1px">${ART.path2}</div><div class="deco" style="left:332px;top:147px">${ART.oval2}</div><div class="deco" style="left:319px;top:152px">${ART.boat2}</div>
+        <h2><span>${U.length}</span>Ships with available space</h2>
+        <p>${cityLines.join('<br>')}</p>
+        <button class="btn" data-go="ships">All Ship Schedule</button>
+      </div>
+      ${U.map(shipRow).join('')}
+    </section>
+    <section>
+      <div class="card stats"><table>
+        <tr><th></th><th>Mar</th><th>Apr (Till Date)</th></tr>
+        <tr><td class="l">Orders<br>Approved</td>
+          <td><span class="stat"><b>${st.mar.orders}</b><i style="width:102px"></i><span class="tip">120 POs approved in March<br>98 shipped, 22 rolled to April</span></span></td>
+          <td><span class="stat"><b id="aprOrders">${st.apr.orders}</b><i style="width:${Math.max(20,Math.round(102*st.apr.orders/st.mar.orders))}px"></i><span class="tip">${st.apr.orders} POs approved, 1–3 Apr<br>On pace for ~140 this month</span></span></td></tr>
+        <tr><td class="l">Goods<br>Transported</td>
+          <td><span class="stat pp"><b>${st.mar.tn.toLocaleString('en-IN')} Tn</b><i style="width:102px"></i><span class="tip">${st.mar.teu} TEU on 11 sailings</span></span></td>
+          <td><span class="stat pp"><b>${st.apr.tn} Tn</b><i style="width:${Math.max(20,Math.round(102*st.apr.tn/st.mar.tn))}px"></i><span class="tip">${st.apr.teu} TEU so far, loaded on MV Coral Bay</span></span></td></tr>
+      </table></div>
+      <div class="card chat" id="chat"></div>
+    </section>
+  </div>
+  <p class="foot">Onquest · freight forwarding dashboard · interactive prototype with sample data · today is Wed, 3 Apr 2019</p>`;
+  renderChat();
+}
+
+/* ============ chat ============ */
+let typingTimer=null, typing=false;
+function renderChat(){
+  const c=$('#chat'); if(!c) return;
+  if(S.threadList){
+    c.innerHTML=`<div class="chd"><h3>Messages</h3></div><div class="threads">${Object.keys(THREADS).map(k=>{ const L=THREADS[k][THREADS[k].length-1];
+      return `<button class="th" data-thread="${k}">${PEOPLE[k].img?`<img class="av" src="${PEOPLE[k].img}" alt="">`:`<span class="av" style="background:${PEOPLE[k].color}">${PEOPLE[k].name.split(' ').map(w=>w[0]).slice(0,2).join('')}</span>`}<div><b>${esc(PEOPLE[k].name)}</b><span>${esc(L.text)}</span></div></button>`; }).join('')}</div>`;
+    return; }
+  const k=S.chat, P=PEOPLE[k], first=P.name.split(' ')[0];
+  c.innerHTML=`<div class="chd"><button data-threads aria-label="All conversations">${I.back}</button><h3>${esc(P.name)}</h3><small>${esc(P.org)}</small></div>
+    <div class="msgs" id="msgs">${THREADS[k].map(m=>msgHTML(m,k)).join('')}${typing&&k==='jamie'?`<div class="typing">Typing…<img src="img/jamie.webp" alt=""></div>`:''}</div>
+    <form class="comp" id="comp"><input id="mi" placeholder="Message ${esc(first)}" autocomplete="off"><button type="button" data-emo aria-label="Emoji">${I.smile}</button>
+      <div class="emo" id="emo">${['👍','🙏','✅','🚢','📄'].map(e=>`<button type="button" data-e="${e}">${e}</button>`).join('')}</div></form>`;
+  const m=$('#msgs'); m.scrollTop=m.scrollHeight;
+}
+function msgHTML(m,k){
+  const img = m.me ? '<img src="img/john.webp" alt="">' : (PEOPLE[k].img?`<img src="${PEOPLE[k].img}" alt="">`:`<span class="av" style="width:34px;height:34px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font-weight:800;font-size:12px;background:${PEOPLE[k].color}">${PEOPLE[k].name.split(' ').map(w=>w[0]).slice(0,2).join('')}</span>`);
+  return `<div class="m ${m.me?'out':'in'} ${m.status?'status':''}">${img}<div class="bb">${esc(m.text)}${m.att?`<div class="att" data-po="${m.att.po}">${I.doc}<span>${esc(m.att.name)}</span></div>`:''}<small>${fChat(m.t)}</small></div></div>`;
+}
+function say(k,text,extra={}){ THREADS[k].push({me:0,text,t:tick(1),...extra}); }
+function send(text,extra={}){
+  const k=S.chat; THREADS[k].push({me:1,text,t:tick(1),...extra}); renderChat();
+  if(k==='jamie') jamieReply(text);
+  else if(k==='rahul') later(()=>{ say('rahul', /bill|leo|customs/i.test(text)?'Will file the shipping bill as soon as the stuffing report comes in. LEO usually takes 2–3 hours.':'Noted, John.'); },1800);
+  else later(()=>{ say('desk','Received. Our team will confirm within 30 minutes.'); },1800);
+}
+function later(fn,ms){ setTimeout(()=>{ fn(); if(S.view==='dash') renderChat(); },ms); }
+function jamieReply(text){
+  if(!S.revised) return;   // the revised PO reply is already on its way
+  typing=true; renderChat();
+  const t=text.toLowerCase();
+  let r='Thanks John, noted.';
+  if(/status|ms |mv |etd|eta|space/.test(t)) r='Perfect, sharing this with Al Noor. Please send the draft BL once it’s ready.';
+  if(/packing/.test(t)) r='Checking with Vasai Electricals, they said the packing list will be uploaded by 6 PM.';
+  if(/book/.test(t)) r='Great, our truck is lined up for stuffing tomorrow morning.';
+  setTimeout(()=>{ typing=false; say('jamie',r); if(/packing/.test(t)){ const p=po('PO-4475'); p.plEta=true; } if(S.view==='dash') renderChat(); },2200);
+}
+// Jamie is typing when the page opens: the revised PO arrives shortly after
+function revisedArrives(){
+  typing=false; S.revised=true;
+  const p=po('PO-4471'); p.cont={20:3}; p.desc='Turmeric and chilli powder, 2,100 cartons (revised)'; p.weight='44.7 t'; p.vol='78 CBM';
+  p.status='match'; p.match='S1'; p.alts=['S6']; p.issue=null; p.docs['Phytosanitary certificate']=1;
+  p.log.push({t:tick(1),text:'Revised PO-4471 R1 received from Jamie Aniston: 3 × 20ft (was 2 × 20ft)'});
+  say('jamie','Sent it just now. Quantity goes up to 3 × 20ft, same ready date (Fri). Phytosanitary cert is attached with it.',{att:{name:'PO-4471-R1.pdf',po:'PO-4471'}});
+  NOTES.unshift({t:'Revised PO-4471 R1 from Konkan Foods, now matches MV Sea Harmony',s:'Jamie Aniston · '+fTime(clock),go:()=>openPO('PO-4471')});
+  $('#bellDot').style.display='';
+  if(S.view==='dash') dash(); else render();
+  toast('Revised PO-4471 received. It now matches MV Sea Harmony 014W.');
+}
+
+/* ============ list pages ============ */
+const LBL={match:'Match found',pend:'Action needed',book:'Booked',transit:'In transit',done:'Delivered',open:'Awaiting cargo'};
+function posPage(){
+  const tabs=[['all','All'],['match','Match found'],['pend','Action needed'],['book','Booked'],['transit','In transit'],['open','Awaiting cargo'],['done','Delivered']];
+  const q=S.q.toLowerCase();
+  const list=POS.filter(p=>(S.poTab==='all'||p.status===S.poTab)&&(!q||[p.id,p.shipper,p.buyer,p.content,PORT[p.to].city].join(' ').toLowerCase().includes(q)));
+  $('#view').innerHTML=`<div class="phead"><div><h1>Purchase Orders</h1><p>Orders from shippers, matched against the space we hold on each sailing</p></div><input class="search" id="q" placeholder="Search PO, shipper, buyer, port" value="${esc(S.q)}"></div>
+    <div class="phead" style="margin-bottom:14px"><div class="tabs">${tabs.map(([k,l])=>`<button data-potab="${k}" class="${S.poTab===k?'on':''}">${l}<em>${k==='all'?POS.length:POS.filter(p=>p.status===k).length}</em></button>`).join('')}</div></div>
+    <div class="card tbl"><table><tr><th>PO</th><th>Shipper → Buyer</th><th>Route</th><th>Cargo</th><th>Ready</th><th>Status</th></tr>
+    ${list.map(p=>`<tr class="row" data-po="${p.id}"><td><b>${p.id}</b><small>${p.inco}</small></td><td>${esc(p.shipper)}<small>${esc(p.buyer)}</small></td>
+      <td>${PORT[p.from].city} → ${PORT[p.to].city}<small>${PORT[p.to].port}</small></td><td>${cText(p.cont)}<small>${esc(p.content)} · ${p.weight}</small></td>
+      <td>${fDay(p.ready)}</td><td><span class="pill ${p.status}">${LBL[p.status]}</span>${p.sailing?`<small>${ship(p.sailing)?ship(p.sailing).vessel:''}</small>`:''}</td></tr>`).join('')}</table>
+    ${list.length?'':'<div class="empty">No purchase orders match.</div>'}</div>`;
+}
+function shipsPage(){
+  const dests=['all',...new Set(SHIPS.map(s=>s.to))];
+  const list=SHIPS.filter(s=>S.shipTab==='all'||s.to===S.shipTab).sort((a,b)=>a.etd-b.etd);
+  const SL={open:'Open',closing:'Closing today',full:'Full',sailed:'Sailed'};
+  $('#view').innerHTML=`<div class="phead"><div><h1>Ship Schedule</h1><p>Sailings from Nhava Sheva (JNPT), Mumbai, where Onquest holds container space</p></div></div>
+    <div class="phead" style="margin-bottom:14px"><div class="tabs">${dests.map(d=>`<button data-shiptab="${d}" class="${S.shipTab===d?'on':''}">${d==='all'?'All ports':PORT[d].city}</button>`).join('')}</div></div>
+    <div class="card tbl"><table><tr><th>Vessel</th><th>Route</th><th>Departs (ETD)</th><th>Arrives (ETA)</th><th>Gate-in cut-off</th><th>Our space left</th><th>Status</th></tr>
+    ${list.map(s=>{ const sp=space(s), tot=s.alloc[20]+s.alloc[40]*2, used=s.booked[20]+s.booked[40]*2, st=shipState(s);
+      return `<tr class="row" data-ship="${s.id}"><td><b>${s.vessel}</b><small>Voy ${s.voy} · ${s.line}</small></td><td>${PORT[s.from].city} → ${PORT[s.to].city}<small>${s.via} · ${Math.ceil((s.eta-s.etd)/864e5)} days</small></td>
+      <td>${fDT(s.etd)}</td><td>${fDT(s.eta)}</td><td>${st==='sailed'?'—':fDT(s.gate)}</td>
+      <td>${st==='sailed'?'—':`${sp[20]} × 20ft, ${sp[40]} × 40ft<div class="bar"><i style="width:${Math.round(used/tot*100)}%"></i></div>`}</td><td><span class="pill ${st==='sailed'?'transit':st}">${SL[st]}</span></td></tr>`; }).join('')}</table></div>`;
+}
+function render(){
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===S.view));
+  if(S.view==='dash') dash(); else if(S.view==='pos') posPage(); else shipsPage();
+  window.scrollTo(0,0);
+}
+
+/* ============ drawers ============ */
+function drawer(html){ const d=$('#drawer'); d.innerHTML=html; d.classList.add('on'); $('#scrim').classList.add('on'); d.querySelector('.db')?.scrollTo(0,0); }
+function closeDrawer(){ $('#drawer').classList.remove('on'); $('#scrim').classList.remove('on'); S.drawer=null; }
+function docsList(p){ return `<ul class="docs">${Object.entries(p.docs).map(([k,v])=>`<li><span class="ck ${v?'y':(k==='Shipping bill'?'n':'w')}">${v?I.tick:''}</span>${k}<span style="color:${v?'var(--green)':k==='Shipping bill'?'var(--mute)':'#b8740a'}">${v?'Received':k==='Shipping bill'?'Filed by CHA after booking':(p.requested&&k==='Packing list')?'Requested':'Missing'}</span></li>`).join('')}</ul>`; }
+function need(p){ return {20:p.cont[20]||0,40:p.cont[40]||0}; }
+function fits(p,s){ const n=need(p), sp=space(s); return sp[20]>=n[20]&&sp[40]>=n[40]; }
+function openPO(id){
+  const p=po(id); S.drawer={t:'po',id}; closePops();
+  const r=`<div class="route"><div><b>${PORT[p.from].city}</b><small>${PORT[p.from].port} · ${p.from}</small></div>${dots}<div><b>${PORT[p.to].city}</b><small>${PORT[p.to].port} · ${p.to}</small></div></div>`;
+  const kv=`<div class="kv"><div><span>Shipper</span><b>${esc(p.shipper)}</b></div><div><span>Buyer (consignee)</span><b>${esc(p.buyer)}</b></div>
+    <div><span>Cargo type</span><b>${p.cargo}</b></div><div><span>Content</span><b>${esc(p.content)}</b></div>
+    <div><span>Goods</span><b>${esc(p.desc)}</b></div><div><span>Containers needed</span><b>${cText(p.cont)}</b></div>
+    <div><span>Gross weight · volume</span><b>${p.weight} · ${p.vol}</b></div><div><span>HS code · Incoterm</span><b>${p.hs} · ${p.inco}</b></div>
+    <div><span>Cargo ready</span><b>${fDT(p.ready)}</b></div><div><span>Shipper contact</span><b>${PEOPLE[p.contact].name}</b></div></div>`;
+  let main='', foot='';
+  if(p.status==='match'){
+    const opts=[p.match,...(p.alts||[])].map(ship).filter(s=>s&&fits(p,s));
+    const sel=p.pick||p.match, s=ship(sel);
+    main=`<div class="sec"><div class="box match"><b>Why this is a match</b><ul>
+        <li>${s.vessel} sails ${PORT[s.from].city} → ${PORT[s.to].city} ${fDay(s.etd)}, after the cargo is ready</li>
+        <li>We still hold ${space(s)[20]} × 20ft and ${space(s)[40]} × 40ft, the order needs ${cText(p.cont)}</li>
+        <li>All shipper documents are in. Shipping bill is filed once space is booked</li>
+        <li>Gate-in cut-off ${fDT(s.gate)}${sameDay(s.gate,NOW)?', book now so the truck can make it':''}</li></ul></div></div>
+      <div class="sec"><h4>Choose a sailing</h4>${opts.map(o=>`<label class="opt ${o.id===sel?'on':''}"><input type="radio" name="sail" value="${o.id}" ${o.id===sel?'checked':''} data-pick="${p.id}"><div class="t"><b>${o.vessel} ${o.voy}</b><small>ETD ${fDT(o.etd)} · ETA ${fDay(o.eta)} · ${Math.ceil((o.eta-o.etd)/864e5)} days</small></div><small>${space(o)[20]} × 20ft · ${space(o)[40]} × 40ft left</small></label>`).join('')}</div>`;
+    foot=`<button class="btn-s solid" data-book="${p.id}">Book ${cText(p.cont)} on ${s.vessel}</button><button class="btn-s ghost" data-hold="${p.id}">Hold 24 h</button>`;
+  } else if(p.status==='pend'){
+    if(p.issue==='rev') main=`<div class="sec"><div class="box pend"><b>Waiting for a revised PO.</b> Jamie mentioned the buyer changed the order, so we are holding off on booking. The phytosanitary certificate is also still to come.</div></div>`;
+    if(p.issue==='pl') main=`<div class="sec"><div class="box pend"><b>Packing list missing.</b> Customs needs carton-wise weights and dimensions before the CHA can file the shipping bill. ${p.requested?`Requested from ${PEOPLE[p.contact].name} at ${fTime(p.requested)}${p.plEta?', expected by 6 PM':''}.`:''}</div></div>`;
+    foot=p.issue==='pl'?`<button class="btn-s solid" data-req="${p.id}" ${p.requested?'disabled style="opacity:.5"':''}>${p.requested?'Request sent':'Request packing list'}</button><button class="btn-s ghost" data-demo="Uploading documents">Upload document</button>`
+                       :`<button class="btn-s solid" data-chatwith="jamie">Message Jamie</button>`;
+  } else if(p.status==='open'){
+    main=`<div class="sec"><div class="box pend">${esc(p.note)}</div></div>`;
+    foot=`<button class="btn-s ghost" data-demo="Waitlisting">Add to waitlist</button>`;
+  }
+  if(p.bk){
+    const s=p.sailing&&ship(p.sailing);
+    main+=`<div class="sec"><h4>Booking</h4><div class="kv"><div><span>Booking no.</span><b>${p.bk}</b></div><div><span>Vessel</span><b>${s?`${s.vessel} ${s.voy}`:'MV Coral Bay 009W'}</b></div>
+      ${p.containers?`<div><span>Containers</span><b>${p.containers.join(', ')}</b></div>`:''}${s?`<div><span>ETD · ETA</span><b>${fDay(s.etd)} · ${fDay(s.eta)}</b></div>`:''}</div></div>
+      <div class="sec"><h4>Shipment tracker</h4><ol class="trk">${STEPS.map((st,i)=>{ const d=i<p.step, c=i===p.step; const ev=p.events&&p.events[i];
+        return `<li class="${d?'d':''} ${c?'c':''}"><i></i>${st[0]}<small>${d&&ev?fDT(ev.t)+' · ':''}${c?'Next · ':''}${st[1]}</small></li>`; }).join('')}</ol>
+        ${p.step<9&&p.status!=='done'?`<button class="link" data-adv="${p.id}">Simulate next update →</button>`:''}</div>`;
+    foot=p.status==='transit'||p.status==='book'?`<button class="btn-s solid" data-sendpo="${p.id}">Send status to ${PEOPLE[p.contact].name.split(' ')[0]}</button><button class="btn-s ghost" data-demo="Draft bill of lading">Draft BL</button>`:'';
+  }
+  main+=`<div class="sec"><h4>Documents</h4>${docsList(p)}</div>`;
+  if(p.log.length) main+=`<div class="sec"><h4>Activity</h4><ul class="log">${p.log.slice().reverse().map(l=>`<li><time>${fTime(l.t)}</time>${esc(l.text)}</li>`).join('')}</ul></div>`;
+  drawer(`<div class="dh"><div class="t"><h2>${p.id}<span class="pill ${p.status}">${LBL[p.status]}</span></h2><p>${esc(p.shipper)} → ${esc(p.buyer)}</p></div><button class="x" data-close aria-label="Close">${I.x}</button></div>
+    <div class="db"><div class="sec">${r}</div><div class="sec">${kv}</div>${main}</div>${foot?`<div class="df">${foot}</div>`:''}`);
+}
+function openShip(id){
+  const s=ship(id); S.drawer={t:'ship',id}; closePops();
+  const sp=space(s), st=shipState(s), ours=POS.filter(p=>p.sailing===id);
+  const row=(k)=>`<div class="spc"><b>${k}ft</b><div class="bar"><i style="width:${Math.round(s.booked[k]/s.alloc[k]*100)}%"></i></div><span>${sp[k]} of ${s.alloc[k]} free</span></div>`;
+  drawer(`<div class="dh"><div class="t"><h2>${s.vessel} <span style="font-weight:600;color:var(--mute);font-size:18px">${s.voy}</span></h2><p>${s.line} · ${s.via}</p></div><button class="x" data-close aria-label="Close">${I.x}</button></div>
+    <div class="db">
+      <div class="sec"><div class="route"><div><b>${PORT[s.from].city}</b><small>${PORT[s.from].port}<br>ETD ${fDT(s.etd)}</small></div>${dots}<div><b>${PORT[s.to].city}</b><small>${PORT[s.to].port}<br>ETA ${fDT(s.eta)}</small></div></div></div>
+      <div class="sec"><h4>Cut-offs</h4><div class="kv"><div><span>SI &amp; VGM</span><b>${fDT(s.si)}</b></div><div><span>Gate-in at JNPT</span><b>${fDT(s.gate)}</b></div>
+        <div><span>Transit time</span><b>${Math.ceil((s.eta-s.etd)/864e5)} days</b></div><div><span>Status</span><b>${st==='sailed'?'Sailed, arriving '+fDay(s.eta):st==='closing'?'Gate closing today':st==='full'?'Our allocation is full':'Open for booking'}</b></div></div></div>
+      <div class="sec"><h4>Our space on this sailing</h4>${row(20)}${row(40)}</div>
+      <div class="sec"><h4>Onquest bookings on board</h4>${ours.length?`<ul class="docs">${ours.map(p=>`<li><span class="ck y">${I.tick}</span><button class="link" data-po="${p.id}">${p.id}</button>&nbsp;${esc(p.shipper)} · ${cText(p.cont)}<span style="color:var(--mute)">${STEPS[Math.max(0,p.step-1)][0]}</span></li>`).join('')}</ul>`:'<p style="font-size:14px;color:var(--mute)">No bookings through this dashboard yet. Other slots were booked by the sales team.</p>'}</div>
+    </div>
+    <div class="df"><button class="btn-s solid" data-share="${s.id}">Share status in chat</button>${st!=='sailed'&&st!=='full'?`<button class="btn-s ghost" data-go="pos" data-close>Find orders for this ship</button>`:''}</div>`);
+}
+
+/* ============ actions ============ */
+function book(id){
+  const p=po(id), s=ship(p.pick||p.match), n=need(p);
+  if(!fits(p,s)){ toast('Not enough space left on this sailing'); return; }
+  s.booked[20]+=n[20]; s.booked[40]+=n[40];
+  p.status='book'; p.sailing=s.id; p.bk=`ONQ/BK/19/0${++bkSeq}`; p.step=1; p.fresh=true; const t=tick(2); p.events=[{t}];
+  p.log.push({t,text:`Booked ${cText(p.cont)} on ${s.vessel} ${s.voy}, carrier ref ${p.bk}`});
+  p.docs['Shipping bill']=0;
+  STATS.apr.orders+=1;
+  closeDrawer(); render();
+  toast(`Booked ${cText(p.cont)} on ${s.vessel}. Booking ${p.bk}`);
+  if(p.contact==='jamie'){ S.chat='jamie'; S.threadList=false; THREADS.jamie.push({me:1,status:1,text:`Booked ${p.id} (${cText(p.cont)}) on ${s.vessel} ${s.voy}. ETD ${fDT(s.etd)}, ETA ${fDay(s.eta)}. Please have the cargo gated in at JNPT by ${fDT(s.gate)}. Booking no. ${p.bk}.`,t:tick(1)}); renderChat(); jamieReply('book'); }
+}
+function advance(id){
+  const p=po(id); if(p.step>=9) return;
+  // realistic event times: pre-shipment steps must beat the gate-in cut-off, the rest follow the vessel
+  const s=ship(p.sailing)||ship('S0'), H=3600000, prev=(p.events[p.step-1]||{t:clock}).t.getTime(), i=p.step;
+  const dur=[0,2,3,2,1][i]||0;
+  let t = i<=4 ? new Date(Math.min(prev+dur*H, s.gate.getTime()-(4-i)*H/2-10*60000)) : i===5 ? new Date(s.etd.getTime()-3*H) : i===6 ? s.etd : i===7 ? s.eta : new Date(s.eta.getTime()+30*H);
+  if(t.getTime()<prev) t=new Date(prev+20*60000);
+  p.events=p.events||[]; p.events[p.step]={t};
+  if(p.step===1) p.containers=Array.from({length:(p.cont[20]||0)+(p.cont[40]||0)},(_,i)=>`${CT[i%4]} ${String(204561+i*37).padStart(6,'0')}-${(i*3+7)%10}`);
+  if(p.step===3) p.docs['Shipping bill']=1;
+  p.log.push({t,text:STEPS[p.step][0]});
+  p.step++; if(p.step>=7&&p.step<9) p.status='transit'; if(p.step>=9){ p.status='done'; }
+  openPO(id); if(S.view!=='dash') render(); else dash();
+  $('#drawer').classList.add('on'); $('#scrim').classList.add('on');
+}
+function statusText(s){ const sp=space(s);
+  return `Status: ${s.vessel} ${s.voy}, ${PORT[s.from].city} (${PORT[s.from].port}) → ${PORT[s.to].city} (${PORT[s.to].port}). ETD ${fDT(s.etd)}, ETA ${fDT(s.eta)}. ${shipState(s)==='sailed'?'Vessel has sailed and is on schedule.':`Gate-in cut-off ${fDT(s.gate)}. Space left: ${sp[20]} × 20ft, ${sp[40]} × 40ft.`}`; }
+function shareShip(id){
+  closeDrawer(); if(S.view!=='dash'){ S.view='dash'; render(); }
+  S.threadList=false; renderChat(); const i=$('#mi'); i.value=statusText(ship(id)); i.focus(); i.setSelectionRange(0,0);
+  toast('Status added to the message. Press Enter to send.');
+}
+function sendPO(id){
+  const p=po(id), s=ship(p.sailing); closeDrawer(); if(S.view!=='dash'){ S.view='dash'; render(); }
+  S.chat=p.contact; S.threadList=false; renderChat();
+  $('#mi').value=`${p.id}: ${STEPS[Math.max(0,p.step-1)][0].toLowerCase()} on ${s?s.vessel+' '+s.voy:'our sailing'}${s?`, ETA ${PORT[s.to].city} ${fDay(s.eta)}`:''}. Booking ${p.bk}.`; $('#mi').focus();
+}
+function closePops(){ document.querySelectorAll('.pop').forEach(p=>p.classList.remove('on')); }
+function bell(){ $('#pop-bell').innerHTML=`<h4>Notifications</h4>${NOTES.map((n,i)=>`<button class="it" data-note="${i}"><i class="${S.seenBell&&i>0?'read':''}"></i><div>${esc(n.t)}<small>${esc(n.s)}</small></div></button>`).join('')}`; }
+
+document.addEventListener('click',e=>{
+  if(e.target.id==='scrim'){ closeDrawer(); return; }
+  const b=e.target.closest('button,[data-ship],[data-po],tr.row');
+  if(!e.target.closest('.pop')&&!e.target.closest('[data-pop]')) closePops();
+  if(!e.target.closest('#emo')&&!e.target.closest('[data-emo]')) $('#emo')?.classList.remove('on');
+  if(!b) return; const d=b.dataset;
+  if(d.pop){ const p=$('#pop-'+d.pop), on=p.classList.contains('on'); closePops(); if(d.pop==='bell'){ bell(); S.seenBell=true; $('#bellDot').style.display='none'; } p.classList.toggle('on',!on); return; }
+  if(d.note!==undefined){ closePops(); NOTES[+d.note].go(); return; }
+  if(d.close!==undefined&&!d.go){ closeDrawer(); return; }
+  if(d.go){ closeDrawer(); S.view=d.go; render(); return; }
+  if(d.share){ e.stopPropagation(); shareShip(d.share); return; }
+  if(d.book){ book(d.book); return; }
+  if(d.hold){ const p=po(d.hold); p.log.push({t:tick(1),text:`Held ${cText(p.cont)} on ${ship(p.pick||p.match).vessel} for 24 hours`}); toast('Space held until tomorrow 3:48 PM. It is released automatically if not booked.'); openPO(p.id); return; }
+  if(d.req){ const p=po(d.req); p.requested=tick(1); p.log.push({t:p.requested,text:'Packing list requested from '+PEOPLE[p.contact].name}); closeDrawer();
+    if(S.view!=='dash'){ S.view='dash'; render(); } S.chat=p.contact; S.threadList=false; send(`Hi Jamie, for ${p.id} (Vasai Electricals, LED panels to Dubai) we still need the packing list with carton-wise weights. Could you share it today so the CHA can file the shipping bill?`); dash(); return; }
+  if(d.adv){ advance(d.adv); return; }
+  if(d.sendpo){ sendPO(d.sendpo); return; }
+  if(d.chatwith){ closeDrawer(); if(S.view!=='dash'){ S.view='dash'; render(); } S.chat=d.chatwith; S.threadList=false; renderChat(); $('#mi').focus(); return; }
+  if(d.threads!==undefined){ S.threadList=true; renderChat(); return; }
+  if(d.thread){ S.chat=d.thread; S.threadList=false; renderChat(); return; }
+  if(d.emo!==undefined){ $('#emo').classList.toggle('on'); return; }
+  if(d.e){ const i=$('#mi'); i.value+=d.e; i.focus(); $('#emo').classList.remove('on'); return; }
+  if(d.potab){ S.poTab=d.potab; posPage(); return; }
+  if(d.shiptab){ S.shipTab=d.shiptab; shipsPage(); return; }
+  if(d.demo){ closePops(); toast(`${d.demo} isn’t part of this prototype`); return; }
+  if(d.po){ openPO(d.po); return; }
+  if(d.ship){ openShip(d.ship); return; }
+});
+document.addEventListener('change',e=>{ if(e.target.dataset.pick){ const p=po(e.target.dataset.pick); p.pick=e.target.value; openPO(p.id); } });
+document.addEventListener('input',e=>{ if(e.target.id==='q'){ S.q=e.target.value; const pos=e.target.selectionStart; posPage(); const q=$('#q'); q.focus(); q.setSelectionRange(pos,pos); } });
+document.addEventListener('submit',e=>{ if(e.target.id==='comp'){ e.preventDefault(); const v=$('#mi').value.trim(); if(!v) return; send(v,/^Status:/.test(v)?{status:1}:{}); } });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeDrawer(); closePops(); } });
+
+typing=true; render();
+setTimeout(revisedArrives, 5200);
+</script>
+
+
+</body></html>
