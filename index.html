@@ -58,6 +58,11 @@ p{margin:0}
 .hero .intro p:first-child{color:var(--ink)}
 .hero .lede{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:40px;margin-top:clamp(32px,5vw,56px);align-items:end}
 .hero .lede p{font-size:clamp(20px,2.2vw,26px);line-height:1.35;max-width:30ch}
+.cos{list-style:none;margin:clamp(32px,4vw,48px) 0 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,2.5vw,32px)}
+.cos li{border-top:1.5px solid var(--ink);padding-top:14px;display:grid;gap:4px}
+.cos b{font-weight:500;font-size:17px}
+.cos span{color:var(--muted);font-size:14.5px}
+@media (max-width:760px){.cos{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .hero .roles{color:var(--muted);font-size:16px;margin-top:14px}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;border-top:1.5px solid var(--ink);padding-top:18px}
 .stat b{display:block;font-family:var(--display);font-weight:500;font-size:clamp(40px,5vw,64px);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
@@ -389,8 +394,13 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     <p>I am a designer based in Bangalore. For the past 15 years I have worked on things people use every day without thinking about them, like buying home internet, joining a video call or booking a lab test.</p>
     <p>I care about the small details, and I do my best work when design, product and engineering figure things out together.</p>
     <p>Right now I am a Principal Designer at Verizon, working on how people shop for home internet. Lately I have also been using AI to prototype faster and build small Figma plugins for my team.</p>
-    <p>When I am not designing, I am usually sketching, reading, or spending time with my family.</p>
   </div>
+  <ul class="cos">
+    <li><b>Verizon</b><span>Principal Designer</span><span>2024 to now</span></li>
+    <li><b>BlueJeans by Verizon</b><span>Design Manager, Lead Designer</span><span>2018 to 2023</span></li>
+    <li><b>Practo</b><span>Lead Designer, Sr. Designer</span><span>2015 to 2018</span></li>
+    <li><b>Clarice Technologies</b><span>UX Designer</span><span>2011 to 2015</span></li>
+  </ul>
 </header>
 
 <!-- ============ VERIZON ============ -->
@@ -560,11 +570,6 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     <div class="sub">
       <div class="sub-head rv">
         <h3>Calling, messaging and meetings (UCaaS)</h3>
-        <ul>
-          <li><span><b>Flat navigation.</b> We tested two options and flat won.</span></li>
-          <li><span><b>Calls always on top</b> with priority-based notifications.</span></li>
-          <li><span><b>Tablet in two columns,</b> list on the left, conversation on the right.</span></li>
-        </ul>
       </div>
       <div class="stage white rv">
         <div class="vgrid five">
