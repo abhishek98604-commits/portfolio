@@ -1,0 +1,1151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<style>html,body{margin:0;padding:0}[hidden]{display:none!important}</style>
+<title>Plan selection · Case study</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Keynote, one idea per screen. The plan tile is the hero: every slide ends with a "card line" that ties back to it. Section rail on the left shows where you are. */
+:root{
+  --paper:#ffffff;--ink:#0b0b0c;--muted:#6e6e73;--soft:#f5f5f7;--line:#e3e3e8;--hair:#d2d2d7;
+  --night:#000;--night-ink:#f5f5f7;--night-muted:#a1a1a6;--night-line:#2c2c2e;
+  --red:#e3242b;--green:#2d9a4b;--amber:#c48a12;
+  --sans:"Instrument Sans","SF Pro Display","Helvetica Neue",Arial,sans-serif;--mono:"Geist Mono",ui-monospace,Menlo,monospace;
+  --rail:148px;color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);overflow:hidden;-webkit-font-smoothing:antialiased}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:clamp(40px,6vh,80px) max(24px,env(safe-area-inset-right,0px)) clamp(84px,11vh,108px) calc(var(--rail) + 24px);opacity:0;visibility:hidden;transition:opacity .5s ease,visibility 0s .5s;overflow-y:auto;background:var(--paper);color:var(--ink)}
+.slide.on{opacity:1;visibility:visible;transition:opacity .5s ease}
+.slide.dark{background:var(--night);color:var(--night-ink);--muted:var(--night-muted);--line:var(--night-line);--soft:#1c1c1e;--hair:#3a3a3c}
+.in{max-width:1120px;margin:0 auto;width:100%}
+.center{text-align:center}.center .lead{margin-inline:auto}
+.eyebrow{font-size:14px;font-weight:500;color:var(--muted);letter-spacing:-.01em;margin:0}
+h1,h2,h3{font-weight:600;letter-spacing:-.045em;line-height:1.03;margin:10px 0 0;text-wrap:balance}
+h1{font-size:clamp(40px,6.6vw,96px)}
+h2{font-size:clamp(30px,4.4vw,60px)}
+h3{font-size:clamp(20px,2vw,26px);letter-spacing:-.03em;line-height:1.15}
+.lead{font-size:clamp(17px,1.6vw,22px);line-height:1.45;color:var(--muted);max-width:48ch;margin:18px 0 0;letter-spacing:-.01em}
+.mega{font-size:clamp(80px,14vw,200px);font-weight:600;letter-spacing:-.07em;line-height:.88}
+.grad{background:linear-gradient(180deg,var(--night-ink),#6e6e73);-webkit-background-clip:text;background-clip:text;color:transparent}
+.note{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:20px;letter-spacing:.01em}
+.note a{color:inherit}
+.rep{position:absolute;right:max(24px,env(safe-area-inset-right,0px));top:clamp(18px,3vh,26px);font-family:var(--mono);font-size:10.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+.cl{display:block;margin-top:28px;font-size:clamp(16px,1.5vw,20px);font-weight:500;letter-spacing:-.015em;max-width:62ch}
+.cl::before{content:"";display:inline-block;margin-right:12px;width:10px;height:10px;border-radius:3px;background:var(--red);transform:translateY(-1px)}
+.center .cl{margin-inline:auto;justify-content:center}
+.cl b{font-weight:600}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(24px,4.5vw,72px);align-items:center}
+.split.r{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+@media (max-width:860px){.split,.split.r{grid-template-columns:1fr}}
+.photo{border-radius:16px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.35);background:#111}
+.photo img{display:block;width:100%;height:auto}
+.cap{font-size:13px;color:var(--muted);margin-top:10px}
+.pics{display:grid;gap:14px}
+.pics.c2{grid-template-columns:1fr 1fr}.pics.c3{grid-template-columns:repeat(3,1fr)}
+@media (max-width:700px){.pics.c3{grid-template-columns:1fr 1fr}}
+
+/* Phones */
+.ph{width:min(270px,100%);border-radius:34px;padding:8px;background:#1d1d1f;box-shadow:0 34px 70px -34px rgba(0,0,0,.5),inset 0 0 0 1px #3a3a3c;margin:0 auto;position:relative}
+.ph .vp{height:min(540px,60vh);border-radius:27px;overflow-y:auto;background:#fff;scrollbar-width:none}
+.ph .vp::-webkit-scrollbar{display:none}
+.ph .vp img{display:block;width:100%}
+.ph iframe{display:block;width:100%;height:min(540px,60vh);border:0;border-radius:27px;background:#fff}
+.ph .ifs{width:254px;height:min(540px,60vh);overflow:hidden;border-radius:27px;background:#fff}
+.ph .ifs iframe{width:375px;height:calc(min(540px,60vh) * 1.4764);transform:scale(.6773);transform-origin:0 0;border-radius:0}
+.ph.sm{width:min(200px,100%);border-radius:28px;padding:6px}.ph.sm .vp{height:min(400px,46vh);border-radius:22px}
+.ph.xs{width:150px;border-radius:22px;padding:5px}.ph.xs .vp{height:300px;border-radius:17px}
+.ph.lit{background:#e8e8ed;box-shadow:0 30px 60px -30px rgba(0,0,0,.3)}
+.ph.hot{}
+.ph.dim{opacity:.4;filter:grayscale(1)}
+
+/* Rail */
+.rail{position:fixed;left:0;top:0;bottom:0;width:var(--rail);display:flex;flex-direction:column;justify-content:center;gap:4px;padding:0 0 0 max(20px,env(safe-area-inset-left,0px));z-index:6;transition:color .4s}
+.rail.dark{color:var(--night-ink)}
+.rail button{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:500;padding:6px 0;opacity:.38;transition:opacity .25s}
+.rail button::before{content:"";width:6px;height:6px;border-radius:50%;border:1.5px solid currentColor;flex:none;transition:all .25s}
+.rail button:hover{opacity:.8}
+.rail button.on{opacity:1}
+.rail button.on::before{background:var(--red);border-color:var(--red);transform:scale(1.35)}
+.rail button.done{opacity:.6}
+.rail button.done::before{background:currentColor}
+.rail button:focus-visible{outline:2px solid var(--red);outline-offset:2px;border-radius:4px}
+@media (max-width:860px){:root{--rail:0px}.rail{top:0;bottom:auto;left:0;right:0;width:auto;height:44px;flex-direction:row;justify-content:flex-start;overflow-x:auto;gap:14px;padding:0 16px;background:inherit;scrollbar-width:none}.rail button{white-space:nowrap}.slide{padding-top:64px}}
+
+/* Bottom bar */
+.bar{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:12px;padding:14px max(24px,env(safe-area-inset-right,0px)) calc(14px + env(safe-area-inset-bottom,0px)) calc(var(--rail) + 24px);z-index:5;transition:color .4s;pointer-events:none}
+.bar>*{pointer-events:auto}
+.bar.dark{color:var(--night-ink)}
+.chap{font-size:13px;font-weight:500;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:.5}
+.bar button{font-family:var(--sans);font-size:14px;width:40px;height:40px;border-radius:50%;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer;opacity:.75}
+.bar button:hover{opacity:1}.bar button:disabled{opacity:.15;cursor:default}
+:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+
+/* Store vs online */
+.chan{display:grid;grid-template-columns:minmax(0,.8fr) auto minmax(0,1.2fr);gap:20px;align-items:center;margin-top:36px}
+.chan .c{border-radius:24px;padding:26px;background:var(--soft)}
+.chan .c.on{background:var(--ink);color:var(--paper)}
+.chan .c svg{width:64px;height:64px;display:block}
+.chan .c b{display:block;font-size:clamp(40px,4.6vw,64px);font-weight:600;letter-spacing:-.05em;margin-top:14px}
+.chan .c span{opacity:.7;font-size:15.5px;display:block;margin-top:4px}
+.chan .c h3{margin-top:14px;font-size:21px}
+.chan .arr{font-size:34px;color:var(--red)}
+@media (max-width:760px){.chan{grid-template-columns:1fr}.chan .arr{transform:rotate(90deg);justify-self:center}}
+.facts{display:flex;gap:28px;flex-wrap:wrap;margin-top:22px;font-size:15px;color:var(--muted)}
+.facts b{color:var(--ink);font-weight:600}
+
+/* Bars */
+.hbar{display:grid;gap:14px;margin-top:32px;max-width:860px}
+.hb{display:grid;grid-template-columns:170px minmax(0,1fr) 92px;gap:16px;align-items:center;font-size:16px}
+.hb .t{height:14px;border-radius:7px;background:var(--soft);overflow:hidden}
+.hb .t i{display:block;height:100%;border-radius:7px;background:var(--hair)}
+.hb.vz .t i{background:var(--red)}
+.hb.vz span{font-weight:600}
+.hb b{font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+.hb small{color:var(--muted);font-weight:400;font-size:13px;margin-left:6px}
+.up{color:var(--green)}.dn{color:var(--muted)}
+@media (max-width:560px){.hb{grid-template-columns:96px minmax(0,1fr) 78px;font-size:14px}}
+
+/* Two products */
+.prod{display:grid;grid-template-columns:150px 1fr 1fr;margin-top:28px;border-top:1px solid var(--line);font-size:15.5px}
+.prod>div{padding:12px 14px 12px 0;border-bottom:1px solid var(--line);line-height:1.4}
+.prod .k{color:var(--muted);font-size:14px}
+.prod .h{font-weight:600;font-size:20px;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.prod .h svg{width:34px;height:34px;flex:none}
+@media (max-width:700px){.prod{grid-template-columns:96px 1fr 1fr;font-size:14px}}
+
+/* Shopper cards */
+.who{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:28px}
+.wc{border-radius:20px;padding:22px;background:var(--soft)}
+.wc .ic{font-size:28px}
+.wc .pimg{height:130px;border-radius:12px;background:#ece9e4;display:flex;justify-content:center;overflow:hidden}
+.wc .pimg img{height:100%;width:auto;display:block}
+.wc .one{margin:4px 0 0;font-size:14px;color:var(--muted);line-height:1.4}
+.wc h3{margin-top:8px;font-size:22px}
+.wc dl{margin:12px 0 0;display:grid;gap:10px;font-size:14.5px;line-height:1.4}
+.wc dt{font-family:var(--mono);font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.wc dd{margin:2px 0 0}
+.wc dd.q{font-weight:600}
+@media (max-width:760px){.who{grid-template-columns:1fr}}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+.seg div{border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:13.5px;color:var(--muted);line-height:1.4}
+.seg b{display:block;color:var(--ink);font-size:22px;letter-spacing:-.03em}
+.mini-tl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:20px;font-size:13.5px;color:var(--muted)}
+.mini-tl span{padding:6px 12px;border-radius:999px;border:1px solid var(--line)}
+.mini-tl span.hot{background:var(--red);border-color:var(--red);color:#fff;font-weight:600}
+
+/* Quiz */
+.quiz{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:36px}
+.quiz button{font-family:var(--sans);font-size:clamp(22px,2.6vw,32px);font-weight:600;letter-spacing:-.03em;padding:22px 34px;border-radius:22px;border:1px solid var(--night-line);background:#1c1c1e;color:var(--night-ink);cursor:pointer;min-width:200px}
+.quiz button:hover{background:#2c2c2e}
+.reveal{margin:30px auto 0;font-size:clamp(18px,1.8vw,23px);line-height:1.45;max-width:42ch;color:var(--night-muted)}
+.reveal b{color:var(--night-ink)}
+
+/* Need vs shown */
+.nvs{display:grid;gap:10px;margin-top:30px;max-width:720px}
+.nvs div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:center;padding:16px 20px;border-radius:14px;background:var(--soft);font-size:18px}
+.nvs em{font-style:normal;font-size:15px;color:var(--muted)}
+.nvs i{font-style:normal;font-weight:600;font-size:15px}
+.nvs .y{color:var(--amber)}.nvs .n{color:var(--red)}
+
+/* Methods */
+.meth{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:30px}
+.meth button{all:unset;cursor:pointer;border-radius:20px;padding:22px;background:var(--soft);display:flex;flex-direction:column;gap:6px;transition:transform .2s}
+.meth button:hover{transform:translateY(-3px)}
+.meth .ic{font-size:26px}
+.meth b{font-size:20px;letter-spacing:-.02em;margin-top:6px}
+.meth small{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.meth span{font-size:14.5px;color:var(--muted);line-height:1.4}
+.meth button.ai{background:var(--ink);color:var(--paper)}
+.meth button.ai span,.meth button.ai small{color:#a1a1a6}
+@media (max-width:860px){.meth{grid-template-columns:1fr 1fr}}
+
+/* Journey strip */
+.strip{display:flex;gap:14px;overflow-x:auto;padding:30px 4px 10px;margin-top:6px;scroll-snap-type:x mandatory;scrollbar-width:thin}
+.st{flex:none;width:150px;scroll-snap-align:start;text-align:center;position:relative}
+.st .ph{width:150px}
+.st .ph .vp{height:300px}
+.st b{display:block;font-size:13.5px;margin-top:12px;letter-spacing:-.01em}
+.st em{display:block;font-style:normal;font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+.st.hot{width:190px}.st.hot .ph{width:190px}.st.hot .ph .vp{height:360px}
+.st.hot b{color:var(--red)}
+.flag{position:absolute;top:-28px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.st .icon{width:150px;height:300px;border-radius:22px;border:1.5px dashed var(--hair);display:grid;place-items:center;font-size:44px;background:var(--soft)}
+.st .arrow{position:absolute;right:-12px;top:150px;color:var(--hair);font-size:14px}
+
+/* Tile with pins */
+.pinwrap{position:relative;width:min(300px,100%);margin:0 auto}
+.pinwrap .ph{width:100%}
+.pinwrap .ph .vp{height:min(600px,64vh)}
+.pin{position:absolute;width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;font-weight:600;font-size:14px;display:grid;place-items:center;box-shadow:0 0 0 6px rgba(227,36,43,.18);z-index:2}
+.probs{display:grid;gap:20px}
+.prob{display:grid;grid-template-columns:34px minmax(0,1fr);gap:14px}
+.prob i{width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;font-style:normal;font-weight:600;font-size:14px;display:grid;place-items:center}
+.prob i.d{background:transparent;border:2px dashed var(--red);color:var(--red)}
+.prob b{display:block;font-size:20px;font-weight:600;letter-spacing:-.025em}
+.prob span{display:block;color:var(--muted);margin-top:3px;line-height:1.45}
+
+/* Data → tile */
+.d2t{display:grid;gap:12px}
+.d2t div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:16px;align-items:center;padding:16px 18px;border-radius:16px;background:var(--soft)}
+.d2t b{font-size:30px;letter-spacing:-.04em;font-weight:600}
+.d2t p{margin:0;font-size:15.5px;line-height:1.45;color:var(--muted)}
+.d2t p strong{color:var(--ink);font-weight:600;display:block;margin-bottom:2px}
+
+/* Synthesis */
+.syn{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1.15fr) auto minmax(0,1fr);gap:16px;align-items:center;margin-top:28px}
+.notes{position:relative;height:250px}
+.notes span{position:absolute;width:110px;padding:8px;font-size:10.5px;line-height:1.3;background:#fef3a8;color:#3a3a00;border-radius:3px;box-shadow:0 6px 14px -8px rgba(0,0,0,.4)}
+.prompt{border-radius:18px;background:var(--ink);color:#e6e6e8;padding:18px;font-family:var(--mono);font-size:12.5px;line-height:1.55}
+.prompt small{display:block;color:#a1a1a6;margin-bottom:8px;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+.themes{display:grid;gap:8px}
+.themes div{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:10px;align-items:center;font-size:14.5px;padding:10px 12px;border-radius:12px;background:var(--soft)}
+.themes b{text-align:right;font-variant-numeric:tabular-nums}
+.syn .ar{font-size:24px;color:var(--red)}
+@media (max-width:900px){.syn{grid-template-columns:1fr}.syn .ar{transform:rotate(90deg);justify-self:center}}
+
+/* Team */
+.team svg{width:100%;max-width:820px;height:auto;display:block;margin:20px auto 0}
+.team text{font-family:var(--sans)}
+.plan5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:30px;position:relative}
+.plan5 div{border-top:2px solid var(--ink);padding-top:12px}
+.plan5 div.hot{border-color:var(--red)}
+.plan5 small{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.plan5 b{display:block;font-size:18px;letter-spacing:-.02em;margin-top:4px}
+.plan5 span{display:block;font-size:14px;color:var(--muted);margin-top:4px;line-height:1.4}
+@media (max-width:760px){.plan5{grid-template-columns:1fr 1fr}}
+.qa{display:grid;gap:16px}
+.qa div{padding:18px 20px;border-radius:16px;background:var(--soft)}
+.qa small{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.qa p{margin:6px 0 0;font-size:16px;line-height:1.5}
+
+/* Decisions */
+.vs{display:flex;gap:clamp(16px,4vw,56px);justify-content:center;align-items:flex-start;margin-top:28px;flex-wrap:wrap}
+.vs figure{margin:0;text-align:center;flex:none}
+.vs figure .ph.sm{width:200px}
+.vs figcaption{margin-top:12px;font-size:14px;color:var(--muted);max-width:270px}
+.vs figcaption b{display:block;color:var(--ink);font-size:16px}
+.badge{display:inline-block;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--red);color:#fff;margin-left:6px;vertical-align:2px}
+.kv{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin-top:18px;font-size:15px;color:var(--muted)}
+.kv b{color:var(--ink);font-size:20px;display:block;letter-spacing:-.02em}
+.zones{display:grid;gap:10px}
+.zones div{border-radius:16px;padding:16px 18px;background:var(--soft)}
+.zones div.main{background:var(--ink);color:var(--paper)}
+.zones small{font-family:var(--mono);font-size:10.5px;opacity:.6;text-transform:uppercase;letter-spacing:.08em}
+.zones p{margin:6px 0 0;font-size:15px;line-height:1.45;opacity:.85}
+.hubg{display:grid;grid-template-columns:repeat(3,auto);gap:clamp(12px,3vw,40px);justify-content:center;align-items:center;margin-top:24px}
+.hubg .mid{grid-row:span 1}
+
+/* Explore grid */
+.wall{display:flex;gap:12px;justify-content:center;align-items:flex-start;margin-top:26px;flex-wrap:wrap}
+.wall figure{margin:0;text-align:center}
+.wall figcaption{font-size:12.5px;color:var(--muted);margin-top:8px}
+.wall .fin figcaption{color:var(--ink);font-weight:600}
+.wall .ph.xs .vp{height:250px}
+.wall .ph.xs{width:130px}
+.wall figure:not(.fin) .ph{opacity:.72}
+
+/* Before/after */
+.ba{display:flex;justify-content:center;gap:clamp(24px,6vw,96px);margin-top:28px;flex-wrap:wrap}
+.ba figure{margin:0;text-align:center;width:min(270px,100%)}
+.ba figcaption{margin-top:14px;color:var(--night-muted);font-size:15px}
+.ba figcaption b{display:block;color:var(--night-ink);font-size:17px}
+
+/* AI next */
+.steps{display:grid;gap:8px;margin-top:22px}
+.steps div{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;padding:12px 16px;border-radius:14px;background:var(--soft);font-size:15px;line-height:1.45;align-items:baseline}
+.steps b{font-size:15px}
+.steps em{font-style:normal;color:var(--muted)}
+.arch svg{width:100%;max-width:1000px;height:auto;display:block;margin:12px auto 0}
+.arch text{font-family:var(--sans)}
+.guard{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+.guard span{font-size:13px;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--paper)}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.tags span{font-family:var(--mono);font-size:11.5px;padding:6px 10px;border-radius:8px;background:#1c1c1e;color:var(--night-muted)}
+
+
+.srcp{display:block;font-family:var(--mono);font-size:10.5px;color:var(--muted);margin:2px 0 4px;letter-spacing:.02em}
+.mixc{display:flex;align-items:flex-end;gap:clamp(10px,2.4vw,32px);height:280px;margin-top:16px}
+.mixc div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:8px;height:100%}
+.mixc i{display:block;width:100%;max-width:96px;border-radius:10px 10px 3px 3px;background:var(--hair)}
+.mixc .top i{background:var(--ink)}
+.mixc b{font-size:20px;letter-spacing:-.03em}
+.mixc span{font-size:13.5px;color:var(--muted)}
+.entry{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:16px;font-size:13px}
+.entry small{font-family:var(--mono);font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-right:4px}
+.entry span{padding:6px 11px;border-radius:999px;background:var(--soft)}
+.strat{margin-top:16px;padding:14px 18px;border-radius:14px;background:var(--ink);color:var(--paper);font-size:15.5px;line-height:1.45}
+.tools{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tools span{padding:14px;border-radius:14px;background:var(--soft);font-size:13.5px;line-height:1.45;color:var(--muted)}
+.tools b{display:block;color:var(--ink);font-size:16px;margin-bottom:4px}
+.how{margin:14px 0 0;padding-left:20px;display:grid;gap:7px;font-size:15px;line-height:1.4}
+.how b{font-weight:600}
+.jr .strip{padding-top:30px}
+.jr .st,.jr .st .ph{width:124px}.jr .st .ph .vp{height:230px}.jr .st .icon{width:124px;height:240px;font-size:36px}
+.jr .photo img{max-height:180px;object-fit:cover;object-position:top}
+.finds{display:grid;gap:22px;margin-top:26px}
+.finds small{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.finds b{display:block;font-size:clamp(20px,2.1vw,28px);font-weight:600;letter-spacing:-.025em;line-height:1.2;margin-top:4px}
+.finds span{display:block;color:var(--muted);font-size:16px;margin-top:4px}
+.tbars{display:grid;gap:10px}
+.tbars div{display:grid;grid-template-columns:80px minmax(0,1fr) 70px;gap:12px;align-items:center;font-size:15px}
+.tbars i{display:block;height:22px;border-radius:6px;background:var(--hair)}
+.tbars .vz i{background:var(--red)}.tbars .vz span,.tbars .vz b{font-weight:600}
+.tbars b{text-align:right;font-variant-numeric:tabular-nums}
+.todesign{margin-top:18px;padding:16px 18px;border-radius:16px;background:var(--ink);color:var(--paper)}
+.todesign small{font-family:var(--mono);font-size:11px;color:#a1a1a6;text-transform:uppercase;letter-spacing:.06em}
+.todesign b{display:block;font-size:20px;letter-spacing:-.02em;margin-top:4px}
+.todesign span{color:#a1a1a6;font-size:14px}
+.tk{display:grid;gap:14px;margin-top:22px}
+.tk div{display:grid;grid-template-columns:120px minmax(0,1fr);column-gap:14px;align-items:baseline}
+.tk small{font-family:var(--mono);font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.tk b{font-size:clamp(16px,1.6vw,20px);font-weight:600;letter-spacing:-.02em;line-height:1.3}
+.tk i{grid-column:2;font-style:normal;color:var(--red);font-size:14.5px;font-weight:500;margin-top:2px}
+.next{margin-top:22px;font-size:14px;color:var(--muted)}
+.dark .next{border-color:var(--night-ink)}
+.jbot{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:center;margin-top:10px}
+.jbot .photo img{height:170px;width:100%;object-fit:cover;object-position:top}
+.jwhy{margin:0;font-size:16px;line-height:1.5;color:var(--muted)}
+.jwhy b{color:var(--ink)}
+@media (max-width:860px){.jbot{grid-template-columns:1fr}}
+.proc{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px;font-size:13.5px;color:var(--muted)}
+.proc span{padding:6px 12px;border-radius:999px;background:var(--soft);color:var(--ink)}
+.path{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:22px;padding:16px 18px;border-radius:16px;border:1.5px dashed var(--hair);position:relative}
+.path span{padding:9px 14px;border-radius:12px;background:var(--soft);font-weight:600;font-size:15px}
+.path span.hot{background:var(--red);color:#fff}
+.path em{font-style:normal;color:var(--muted)}
+.path i{font-style:normal;margin-left:auto;font-size:13px;font-weight:600;color:var(--red);text-decoration:line-through}
+.fgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.fgrid div{padding:14px 16px;border-radius:14px;background:var(--soft)}
+.fgrid b{display:block;font-size:16px;letter-spacing:-.015em}
+.fgrid span{display:block;font-size:13.5px;color:var(--muted);margin-top:4px;line-height:1.45}
+@media (max-width:860px){.fgrid{grid-template-columns:1fr}}
+.killer{margin-top:14px;font-size:clamp(22px,2.6vw,34px);font-weight:600;letter-spacing:-.03em;line-height:1.2;max-width:30ch}
+.killer b{color:var(--red);font-weight:600}
+.ins{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ins div{padding:12px 14px;border-radius:14px;background:var(--soft)}
+.ins b{display:block;font-size:15.5px;letter-spacing:-.015em}
+.ins span{display:block;font-size:13.5px;color:var(--muted);margin-top:3px;line-height:1.4}
+@media (max-width:700px){.ins{grid-template-columns:1fr}}
+.ilist{list-style:none;padding:0;margin:28px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-width:900px}
+.ilist li{padding:14px 16px;border-radius:14px;background:var(--soft);font-size:16px;font-weight:500;letter-spacing:-.01em}
+@media (max-width:760px){.ilist{grid-template-columns:1fr}}
+.ask{margin-top:30px;font-size:clamp(17px,1.7vw,22px);font-style:italic;color:var(--muted);max-width:52ch;line-height:1.4}
+.aitools{display:grid;grid-template-columns:repeat(2,minmax(0,280px));gap:14px;margin-top:30px}
+.aitools div{padding:20px;border-radius:18px;background:var(--soft)}
+.aitools b{display:block;font-size:22px;letter-spacing:-.02em}
+.aitools span{display:block;color:var(--muted);margin-top:4px;font-size:15px}
+@media (max-width:640px){.aitools{grid-template-columns:1fr}}
+.kc{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px;max-width:960px}
+.kc div{padding:16px 18px;border-radius:16px;background:var(--soft)}
+.kc div.wide{grid-column:1/-1;background:var(--ink);color:var(--paper)}
+.kc small{font-family:var(--mono);font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.kc .wide small{color:#a1a1a6}
+.kc b{display:block;font-size:19px;letter-spacing:-.02em;margin-top:2px}
+.kc span{display:block;font-size:15px;color:var(--muted);margin-top:4px;line-height:1.45}
+.kc .wide span{color:#d1d1d6}
+@media (max-width:700px){.kc{grid-template-columns:1fr}}
+.ticks{list-style:none;padding:0;margin:24px 0 0;display:grid;gap:14px}
+.ticks li{display:flex;gap:14px;align-items:baseline;font-size:clamp(20px,2.2vw,30px);font-weight:500;letter-spacing:-.025em}
+.ticks li::before{content:"✓";color:var(--green);font-weight:600}
+.ns3{list-style:none;padding:0;margin:40px auto 0;display:grid;gap:14px;justify-content:center;text-align:left;width:max-content;max-width:100%;counter-reset:n}
+.ns3 li{counter-increment:n;font-size:clamp(17px,1.7vw,22px);color:var(--night-muted)}
+.ns3 li::before{content:counter(n);display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--red);color:#fff;font-size:14px;font-weight:600;margin-right:10px;vertical-align:2px}
+.why{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.why li{font-size:clamp(17px,1.7vw,21px);font-weight:500;letter-spacing:-.015em;padding-left:22px;position:relative;line-height:1.35}
+.why li::before{content:"";position:absolute;left:0;top:.5em;width:9px;height:9px;border-radius:3px;background:var(--red)}
+.bigstat{margin-bottom:18px}.bigstat b{display:block;font-size:clamp(48px,6vw,80px);letter-spacing:-.05em;line-height:1}.bigstat span{color:var(--muted);font-size:16px}
+.split .vs{flex-wrap:nowrap;gap:24px}
+.slide:not(.dark){justify-content:flex-start;padding-top:clamp(56px,10vh,104px)}
+.dh{font-size:clamp(28px,3.4vw,46px)}
+.dscreens{display:flex;justify-content:center;align-items:flex-end;gap:clamp(20px,4vw,56px);margin-top:26px}
+.dscreens figure{margin:0;text-align:center;flex:none}
+.dscreens figure .ph.sm{width:210px}.dscreens figure .ph.sm .vp{height:min(380px,42vh)}
+.dscreens figure .ph.xs .vp{height:min(320px,36vh)}
+.dscreens figcaption{margin-top:10px;font-size:13.5px;color:var(--muted)}
+.dscreens figcaption b{color:var(--ink);font-weight:600}
+.hubsvg{width:100%;max-width:820px;height:auto}
+.hubsvg text{font-family:var(--sans)}
+.dnotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:24px}
+.dnotes div{padding:12px 14px;border-radius:14px;background:var(--soft)}
+.dnotes small{font-family:var(--mono);font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.dnotes p{margin:4px 0 0;font-size:14.5px;line-height:1.45}
+.ph.lg{width:270px;border-radius:46px;padding:10px;box-shadow:0 40px 80px -40px rgba(0,0,0,.45),inset 0 0 0 1px #3a3a3c}
+.ph.lg .vp{height:min(560px,62vh);border-radius:37px}
+.ph.md{width:220px;border-radius:40px;padding:9px}.ph.md .vp{height:min(470px,54vh);border-radius:32px}
+.ph.lg::after,.ph.md::after{content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);width:72px;height:20px;border-radius:12px;background:#1d1d1f;z-index:2}
+.ph.lg .vp img,.ph.md .vp img{padding-top:26px;background:#fff}
+.dgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,300px);gap:clamp(24px,4vw,56px);align-items:center;margin-top:20px}
+.dgrid .dscreens{margin-top:0;align-items:center}
+.dside{display:grid;gap:12px}
+.dside div{padding:14px 16px;border-radius:14px;background:var(--soft)}
+.dside small{font-family:var(--mono);font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.dside p{margin:4px 0 0;font-size:15px;line-height:1.45}
+.arrowx{font-size:30px;color:var(--muted);align-self:center}
+@media (max-width:980px){.dgrid{grid-template-columns:1fr}}
+.ideas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px}
+.ideas div{padding:18px;border-radius:16px;background:var(--soft)}
+.ideas b{display:block;font-size:18px;letter-spacing:-.02em;margin-top:10px}
+.ideas p{margin:6px 0 0;font-size:14.5px;color:var(--muted);line-height:1.45}
+.st2{font-family:var(--mono);font-size:10.5px;padding:3px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em}
+.st2.nx{background:var(--paper);border:1px solid var(--line)}.st2.bd{background:var(--ink);color:var(--paper)}
+@media (max-width:860px){.ideas{grid-template-columns:1fr}}
+.fut li{font-size:clamp(18px,1.9vw,26px)}
+.fut li::before{color:var(--red)}
+.certs{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:26px}
+@media (max-width:760px){.certs{grid-template-columns:1fr}}
+.ph.pro{border-radius:46px;padding:10px}.ph.pro .vp{border-radius:37px;overflow:hidden}
+.craft{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:22px}
+.craft div{padding:14px;border-radius:14px;background:var(--soft)}
+.craft b{display:block;font-size:16px;letter-spacing:-.015em}
+.craft span{display:block;font-size:13.5px;color:var(--muted);margin-top:4px;line-height:1.4}
+@media (max-width:860px){.craft{grid-template-columns:1fr 1fr}}
+.phold>div{height:150px;border-radius:14px;border:1.5px dashed var(--hair);display:grid;place-items:center;color:var(--muted);font-size:13px;text-align:center;padding:10px}
+/* Hotspots */
+.hs{position:absolute;width:26px;height:26px;border-radius:50%;border:0;padding:0;cursor:pointer;font:600 12px var(--sans);color:#fff;display:grid;place-items:center;transform:translate(-50%,-50%);z-index:3;transition:transform .2s}
+.hs::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid currentColor;opacity:.35;animation:pulse 2s infinite}
+@keyframes pulse{50%{transform:scale(1.25);opacity:0}}
+.hs.buried{background:var(--amber);color:var(--amber)}.hs.missing{background:var(--red);color:var(--red)}.hs.ok{background:var(--green);color:var(--green)}
+.hs span{color:#fff;position:relative;z-index:1}
+.hs.on{transform:translate(-50%,-50%) scale(1.3)}
+.hshl{position:absolute;left:4%;right:4%;border-radius:8px;border:2px solid var(--ink);pointer-events:none;z-index:2;transition:all .25s;opacity:0}
+.hsinfo{margin-top:22px;border-radius:18px;background:var(--soft);padding:18px 20px;height:250px;overflow-y:auto}
+.hsinfo small{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.hsinfo b{display:block;font-size:22px;letter-spacing:-.025em;margin-top:6px}
+.hsinfo p{margin:8px 0 0;font-size:15.5px;line-height:1.5;color:var(--muted)}
+.hsinfo p strong{color:var(--ink);font-weight:600}
+.hslist{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.hslist button{font:500 13px var(--sans);border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:7px 12px;cursor:pointer;display:flex;align-items:center;gap:6px}
+.hslist button i{width:8px;height:8px;border-radius:50%}
+.hslist button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+@media (prefers-reduced-motion:reduce){.slide,.slide.on{transition:none}}
+
+.q4{list-style:none;padding:0;margin:30px 0 0;display:grid;gap:14px;counter-reset:q}
+.q4 li{counter-increment:q;font-size:clamp(22px,2.6vw,36px);font-weight:600;letter-spacing:-.03em}
+.q4 li::before{content:counter(q);display:inline-grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--ink);color:#fff;font-size:17px;margin-right:16px;vertical-align:4px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,4vw,56px);align-items:start}
+@media (max-width:860px){.two{grid-template-columns:1fr}}
+.ticks.small li{font-size:clamp(17px,1.7vw,22px)}
+.facts.col{flex-direction:column;gap:18px;margin-top:14px}
+.facts.col b{display:block;font-size:clamp(34px,4vw,52px);letter-spacing:-.04em;color:var(--ink)}
+.facts.col b.r{color:var(--red)}
+.arch4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:26px}
+.arch4 div{padding:18px;border-radius:16px;background:#1c1c1e}
+.arch4 b{display:block;font-size:19px;letter-spacing:-.02em}
+.arch4 span{display:block;color:var(--night-muted);font-size:14px;margin-top:6px;line-height:1.4}
+@media (max-width:860px){.arch4{grid-template-columns:1fr 1fr}}
+.role{margin-top:24px;padding:14px 18px;border-radius:14px;background:var(--ink);color:var(--paper);max-width:760px}
+.role small{font-family:var(--mono);font-size:10.5px;color:#a1a1a6;text-transform:uppercase;letter-spacing:.07em}
+.role p{margin:4px 0 0;font-size:16px;line-height:1.45}
+.prods{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.prods>div{padding:20px;border-radius:18px;background:var(--soft)}
+.prods b{display:block;font-size:22px;letter-spacing:-.02em}
+.prods span{display:block;color:var(--muted);font-size:14.5px;margin-top:4px}
+.prods .sub{margin-top:10px;font-size:13.5px}
+.pl{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.pl i{font-style:normal;font-size:13.5px;font-weight:600;padding:7px 11px;border-radius:999px;background:var(--paper);border:1px solid var(--line)}
+@media (max-width:760px){.prods{grid-template-columns:1fr}}
+.vfacts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:34px;max-width:960px}
+.vfacts div{padding:22px;border-radius:18px;background:var(--soft)}
+.vfacts b{display:block;font-size:clamp(40px,5vw,64px);letter-spacing:-.05em;line-height:1}
+.vfacts b.r{color:var(--red)}
+.vfacts span{display:block;color:var(--muted);font-size:15px;margin-top:8px}
+@media (max-width:760px){.vfacts{grid-template-columns:1fr}}
+.ucards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.uc{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center;padding:18px;border-radius:18px;background:var(--soft)}
+.uc .pimg{height:170px;border-radius:12px;background:#ece9e4;display:flex;justify-content:center;overflow:hidden}
+.uc .pimg img{height:100%;width:auto}
+.uc b{display:block;font-size:22px;letter-spacing:-.02em}
+.uc span{display:block;color:var(--muted);font-size:14.5px;margin-top:6px;line-height:1.45}
+.uc q{display:block;margin-top:12px;font-size:17px;font-weight:600;quotes:none}
+@media (max-width:860px){.ucards{grid-template-columns:1fr}}
+.cur .strip{gap:16px;padding-top:34px}
+.cur .st,.cur .st .ph{width:138px}.cur .st .ph .vp{height:296px}
+.cur .st.hot,.cur .st.hot .ph{width:138px}
+.steps5{list-style:none;padding:0;margin:26px 0 0;display:grid;gap:10px;counter-reset:s;max-width:900px}
+.steps5 li{counter-increment:s;display:grid;grid-template-columns:36px minmax(0,1fr);column-gap:14px;align-items:baseline}
+.steps5 li::before{content:counter(s);grid-row:span 2;width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:14px;font-weight:600}
+.steps5 b{font-size:clamp(18px,1.9vw,24px);letter-spacing:-.02em}
+.steps5 span{color:var(--muted);font-size:15px}
+.dissect{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px;margin-top:20px;align-items:start}
+@media (max-width:860px){.dissect{grid-template-columns:1fr}}
+.hier{display:grid;grid-template-columns:auto minmax(0,1fr);gap:clamp(24px,4vw,56px);margin-top:20px;align-items:start}
+.hier .hsinfo{overflow:auto}
+@media (max-width:860px){.hier{grid-template-columns:1fr}}
+.ph.lg::after,.ph.md::after{display:none!important}
+.ph.lg .vp img,.ph.md .vp img{padding-top:0!important}
+.dnote{text-align:center;color:var(--muted);font-size:14.5px;margin-top:16px}
+.ba2{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:18px}
+.ba2 span{font-size:13.5px;padding:8px 12px;border-radius:999px;background:var(--soft)}
+.ba2 s{color:var(--muted)}
+.ba2 b{font-weight:600}
+.gal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+.gal .photo img{height:min(250px,30vh);width:100%;object-fit:cover}
+@media (max-width:760px){.gal{grid-template-columns:1fr 1fr}}
+.apx{margin-top:14px}
+.apl{margin:6px 6px 8px;font-size:15px}
+.apf{width:100%;aspect-ratio:1400/900;position:relative;overflow:hidden;margin-bottom:14px}
+.apf iframe{position:absolute;left:0;top:0;width:1400px;height:900px;border:0;transform-origin:0 0}
+.ph.std{width:276px;border-radius:46px;padding:11px}
+.ph.std .ifs{width:254px!important;height:min(560px,62vh)!important;border-radius:36px}
+.ph.std .ifs iframe{width:375px!important;height:calc(min(560px,62vh) * 1.4764)!important;transform:scale(.6773)!important;transform-origin:0 0}
+.dscreens .ph.lg{width:276px;border-radius:46px;padding:11px}
+.dscreens .ph.lg .vp{height:min(560px,62vh);border-radius:36px}
+.ph.wf{background:#e9eaee}
+.finproto{display:block;width:100%;max-width:520px;height:900px;border:0;margin:10px auto 0;background:#000;border-radius:24px}
+.phold.dk>div{border-color:#3a3a3c;color:#a1a1a6}
+.dlv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:16px}
+.dlv>div{padding:14px;border-radius:16px;background:var(--soft);display:flex;flex-direction:column}
+.dlv b{font-size:clamp(28px,3vw,40px);letter-spacing:-.04em;line-height:1}
+.dlv span{font-size:13px;color:var(--muted);margin-top:4px;min-height:34px}
+.dimg{margin-top:10px;height:min(380px,46vh);border-radius:12px;overflow:hidden;background:#fff}
+.dimg.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.dimg.minis{display:flex;gap:4px;padding:6px;align-items:flex-start;overflow:hidden}
+.dimg.minis img{flex:1;min-width:0;border-radius:8px;display:block}
+.dimg.phold>div{height:100%}
+@media (max-width:860px){.dlv{grid-template-columns:1fr 1fr}}
+.dstats{display:flex;gap:40px;flex-wrap:wrap;margin-top:8px}
+.dstats span{font-size:14px;color:var(--muted)}
+.dstats b{display:block;font-size:clamp(34px,4vw,52px);letter-spacing:-.04em;color:var(--ink);line-height:1}
+.dsec{margin-top:34px;font-size:18px;letter-spacing:-.02em}
+.mas{columns:4 220px;column-gap:10px;margin-top:12px}
+.mas img{width:100%;display:block;margin-bottom:10px;border-radius:10px;break-inside:avoid;background:#111}
+.bar{background:linear-gradient(rgba(255,255,255,0),rgba(255,255,255,.96) 45%)}
+.bar.dark{background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.96) 45%)}
+.how{display:flex;flex-direction:column;align-items:stretch}
+.hbox{padding:14px 16px;border-radius:14px;background:var(--soft)}
+.hbox.dkb{background:var(--ink);color:var(--paper)}
+.hbox b{display:block;font-size:17px;letter-spacing:-.02em}
+.hbox span{display:block;font-size:13.5px;color:var(--muted);margin-top:4px;line-height:1.45}
+.hbox.dkb span{color:#a1a1a6}
+.hline{width:2px;height:18px;background:var(--hair);margin:0 auto}
+.fgrid2{display:grid;grid-template-columns:330px minmax(0,1fr);gap:clamp(24px,4vw,56px);margin-top:16px;align-items:start}
+.fproto{width:330px;height:700px;overflow:hidden;border-radius:24px}
+.fproto iframe{width:440px;height:933px;border:0;transform:scale(.75);transform-origin:0 0;background:#000}
+.fds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fd{padding:12px;border-radius:8px;background:#1c1c1e}
+.fd img{display:block;max-width:100%;max-height:110px;width:auto;height:auto;border-radius:3px;background:#fff;image-rendering:auto}
+.fd .mi{height:64px;border-radius:3px;background:#2c2c2e;display:flex;align-items:center;justify-content:center;gap:10px}
+.fd .mi i{font-style:normal;font-size:12.5px;color:#fff;padding:6px 10px;border-radius:999px;background:#3a3a3c}
+.fd .mi i.bd{background:var(--red);width:24px;height:24px;padding:0;display:grid;place-items:center;font-weight:600}
+.fd b{display:block;margin-top:10px;font-size:15.5px;letter-spacing:-.015em;color:var(--night-ink)}
+.fd span{display:block;font-size:13px;color:var(--night-muted);margin-top:3px;line-height:1.4}
+@media (max-width:980px){.fgrid2{grid-template-columns:1fr}.fproto{margin:0 auto}}
+.brief{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px;max-width:960px}
+.brief div{padding:14px 16px;border-radius:14px;border:1px solid var(--line)}
+.brief b{display:block;font-size:30px;letter-spacing:-.04em;line-height:1}
+.brief span{display:block;font-size:13.5px;color:var(--muted);margin-top:6px;line-height:1.35}
+@media (max-width:760px){.brief{grid-template-columns:1fr 1fr}}
+.jm{display:grid;gap:0}
+.jm div{display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:14px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--line)}
+.jm b{grid-row:span 2;font-size:30px;letter-spacing:-.04em;line-height:1}
+.jm span{font-size:15px;line-height:1.4}
+.jm i{font-style:normal;font-size:13.5px;color:var(--muted);margin-top:3px}
+.learn{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
+.learn div{padding:16px;border-radius:14px;background:var(--soft)}
+.learn b{display:block;font-size:16.5px;letter-spacing:-.02em}
+.learn span{display:block;font-size:13.5px;color:var(--muted);margin-top:6px;line-height:1.4}
+@media (max-width:860px){.learn{grid-template-columns:1fr 1fr}}
+.me3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:30px;max-width:960px}
+.me3 div{border-top:2px solid var(--ink);padding-top:14px}
+.me3 b{display:block;font-size:clamp(26px,3vw,38px);letter-spacing:-.04em;line-height:1.05}
+.me3 span{display:block;color:var(--muted);font-size:15px;margin-top:6px}
+@media (max-width:760px){.me3{grid-template-columns:1fr}}
+.fun{display:flex;align-items:stretch;gap:10px;margin-top:30px;flex-wrap:nowrap;max-width:1080px}
+.fun>div{flex:1;min-width:0;padding:18px;border-radius:16px;background:var(--soft)}
+.fun>div.hot{background:#fdecec}
+.fun>div.hot b{color:var(--red)}
+.fun b{display:block;font-size:clamp(28px,3.4vw,46px);letter-spacing:-.05em;line-height:1}
+.fun span{display:block;color:var(--muted);font-size:14px;margin-top:8px;line-height:1.35}
+.fun>i{font-style:normal;align-self:center;color:var(--muted);font-size:20px}
+.ph-x{display:inline-block!important;border:2px dashed #e0a800;border-radius:10px;padding:0 10px;background:#fff8d6;color:#8a6d00}
+@media (max-width:760px){.fun{flex-direction:column}.fun>i{display:none}}
+.own{padding:22px;border-radius:18px;background:var(--ink);color:var(--paper)}
+.own small{font-family:var(--mono);font-size:10.5px;color:#a1a1a6;text-transform:uppercase;letter-spacing:.07em}
+.own b{display:block;font-size:clamp(22px,2.4vw,30px);letter-spacing:-.03em;line-height:1.15;margin-top:10px}
+.uc em.demo{display:block;font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--ink);margin-top:6px;letter-spacing:.01em}
+.uc b.vc{display:inline;font-size:inherit;letter-spacing:0;color:var(--ink)}
+.cur .st small.def{display:block;font-size:11px;color:var(--muted);line-height:1.3;margin-top:2px}
+.obs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:12px}
+.obs figure{margin:0;min-width:0}
+.obs .oimg{height:150px;border-radius:12px;background:#ececee;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:10px}
+.obs .oimg img{max-width:100%;max-height:100%;display:block;border-radius:4px}
+.obs figcaption{font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.4}
+.obs figcaption b{display:block;color:var(--ink);font-size:15px;margin-bottom:2px}
+@media (max-width:860px){.obs{grid-template-columns:1fr 1fr}}
+.proof{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:center;margin-top:24px;max-width:1100px;margin-inline:auto}
+.proof figure{margin:0}.proof img{display:block;width:100%;border-radius:10px}
+.proof .ptxt{font-size:16px;line-height:1.5;margin-top:6px}
+@media (max-width:860px){.proof{grid-template-columns:1fr}}
+.cc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px}
+.cc>div{padding:14px 16px;border-radius:14px;background:var(--soft);display:flex;flex-direction:column;gap:6px}
+.cc small{font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;align-self:flex-start;padding:2px 7px;border-radius:5px;background:var(--paper)}
+.cc small.cc-removed{color:var(--red)}.cc small.cc-moved{color:#8a6d00}
+.cc s{color:var(--muted);font-size:13.5px;line-height:1.35}
+.cc b{font-size:15.5px;font-weight:600;line-height:1.35}
+.cc b::before{content:"→ ";color:var(--muted);font-weight:400}
+@media (max-width:860px){.cc{grid-template-columns:1fr}}
+.mis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:14px}
+.fstage{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:clamp(20px,3vw,44px);align-items:start;margin-top:18px}
+.fphone{width:352px;border-radius:52px;padding:11px;background:#2c2c2e;box-shadow:0 40px 80px -30px rgba(0,0,0,.7)}
+.fvp{width:330px;height:min(700px,74vh);border-radius:42px;overflow:hidden;position:relative;background:#fff}
+.fvp iframe{position:absolute;left:0;top:0;width:375px;height:calc(min(700px,74vh) / .88);border:0;transform:scale(.88);transform-origin:0 0}
+.fnar{padding-top:6px;max-width:340px}
+.fnar>small{font-family:var(--mono);font-size:10.5px;color:#ff6b6b;text-transform:uppercase;letter-spacing:.08em}
+.fnow{margin-top:10px;padding:16px 18px;border-radius:14px;background:#1c1c1e}
+.fnow.in{animation:fin .35s ease}
+@keyframes fin{from{opacity:0;transform:translateY(8px)}}
+.fnow b{display:block;font-size:19px;letter-spacing:-.02em;color:var(--night-ink)}
+.fnow p{margin:6px 0 0;font-size:14.5px;line-height:1.5;color:var(--night-muted)}
+.flog{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:6px}
+.flog li{font-size:13px;color:var(--night-muted);padding-left:16px;position:relative;opacity:.75}
+.flog li::before{content:"✓";position:absolute;left:0;color:#4cd07d}
+@media (max-width:1100px){.fstage{grid-template-columns:1fr}.fstage>div:first-child{display:none}.fphone{margin:0 auto}.fnar{max-width:none}}
+.m-card{width:100%;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;overflow:hidden}
+.m-ch{display:flex;justify-content:space-between;padding:6px 8px;font-size:12px}
+.m-cb{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s ease}
+.m-card.open{border-color:#000}.m-card.open .m-cb{grid-template-rows:1fr}
+.m-cbi{overflow:hidden;font-size:10.5px;padding:0 8px;color:#444}
+.m-card.open .m-cbi{padding:0 8px 6px}
+.m-cta{transition:background .3s,color .3s}
+.m-cta[aria-disabled="true"]{background:#bbb;color:#eee;cursor:default}
+.m-lnk{font:inherit;font-size:11.5px;background:none;border:0;text-decoration:underline;cursor:pointer;color:#000;padding:0}
+.m-lnk.ok{text-decoration:none;color:#008331;font-weight:600}
+.m-perk b{display:block;font-size:12px}.m-perk span{font-size:11px;color:#666}
+.m-pill{font:inherit;font-size:12px;font-weight:600;border:1.5px solid #000;background:#fff;border-radius:999px;padding:6px 14px;cursor:pointer;transition:.25s}
+.m-pill.added{background:#000;color:#fff}
+.m-offer{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px}
+.mstage{height:110px}
+.mx{padding:12px;border-radius:12px;background:#1c1c1e;min-width:0}
+.mx>b{display:block;margin-top:10px;font-size:15px;color:var(--night-ink)}
+.mx>span{display:block;font-size:12.5px;color:var(--night-muted);margin-top:3px;line-height:1.4}
+.mstage{height:96px;border-radius:8px;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;gap:12px;padding:10px;font-size:12px;position:relative;overflow:hidden}
+.mstage.col{flex-direction:column;gap:8px}
+.m-tog{width:42px;height:24px;border-radius:999px;background:#008331;position:relative;cursor:pointer;transition:background .2s;flex:none}
+.m-tog::after{content:"";position:absolute;top:3px;left:21px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s}
+.m-tog[aria-checked="false"]{background:#bbb}.m-tog[aria-checked="false"]::after{left:3px}
+.m-pr s{color:#777}.m-pr b{font-size:15px;transition:color .3s}.m-pr b.fl{color:#008331}
+.m-cart{position:relative;width:38px;height:38px;border-radius:50%;background:#fde9e9;display:grid;place-items:center}
+.m-cart i{position:absolute;top:-3px;right:-3px;min-width:18px;height:18px;border-radius:9px;background:#ee0000;color:#fff;font-style:normal;font-size:10px;font-weight:700;display:grid;place-items:center}
+.m-cart i.pop{animation:mpop .35s ease}
+@keyframes mpop{0%{transform:scale(0)}70%{transform:scale(1.3)}100%{transform:scale(1)}}
+.m-btn{font:inherit;font-size:12px;font-weight:600;border:0;border-radius:999px;background:#000;color:#fff;padding:7px 12px;cursor:pointer}
+.m-bar{font-size:11px;padding:6px 8px;border-radius:6px;background:#f4f4f4;transition:color .3s}
+.m-bar.fl{color:#008331}
+.m-toast{font-size:11px;background:#1f1f1f;color:#fff;padding:6px 10px;border-radius:6px;opacity:0;transform:translateY(6px);transition:.25s}
+.m-toast.show{opacity:1;transform:none}
+.m-gifts{display:flex;gap:6px}
+.m-gifts span{font-size:11px;padding:16px 8px 8px;border:1.5px solid #ddd;border-radius:8px;cursor:pointer;position:relative}
+.m-gifts span::after{content:"";position:absolute;right:5px;top:4px;width:10px;height:10px;border-radius:50%;border:1.5px solid #bbb}
+.m-gifts span.on{border-color:#000}.m-gifts span.on::after{background:#000;border-color:#000}
+@media (max-width:860px){.mis{grid-template-columns:1fr 1fr}}
+.intro{display:grid;gap:16px;margin-top:22px;max-width:760px}
+.intro p{margin:0;font-size:clamp(18px,1.7vw,22px);line-height:1.5;color:var(--muted)}
+.intro p:first-child{color:var(--ink)}
+.jsum p{margin:0 0 12px;font-size:16px;line-height:1.5;color:var(--muted)}
+.jsum p.big{font-size:clamp(20px,2vw,26px);line-height:1.3;color:var(--ink);font-weight:600;letter-spacing:-.02em}
+.jins{margin-top:8px;padding:14px 16px;border-radius:14px;background:var(--ink);color:var(--paper)}
+.jins small{font-family:var(--mono);font-size:10.5px;color:#a1a1a6;text-transform:uppercase;letter-spacing:.07em}
+.jins b{display:block;font-size:19px;letter-spacing:-.02em;margin-top:4px}
+.jins span{display:block;font-size:13.5px;color:#c7c7cc;margin-top:4px}
+.hsimg{margin-top:14px;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#fff}
+.hsimg img{display:block;width:100%}
+/* consistent phones */
+.slide{padding-top:clamp(24px,4vh,48px)}
+.cvp{height:600px}.cvp iframe{height:803.6px}
+.ph.std{width:302px;border-radius:48px;padding:11px}
+.ph.std .ifs{width:280px!important;height:600px!important;border-radius:38px}
+.ph.std .ifs iframe{height:803.6px!important;transform:scale(.74667)!important}
+.dscreens .ph.lg{width:302px;padding:11px;border-radius:48px}
+.dscreens .ph.lg .vp{height:600px;border-radius:38px}
+.fphone{width:330px}.fvp{width:308px;height:660px}.fvp iframe{height:803.6px;transform:scale(.82133)}
+@media (max-height:960px){.cph,.ph.std,.dscreens .ph.lg,.fphone,.ph.pro{zoom:.88}}
+@media (max-height:840px){.cph,.ph.std,.dscreens .ph.lg,.fphone,.ph.pro{zoom:.76}}
+@media (max-height:720px){.cph,.ph.std,.dscreens .ph.lg,.fphone,.ph.pro{zoom:.66}}
+.fnl{display:grid;gap:8px;margin-top:22px;max-width:1000px}
+.fr{display:flex;align-items:center;gap:8px}
+.fr em{font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--muted);white-space:nowrap;margin-left:6px}
+.fb{width:var(--w);min-width:150px;padding:10px 14px;border-radius:10px;background:#e9e9ed;display:flex;align-items:baseline;gap:10px;white-space:nowrap}
+.fb b{font-size:24px;letter-spacing:-.04em}
+.fb span{font-size:13.5px;color:var(--muted);white-space:normal}
+.fb.lose{background:#fdecec}.fb.lose b{color:var(--red)}
+.fb.win{background:var(--ink);color:var(--paper)}.fb.win span{color:#c7c7cc}
+.fr.split .fb:first-child{border-radius:10px 4px 4px 10px}.fr.split .fb.lose{margin-left:-4px;border-radius:4px 10px 10px 4px}
+.fsum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px;max-width:1000px}
+.fsum>div{padding:14px 16px;border-radius:14px;border:1px solid var(--line)}
+.fsum>div.hot{border-color:#f3b4b4;background:#fdecec}
+.fsum small{font-family:var(--mono);font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.fsum b{display:block;font-size:26px;letter-spacing:-.04em;margin-top:4px}
+.fsum .hot b{color:var(--red)}
+.fsum span{display:block;font-size:13.5px;color:var(--muted);margin-top:4px;line-height:1.35}
+@media (max-width:760px){.fsum{grid-template-columns:1fr}.fb{min-width:0}}
+.tt{display:none}
+body.tton .slide.on .tt{display:block;position:fixed;left:calc(var(--rail) + 24px);right:24px;bottom:72px;max-height:38vh;overflow:auto;background:rgba(18,18,20,.96);color:#f5f5f7;padding:16px 20px;border-radius:16px;z-index:8;box-shadow:0 20px 50px -20px rgba(0,0,0,.6);text-align:left}
+.tt small{font-family:var(--mono);font-size:11px;color:#ff6b6b;text-transform:uppercase;letter-spacing:.07em}
+.tt p{margin:8px 0 0;font-size:15.5px;line-height:1.55;max-width:none}
+.ttbtn{width:auto!important;padding:0 14px;border-radius:999px!important;font-size:13px!important}
+.bar .timer{width:auto;padding:0 12px;border-radius:999px;font-family:var(--mono);font-size:12px;opacity:.7;min-width:48px;text-align:right}
+
+/* ---------- Before / after compare ---------- */
+.cmp{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:clamp(20px,3vw,40px);align-items:start;margin-top:18px}
+.cmpcol figcaption{text-align:center;font-size:13px;color:var(--muted);margin-top:10px}
+.cph{width:300px;border-radius:44px;padding:10px;background:#1d1d1f;box-shadow:0 30px 60px -30px rgba(0,0,0,.45)}
+.cvp{width:280px;height:min(600px,64vh);border-radius:34px;overflow:hidden;background:#fff;position:relative}
+.cvp iframe{position:absolute;left:0;top:0;width:375px;height:calc(min(600px,64vh) / .74667);border:0;transform:scale(.74667);transform-origin:0 0;background:#fff}
+.cvp img.ref{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;display:none;z-index:2}
+.cmp.refon .cvp img.ref{display:block}
+.cside .chips2{display:flex;flex-wrap:wrap;gap:8px}
+.chips2 button{font:inherit;font-size:13.5px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:8px 13px;cursor:pointer}
+.chips2 button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.cexp{margin-top:16px;padding:16px 18px;border-radius:12px;background:var(--soft);min-height:150px}
+.cexp small{font-family:var(--mono);font-size:10.5px;color:var(--red);text-transform:uppercase;letter-spacing:.07em}
+.cexp p{margin:8px 0 0;font-size:15px;line-height:1.5}
+.cexp p b{font-weight:600}
+.cmode{margin-top:14px;font-size:13px;color:var(--muted)}
+.cmode button{font:inherit;font-size:13px;background:none;border:0;color:var(--ink);text-decoration:underline;cursor:pointer;padding:0}
+@media (max-width:1100px){.cmp{grid-template-columns:auto auto}.cside{grid-column:1/-1}}
+
+h1,h2,h3{letter-spacing:-.025em}
+</style>
+</head>
+<body>
+
+<nav class="rail" id="rail" aria-label="Sections"></nav>
+<main id="deck">
+<section class="slide" data-sec="Intro" data-chap="About me"><div class="in">
+  <h2 class="dh">Hello, I am Abhishek.</h2>
+  <div class="intro">
+    <p>I am a designer based in Bangalore. For the past 15 years I have worked on things people use every day without thinking about them, like buying home internet, joining a video call or booking a lab test.</p>
+    <p>My work spans Verizon, BlueJeans and Practo.</p>
+    <p>I have worked as a Principal Designer, managed teams, and as a solo contributor.</p>
+  </div>
+<aside class="tt"><small>Talk track · 30 sec</small><p>Hello, I am Abhishek. I am a designer based in Bangalore. For the past 15 years I have worked on things people use every day without thinking about them, like buying home internet, joining a video call or booking a lab test.</p><p>My work spans Verizon, BlueJeans and Practo. I have worked as a Principal Designer, managed teams, and also worked as a solo contributor.</p><p>Today I want to walk you through one case study from Verizon.</p></aside></div></section>
+
+<section class="slide dark" data-sec="Context" data-chap="Title"><div class="in center">
+  <p class="eyebrow">Verizon · Home internet</p>
+  <h1>Redesigning plan selection in the home internet buying journey</h1>
+  <p class="lead">Abhishek Bora, Principal Designer, Home Sales</p>
+<aside class="tt"><small>Talk track · 30 sec</small><p>This case study is about redesigning one page: the Verizon home internet plan selection page, where shoppers choose their plan online.</p><p>I am Abhishek Bora. At the time I was a Principal Designer on the Home Sales design team. We owned the experience of buying home internet online.</p></aside></div></section>
+
+<section class="slide" data-sec="Context" data-chap="Context"><div class="in">
+  <p class="eyebrow">Context</p>
+  <ol class="q4"><li>Who is Verizon?</li><li>What is plan selection, in the home internet journey?</li><li>Why the redesign?</li></ol>
+<aside class="tt"><small>Talk track · 20 sec</small><p>Some quick context first, in three parts. Who Verizon is. What plan selection is, in the home internet buying journey. And why we redesigned it.</p></aside></div></section>
+
+<section class="slide" data-sec="Context" data-chap="1 · Who is Verizon"><div class="in">
+  <p class="eyebrow">1 · Who is Verizon?</p>
+  <h2 class="dh">One of the biggest telecom providers in the US.</h2>
+  <div class="vfacts" style="grid-template-columns:repeat(2,minmax(0,1fr));max-width:720px">
+    <div><b>17.4M</b><span>home internet connections, fiber and 5G</span></div>
+    <div><b class="r">314K</b><span>new home internet customers in one quarter</span></div>
+  </div>
+  <p class="note">Other big providers: Spectrum, Xfinity, AT&amp;T, T-Mobile</p>
+  <p class="note" style="margin-top:6px">For context in India: Jio ~28.6M and Airtel 14.7M home broadband customers</p>
+  <p class="note" style="margin-top:6px">Sources: Verizon Q3 2026 results, Airtel Q1 FY27, Jio filings</p>
+<aside class="tt"><small>Talk track · 30 sec</small><p>Verizon is one of the biggest telecom providers in the US. Most people know it for mobile, but home internet is a big business too.</p><p>About 17.4 million homes use Verizon internet, on fiber or 5G. And last quarter alone, Verizon added about 314 thousand new home internet customers. So every improvement in how people buy it matters. For context in India, Jio has about 28 million home broadband customers, and Airtel about 15 million.</p></aside></div></section>
+
+<section class="slide" data-sec="Context" data-chap="2 · Plan selection"><div class="in">
+  <p class="eyebrow">2 · What is plan selection, in the home internet journey?</p>
+  <h2 class="dh">The step where shoppers pick one internet plan, on fiber or 5G, as a monthly subscription.</h2>
+  <div class="prods">
+    <div><b>Fios · fiber</b><span>A fiber line into the home</span>
+      <div class="pl"><i>300 Mbps</i><i>500 Mbps</i><i>1 Gig</i><i>2 Gig</i><i>5 Gig</i></div></div>
+    <div><b>5G Home · wireless</b><span>Signal from a tower to a box inside</span>
+      <div class="pl"><i>5G Home</i><i>5G Home Plus</i><i>LTE Home</i><i>LTE Home Plus</i></div>
+      <span class="sub">Also on 5G: add-ons like WiFi Backup</span></div>
+  </div>
+  <div class="role" style="margin-top:22px"><small>Impact on design</small><p>The plan tile has to cater to every variation.</p></div>
+<aside class="tt"><small>Talk track · 45 sec</small><p>Verizon sells two kinds of home internet. Fios is fiber, a line into the home. 5G Home is wireless, a signal from a tower to a box inside. Under 5G there are more levels, like LTE Home, and products like WiFi Backup that run on 5G.</p><p>Every address qualifies for only some of these. Loop qualification decides that.</p><p>Why this matters for the page: Fios shows an exact speed, 5G shows a range, and setup is different. So one plan tile had to handle all these variations.</p></aside></div></section>
+
+<section class="slide" data-sec="Context" data-chap="3 · Why the redesign"><div class="in">
+  <p class="eyebrow">3 · Why the redesign? · a typical month, rounded</p>
+  <h2 class="dh">We lose ~200K shoppers a month on one page.</h2>
+  <div class="fnl">
+    <div class="fr"><div class="fb" style="--w:100%"><b>1M</b><span>check their address</span></div></div>
+    <div class="fr"><div class="fb" style="--w:50%"><b>500K</b><span>can get service and reach the plan page</span></div><em>50% of 1M</em></div>
+    <div class="fr split"><div class="fb" style="--w:30%"><b>300K</b><span>pick a plan and move on</span></div><div class="fb lose" style="--w:20%"><b>200K</b><span>leave here</span></div><em>60% move on · 40% drop</em></div>
+    <div class="fr"><div class="fb win" style="--w:11.5%"><b>~115K</b><span>order</span></div><em>~350K new customers a quarter</em></div>
+  </div>
+  <div class="fsum">
+    <div><small>Final conversion</small><b>~11.5%</b><span>of 1M address checks become customers</span></div>
+    <div class="hot"><small>Lost on the plan page</small><b>~200K a month</b><span>almost 2x the people who order</span></div>
+    <div><small>The goal</small><b>More net adds</b><span>Win back even 10% of the drop: ~20K more customers a month</span></div>
+  </div>
+  <p class="note" style="margin-top:12px">The drop happens on mobile and desktop, and is higher on 5G Home than on Fios. Rounded, directional numbers.</p>
+<aside class="tt"><small>Talk track · 1 min</small><p>The brief was simple: fix the drop on the plan selection page. Let me show it with rounded numbers for a typical month.</p><p>About 1 million visits check their address. About half, 500 thousand, can get service and reach the plan page.</p><p>That is where it breaks. Only 300 thousand pick a plan and move on. 200 thousand, 40 percent, leave right here.</p><p>In the end about 115 thousand order, which adds up to roughly 350 thousand new customers a quarter. So the final conversion is about 11 and a half percent of address checks.</p><p>The key point: we lose about 200 thousand shoppers a month on this one page. That is almost twice the number of people who buy. If we win back even 10 percent of them, that is about 20 thousand more customers a month.</p><p>The drop happens on mobile and desktop, and it is higher on 5G Home than on Fios. The goal was better overall conversion and more net adds, and since it is a monthly subscription, every shopper we keep is revenue every month.</p></aside></div></section>
+
+<section class="slide" data-sec="Context" data-chap="My role"><div class="in">
+  <p class="eyebrow">My role · about one quarter</p>
+  <h2 class="dh">I led the exercise, with 2 designers from the Home Sales team.</h2>
+  <div class="two" style="margin-top:24px;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)">
+    <div class="own"><small>The metric I owned</small><b>Shoppers who move forward from the plan page</b></div>
+    <div><p class="eyebrow">What was expected of me</p><ul class="ticks small"><li>High design quality, consistent with VDS</li><li>Clear updates to leadership, every step</li><li>Product, engineering, content and legal aligned</li><li>Delivery on time, in about a quarter</li></ul></div>
+  </div>
+<aside class="tt"><small>Talk track · 40 sec</small><p>My role. I led this exercise, with 2 designers from the Home Sales team. It took about a quarter.</p><p>The metric I owned as design was simple: how many shoppers move forward from the plan page.</p><p>What was expected of me: high design quality, consistent with our design system, VDS. Clear updates to leadership at every step. Keeping product, engineering, content and legal aligned. And delivering on time.</p></aside></div></section>
+
+<section class="slide" data-sec="Users" data-chap="Who we design for"><div class="in">
+  <p class="eyebrow">Who we design for</p>
+  <h2 class="dh">Two kinds of homes. One tile has to work for both.</h2>
+  <div class="ucards">
+    <div class="uc"><div class="pimg"><img src="a/p_emma.webp" alt="Persona: young urban shopper" loading="lazy"></div>
+      <div><b>Young and urban</b><em class="demo">18 to 34 · cities · more on 5G Home</em><span><b class="vc">Value conscious.</b> Comfortable online, works from home, will pay more if they see the value.</span><q>"Will gaming work fine?"</q></div></div>
+    <div class="uc"><div class="pimg"><img src="a/p_mark.webp" alt="Persona: mature family shopper" loading="lazy"></div>
+      <div><b>Mature family</b><em class="demo">Millennials to boomers · suburbs · more on Fios</em><span><b class="vc">Price conscious.</b> One bill for the whole family, so every dollar counts. Less familiar with tech.</span><q>"Will Netflix work for all of us?"</q></div></div>
+  </div>
+  <div class="role" style="margin-top:20px"><small>Both care about</small><p>Price, and the idea of speed: what it lets them do, not Mbps. So the tile has to explain both in plain terms, without assuming tech knowledge.</p></div>
+  <p class="note" style="margin-top:10px">From Verizon customer research</p>
+<aside class="tt"><small>Talk track · 1 min</small><p>Instead of a long list of personas, it helped to think of two kinds of homes.</p><p>Young and urban: mostly 18 to 34, living in cities, and more often on 5G Home. They are value conscious. Comfortable online, often working from home, and happy to pay more if they see the value. Their question is, will gaming work fine?</p><p>Mature families: millennials to boomers, living in the suburbs, more often on Fios. They are price conscious, because one bill covers the whole family, so every dollar counts. And they are less familiar with tech. Their question is, will Netflix work for all of us?</p><p>Both care about two things: price, and the idea of speed. Not Mbps, but what it lets them do. So the tile had to explain price and speed in plain terms, and could not assume people know how things work.</p></aside></div></section>
+
+<section class="slide" data-sec="Current experience" data-chap="Current experience"><div class="in jr cur" style="max-width:1240px">
+  <p class="eyebrow">The current experience</p>
+  <h2 class="dh">How people buy home internet online today.</h2>
+  <div class="strip">
+    <div class="st"><div class="ph xs"><div class="vp"><img src="a/s_j1_address.webp" alt="Landing and address check" loading="lazy"></div></div><b>Address check</b><em>"Can I get it here?"</em></div>
+    <div class="st hot"><span class="flag">~40% leave here</span><div class="ph xs"><div class="vp"><img src="a/s_j2_plan.webp" alt="Plan selection" loading="lazy"></div></div><b>Plan selection</b><em>"Which one is right?"</em></div>
+    <div class="st"><div class="ph xs"><div class="vp"><img src="a/s_j3_gift.webp" alt="Choose a gift" loading="lazy"></div></div><b>Gifts</b><em>"Do I have to pick?"</em></div>
+    <div class="st"><div class="ph xs"><div class="vp"><img src="a/s_j4_perks.webp" alt="Perks" loading="lazy"></div></div><b>Perks</b><small class="def">Streaming add-ons, like Netflix, at a discount</small><em>"Is this required?"</em></div>
+    <div class="st"><div class="ph xs"><div class="vp"><img src="a/s_j5_tv.webp" alt="Live TV" loading="lazy"></div></div><b>Live TV</b><small class="def">TV channels, streamed through YouTube TV</small><em>"Do I need this?"</em></div>
+    <div class="st"><div class="ph xs"><div class="vp"><img src="a/s_j6_phone.webp" alt="Home phone" loading="lazy"></div></div><b>Home phone</b><small class="def">A landline over the internet connection</small><em>"Still more?"</em></div>
+    <div class="st"><div class="ph xs"><div class="vp"><img src="a/s_j7_cart.webp" alt="Review cart" loading="lazy"></div></div><b>Review cart</b><em>"Is this the real price?"</em></div>
+    <div class="st"><div class="ph xs"><div class="vp"><img src="a/s_j8_order.webp" alt="Checkout" loading="lazy"></div></div><b>Checkout</b><em>"What do I pay today?"</em></div>
+  </div>
+  <p class="note" style="font-size:12px">TV and Home Phone have their own flows too. This case study focuses on Internet.</p>
+<aside class="tt"><small>Talk track · 1 min</small><p>Let me show you the current experience, so it is clear what we are talking about.</p><p>A shopper enters their address and we check what they can get. Then they land on plan selection. This is where about 40 percent of people leave.</p><p>Those who stay go through gifts, then perks, which are streaming add-ons like Netflix at a discount. Then Live TV, which is TV channels streamed through YouTube TV, and Home Phone, a landline over the internet connection. Then the cart and checkout.</p><p>Our focus is this one page, plan selection, the first real decision in the journey. TV and Home Phone have their own flows too, but this case study focuses on Internet.</p></aside></div></section>
+
+<section class="slide" data-sec="Approach" data-chap="Approach"><div class="in">
+  <p class="eyebrow">My approach</p>
+  <h2 class="dh">How I approached it.</h2>
+  <ol class="steps5">
+    <li><b>Set clear goals and ownership</b><span>Documented goals and expectations with the PM</span></li>
+    <li><b>Analyse the data</b><span>Funnel, heat maps, sessions, orders</span></li>
+    <li><b>Map the whole journey</b><span>Every connection and edge case, in one place</span></li>
+    <li><b>Use the research we had, with AI</b><span>100+ decks already full of good insight</span></li>
+    <li><b>Design with speed</b><span>AI prototypes, VDS components, rapid testing</span></li>
+  </ol>
+<aside class="tt"><small>Talk track · 40 sec</small><p>One change here affects a lot of users, so I wanted a careful approach in five steps.</p><p>First, set clear goals and ownership. We documented the goals and expectations with the PM. Then analyse the data. Then map the whole journey. Then use the research we already had, with AI. And finally, design with speed, to meet the deadline and the scale of what we had to deliver.</p></aside></div></section>
+
+<section class="slide" data-sec="Approach" data-chap="Data"><div class="in">
+  <span class="rep">Representative data</span>
+  <div class="split r" style="grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)">
+    <div class="photo" style="background:#fff;max-height:74vh"><img src="a/heatmap.webp" alt="Quantum Metric heat map of the plan page, split into four zones" style="max-height:74vh;width:100%;object-fit:contain"></div>
+    <div>
+      <p class="eyebrow">Step 2 · Data · Quantum Metric</p>
+      <h2 style="font-size:clamp(28px,3.4vw,46px)">What the data told us.</h2>
+      <div class="tk">
+        <div><small>Funnel</small><b>~40% leave at plan selection.</b><i>→ Fix this page first</i></div>
+        <div><small>Devices</small><b>Over 50% buy and research on mobile.</b><i>→ Design for mobile first</i></div>
+        <div><small>Heat map</small><b>Most taps land on info icons and "Review details".</b><i>→ Key information upfront, not hidden</i></div>
+        <div><small>Session replays</small><b>~30% come back from the cart to the plan page.</b><i>→ One clear price on the tile</i></div>
+      </div>
+      
+    </div>
+  </div>
+<aside class="tt"><small>Talk track · 1 min</small><p>The data told us four things that shaped the design.</p><p>About 40 percent of shoppers left at plan selection, so this page came first. Over half of people buy and research on mobile, so we designed for mobile first.</p><p>The heat map showed most taps landing on info icons and "Review details". People were hunting for information, so the key information had to be upfront, not hidden.</p><p>And almost 30 percent of people came back from the cart to the plan page, usually because the price changed. So the tile needed one clear price.</p></aside></div></section>
+
+<section class="slide" data-sec="Approach" data-chap="Journey mapping"><div class="in" style="max-width:1240px">
+  <p class="eyebrow">Step 3 · Journey mapping · in person, with leadership in the room</p>
+  <h2 class="dh">The wider picture, and what it meant for the plan page.</h2>
+  <div class="two" style="margin-top:18px;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)">
+    <div class="photo"><img src="a/wall.webp" alt="In-person journey mapping wall" loading="lazy"></div>
+    <div class="jsum">
+      <p class="big">We saw repetition, dead ends, and optional steps that looked required.</p>
+      <p>The reason: different parts of the journey were owned by different teams. No single owner for the whole journey.</p>
+      <p>We highlighted this to leadership.</p>
+      <div class="jins"><small>Insight</small><b>Less than 1% of orders added TV or Phone</b><span>Yet they got the same space as internet. → Internet first, the rest optional.</span></div>
+    </div>
+  </div>
+  <p class="eyebrow" style="margin-top:28px">What we saw, screen by screen</p>
+  <div class="obs">
+    <figure><div class="oimg"><img src="a/o_gift.webp" alt="The same gift offer shown on several screens" loading="lazy"></div><figcaption><b>The gift, three times</b>On the plan card, as its own required step, then as a banner on later screens.</figcaption></figure>
+    <figure><div class="oimg"><img src="a/o_controls.webp" alt="Radio button, toggle, Select button and plus row" loading="lazy"></div><figcaption><b>Four ways to choose</b>Radio buttons, toggles, Select buttons and + rows, for the same kind of choice.</figcaption></figure>
+    <figure><div class="oimg"><img src="a/o_banner.webp" alt="The same sign in banner on three screens" loading="lazy"></div><figcaption><b>The same banner, every screen</b>The sign in promo repeats at the top, pushing the plans down.</figcaption></figure>
+    <figure><div class="oimg"><img src="a/o_optional.webp" alt="Perks marked optional in small grey text" loading="lazy"></div><figcaption><b>Optional looked required</b>"Optional" was small grey text. People missed it and felt they had to choose.</figcaption></figure>
+  </div>
+<aside class="tt"><small>Talk track · 1.5 min</small><p>Next, journey mapping. We printed the whole journey and mapped it in person, with leadership in the room. It gave us the wider picture.</p><p>We saw a lot of repetition, dead ends, and optional steps that looked required. The reason was simple: different parts of the journey were owned by different teams, and no one owned the whole journey. We highlighted this to leadership.</p><p>One insight stood out: less than 1 percent of orders added TV or Phone, yet they got the same space as internet.</p><p>Looking at the screens side by side, a few things jumped out. The gift offer showed up three times: on the plan card, as its own required step, and as a banner later. There were four different ways to choose things: radio buttons, toggles, Select buttons and plus rows. The same sign in banner repeated on every screen, pushing the plans down. And "optional" was small grey text, so people felt they had to choose perks.</p><p>All of this pointed to the same fixes: one way to choose, each thing shown once, and a clear, short path to checkout.</p></aside></div></section>
+
+<section class="slide" data-sec="Approach" data-chap="Research with AI"><div class="in">
+  <p class="eyebrow">Step 4 · Existing research, with AI · NotebookLM</p>
+  <h2 class="dh">Good research already existed. AI helped us use all of it.</h2>
+  <div class="two" style="margin-top:22px">
+    <div><p class="eyebrow">What it told us</p><ul class="ticks small"><li>Price decides first, then speed</li><li>Most come with a price in mind</li><li>A price guarantee is expected, so show it upfront</li><li>Gifts are good to have, not deciding</li><li>Many did not understand what perks are</li><li>TV and Home Phone confused people. They got lost exploring.</li></ul></div>
+    <div><p class="eyebrow">What competitors do well</p><ul class="ticks small"><li>Frontier: simple plan names</li><li>T-Mobile: a free test drive</li><li>Xfinity: information step by step</li><li>Jio and Airtel: simple, scannable plans</li></ul></div>
+  </div>
+<aside class="tt"><small>Talk track · 1.5 min</small><p>Next, a lot of good research already existed: more than 100 decks from the research team, plus PDFs, screen recordings and competitor studies.</p><p>We put all of it into NotebookLM and used it like a database we could ask questions. Without AI, going through all of that would have been impossible.</p><p>Some clear insights came out. Price decides first, then speed, and most people come with a price in mind. Every competitor offers a price guarantee, so people expect it, and it has to be upfront. Gifts are good to have, but they do not decide. Many people did not understand what perks are. And TV and Home Phone confused people, so they got lost exploring them.</p><p>From competitors: Frontier, which Verizon acquired, has much simpler plan names. T-Mobile offers a free test drive. Xfinity shows information step by step. And Indian providers surprised us. Jio's mobile web and the Airtel app are really good.</p></aside></div></section>
+
+<section class="slide" data-sec="Approach" data-chap="Design with speed"><div class="in">
+  <p class="eyebrow">Step 5 · Design with speed, to meet the deadline and the scale of deliverables</p>
+  <ul class="ticks">
+    <li>AI for quick prototypes, to decide faster</li>
+    <li>VDS components, so we never started from scratch</li>
+    <li>Mobile first: short scroll, one thing at a time</li>
+    <li>A clear Verizon brand presence</li>
+    <li>Rapid testing with the research team, on testing software we had credits for</li>
+  </ul>
+<aside class="tt"><small>Talk track · 1 min</small><p>The fifth step was designing with speed. We had a deadline and 50 to 60 screens to deliver, so speed mattered.</p><p>We used AI for quick prototypes, so we could decide faster. We built on VDS components, so we never started from scratch. We designed mobile first, keeping the scroll short. We kept a clear Verizon brand presence.</p><p>And we tested fast. The research team helped us, and we used user testing software we already had credits for, so we could test ideas within days.</p></aside></div></section>
+
+<section class="slide" data-sec="Key design highlights" data-chap="Hierarchy of information"><div class="in">
+  <p class="eyebrow">Key highlight 1 · an exercise · 15 to 16 pieces of information on one card</p>
+  <h2 class="dh">Start with fixing the information hierarchy.</h2>
+  <div class="hier">
+    <div class="pinwrap" id="hswrap" style="width:min(262px,100%)">
+      <div class="ph" style="width:100%"><div class="vp" style="height:auto;overflow:hidden"><img src="a/j2_crop.webp" alt="The original Verizon plan card on mobile" style="display:block;width:100%"></div></div>
+    </div>
+    <div>
+      <div class="hsinfo" id="hsinfo" aria-live="polite" style="margin-top:0;height:190px"></div>
+      <div class="hslist" id="hslist" style="display:none"></div>
+      <div class="hsimg"><img src="a/goodtoknow.webp" alt="The plan tile mapped: deal breakers on the left, good to know details on the right" loading="lazy"></div>
+      <p class="cap">A joint exercise, started by me and the product lead.</p>
+    </div>
+  </div>
+<aside class="tt"><small>Talk track · 1.5 min</small><p>We started with fixing the information hierarchy. The card had 15 to 16 pieces of information, which is a lot for anyone.</p><p>On the left is the real card. Tap any dot and you see what shoppers want, and what the card actually shows. The setup cost is in a grey note above the tiles. The price shows two numbers. The biggest block is a gift offer. And support is nowhere.</p><p>So the product lead and I started an exercise. We listed every piece in a sheet and ranked it by usage data. Price, speed and the price guarantee went to the top. Things like upload speed, router and terms went one tap away. That order drove every decision after.</p></aside></div></section>
+
+<section class="slide" data-sec="Key design highlights" data-chap="Decision 1"><div class="in">
+  <p class="eyebrow">Key highlight 2</p>
+  <h2 class="dh">Stack all plans, to make comparing easy.</h2>
+  <div class="dscreens" style="margin-top:22px"><figure><div class="ph pro std"><div class="vp ifs"><iframe src="before/index.html" title="Before: the old plan page, rebuilt" loading="lazy"></iframe></div></div><figcaption>Before · one at a time, swipe sideways</figcaption></figure><figure><div class="ph pro std"><div class="vp ifs"><iframe src="proto/index.html#plan" title="Working prototype" loading="lazy"></iframe></div></div><figcaption>After · all in one scroll, try it</figcaption></figure></div>
+  
+<aside class="tt"><small>Talk track · 45 sec</small><p>First, make comparing easy. No single plan fits everyone. We tried that, and it did not work.</p><p>The old design made comparing hard. You had to swipe sideways, one plan at a time, with too much on each card. Try it on the left. So we stacked all plans one below the other, with less information. People see every plan on one screen and open the one that matters.</p></aside></div></section>
+
+<section class="slide" data-sec="Key design highlights" data-chap="Decision 2"><div class="in" style="max-width:1180px">
+  <p class="eyebrow">Key highlight 3 · two approaches, tested with 20 users · scroll and tap</p>
+  <h2 class="dh">Details open in place, so nobody loses context.</h2>
+  <div class="apx" id="apx">
+    <p class="apl"><b>Approach B · details open in place</b> <span class="badge" style="background:var(--ink)">Won</span></p>
+    <div class="apf"><iframe src="ap1/index.html" title="Approach B: plan card variations, details open in place" loading="lazy"></iframe></div>
+    <p class="apl"><b>Approach A · details on a separate page</b></p>
+    <div class="apf"><iframe src="ap2/index.html" title="Approach A: plan details variations on a separate page" loading="lazy"></iframe></div>
+  </div>
+  <p class="dnote">We tested both with 20 users. Opening in place won, because people kept their context while comparing.</p>
+  <div class="proof">
+    <figure><img src="a/mh_insight.webp" alt="Research readout: one page with a clear price helps people make all decisions" loading="lazy"></figure>
+    <div><p class="eyebrow">Proof · from the research readout</p><p class="ptxt">A moderated test with real users, run with the research team. People wanted to make every decision on one page, with a clear price. Breaking it across pages lowered their confidence.</p></div>
+  </div>
+<aside class="tt"><small>Talk track · 1.5 min</small><p>Second, an interaction call. Do we open the plan in place, or take people to a separate detail page? This was a hard call, so I explored both properly.</p><p>Approach B keeps the details inside the list. Here are three visual variations of it. Approach A opens a separate detail page. Here are three variations of that.</p><p>We ran a moderated test with the research team, with 20 real users, a mix of prospects and people upgrading. Opening in place won. People said in many ways that it helped them not lose context, because they compare a lot.</p><p>Here is the readout from research: people want to make all their decisions on one page, with a clear price. Splitting it across pages lowered their confidence.</p></aside></div></section>
+
+<section class="slide" data-sec="Key design highlights" data-chap="Decision 3"><div class="in">
+  <p class="eyebrow">Key highlight 4 · hub and spoke</p>
+  <h2 class="dh">Add-ons optional. Checkout one click away.</h2>
+  <div class="dscreens" style="margin-top:22px"><figure><div class="ph pro std"><div class="vp ifs"><iframe src="proto/index.html?demo#plan" title="Working prototype" loading="lazy"></iframe></div></div><figcaption>1 · Pick a plan</figcaption></figure><div class="arrowx" aria-hidden="true">→</div><figure><div class="ph pro std"><div class="vp ifs"><iframe src="proto/index.html?demo#services" title="Working prototype" loading="lazy"></iframe></div></div><figcaption>2 · Hub, checkout one click away</figcaption></figure></div>
+  
+<aside class="tt"><small>Talk track · 45 sec</small><p>Third, anything other than internet became optional. It was never mandatory, but the old design made it look that way.</p><p>Now, when you add a plan to cart, you land in a hub. Perks, Live TV and Home Phone wait there, and checkout is always one click away.</p><p>This was a trade-off, and my call. Fewer people may add TV or Phone. But they are only about 1% of the business, and a clear path for the 99% who want internet matters more.</p></aside></div></section>
+
+<section class="slide" data-sec="Key design highlights" data-chap="Decision 4"><div class="in" style="max-width:1240px">
+  <p class="eyebrow">Key highlight 5 · written with the content team, agreed with legal</p>
+  <h2 class="dh">Clear communication, to avoid confusion.</h2>
+  <p class="lead" style="font-size:16px;margin-top:8px">Not just better copy. We also removed what did not help, and moved things to where people decide.</p>
+  <div class="cc"><div><small class="cc-rewrote">Rewrote</small><s>Add internet</s><b>Select your plan</b></div><div><small class="cc-removed">Removed</small><s>Good news, Verizon Home Internet is available.</s><b>A header that says what to do, and when internet can arrive</b></div><div><small class="cc-rewrote">Rewrote</small><s>$74.99/mo · As low as $59.99/mo</s><b>$49.99/mo, one price, old price struck through</b></div><div><small class="cc-rewrote">Rewrote</small><s>Show pricing with Auto Pay &amp; paper-free billing discount</s><b>Save $10/mo with paperless billing</b></div><div><small class="cc-moved">Moved</small><s>$99 professional installation charge. May be waived or discounted for select plans...</s><b>Online only: $99 professional setup fee waived, on each plan</b></div><div><small class="cc-rewrote">Rewrote</small><s>A special gift, on us + a long offer paragraph</s><b>2 special gifts on us</b></div><div><small class="cc-removed">Removed</small><s>Save $15/mo banner + Already a Fios customer? box</s><b>One row: Mobile customer? Sign in</b></div><div><small class="cc-removed">Removed</small><s>Review details, opening a new page</s><b>Details open in place</b></div><div><small class="cc-rewrote">Rewrote</small><s>Choose your plan · Review · Checkout</s><b>Plan · Services · Review &amp; Checkout</b></div></div><aside class="tt"><small>Talk track · 1 min</small><p>Fourth, clear communication. We worked with the content team, reviewed every piece of text on the page, and agreed the changes with legal.</p><p>It was not just rewriting. We also removed things that did not help. For example, "Good news, Verizon Home Internet is available" sounded nice, but it told people nothing about what to do. We replaced it with a clear header, "Select your plan", and when internet can arrive. The promo banner and the Fios sign in box became one row: mobile customer, sign in.</p><p>We rewrote things too. Two prices became one. The Auto Pay toggle now says the saving, 10 dollars a month. The long gift paragraph became "2 special gifts on us".</p><p>And we moved things to where people decide. The 99 dollar setup note moved from the top into each plan, in plain words.</p><p>The hard part: we wanted labels like "great for 4 people". We did not have the data to prove it, and legal would not allow it without proof. So we kept Mbps for now. That is the first thing in version 2.</p></aside></div></section>
+
+<section class="slide dark" data-sec="Key design highlights" data-chap="Final design" style="justify-content:flex-start;padding-top:clamp(24px,4vh,48px)"><div class="in" style="max-width:1240px">
+  <p class="eyebrow" style="text-align:center">Final design · working prototype · tap around, I will tell you what is happening</p>
+  <div class="fstage">
+    <div></div>
+    <div class="fphone"><div class="fvp"><iframe id="fproto" src="proto/index.html" title="Final design working prototype" loading="lazy"></iframe></div></div>
+    <div class="fnar" aria-live="polite">
+      <small>What is happening</small>
+      <div id="fnow" class="fnow"><b>Select your plan</b><p>All plans are stacked. 1 Gig is open, so you can see what is inside a plan. Tap a plan, toggle Auto Pay, pick a gift, or add to cart.</p></div>
+      <ol id="flog" class="flog"></ol>
+    </div>
+  </div>
+<aside class="tt"><small>Talk track · 1.5 min</small><p>This is the final design, as a working prototype, and as I tap, the panel on the right tells you what is happening.</p><p>All plans are stacked, and 1 Gig is open. I can toggle Auto Pay and every price updates. I can pick a gift. When I add to cart, I move to the services hub. The cart shows 1, and the bar at the bottom shows what I pay today and every month. Review and checkout is now active.</p><p>From the hub, perks, Live TV and Home Phone are all optional. I can go in, add something, and come back, and the total updates. Or go straight to review, where the price matches the plan card.</p><p>Notice the small details as I go: the cart badge, the totals that flash green when the price changes, and the short confirmations. Small things, but they make it feel easy and trustworthy.</p></aside></div></section>
+
+<section class="slide" data-sec="Key design highlights" data-chap="What changed"><div class="in" style="max-width:1240px">
+  <p class="eyebrow">What changed · tap a change</p>
+  <h2 class="dh">Before and after, side by side.</h2>
+  <div class="cmp" id="cmp">
+    <figure class="cmpcol" style="margin:0"><div class="cph"><div class="cvp"><iframe id="cfB" src="before/index.html" title="Before: the old plan selection page, rebuilt" loading="lazy"></iframe><img class="ref" src="a/old_page.webp" alt="Original live page screenshot"></div></div><figcaption>Before · rebuilt from the live page</figcaption></figure>
+    <figure class="cmpcol" style="margin:0"><div class="cph"><div class="cvp"><iframe id="cfA" src="proto/index.html?demo#plan" title="After: the final design prototype" loading="lazy"></iframe><img class="ref" src="a/f_plans.webp" alt="Final design screenshot"></div></div><figcaption>After · final design prototype</figcaption></figure>
+    <div class="cside">
+      <div class="chips2" id="cchips"><button type="button" data-c="header" aria-pressed="false">Header</button><button type="button" data-c="plans" aria-pressed="false">Plans visible</button><button type="button" data-c="price" aria-pressed="false">Price</button><button type="button" data-c="autopay" aria-pressed="false">Auto Pay</button><button type="button" data-c="lock" aria-pressed="false">Price lock</button><button type="button" data-c="specs" aria-pressed="false">Speed and specs</button><button type="button" data-c="gifts" aria-pressed="false">Gifts</button><button type="button" data-c="setup" aria-pressed="false">Setup cost</button><button type="button" data-c="addons" aria-pressed="false">Perks, TV and Phone</button><button type="button" data-c="checkout" aria-pressed="false">Checkout</button></div>
+      <div class="cexp" id="cexp"><small>Tap a change</small><p>Each one highlights the same part in both screens. Both are live, so you can scroll and tap too.</p></div>
+      <p class="cmode">Want the originals? <button type="button" id="cref">Show reference screenshots</button></p>
+    </div>
+  </div>
+  <script type="application/json" id="cmap">{"header": {"n": "Header", "a": [".screen.active .steps", ".screen.active .redbar"], "r": "plan", "d": "<b>Before:</b> \"Good news, Verizon Home Internet is available\", then \"Add internet\". Nice to hear, but it did not tell people what to do. <b>After:</b> one clear header, \"Select your plan\", with when internet can arrive. Steps renamed to Plan, Services, Review &amp; Checkout."}, "plans": {"n": "Plans visible", "a": ["#plan-list"], "r": "plan", "d": "<b>Before:</b> one plan at a time, the rest hidden in a side scroll. <b>After:</b> all plans stacked, so people compare at a glance and open the one they like."}, "price": {"n": "Price", "a": [".card[data-plan=\"1g\"] .price-col", ".cfg-card .cfg-row:nth-child(3)"], "r": "plan", "d": "<b>Before:</b> two prices, $74.99 and \"As low as $59.99\". The lower one only applied to Mobile + Home customers. There was also a promo banner and a Fios sign in box. <b>After:</b> we removed \"as low as\". Mobile customers sign in at the top to see bundle savings, so every plan shows one real monthly price, with the old price struck through."}, "autopay": {"n": "Auto Pay", "a": [".cfg-card .cfg-row:first-child"], "r": "plan", "d": "<b>Before:</b> \"Show pricing with Auto Pay &amp; paper-free billing discount\". A toggle that quietly changed every price. <b>After:</b> the saving is said plainly, \"Save $10/mo with paperless billing\", on by default."}, "lock": {"n": "Price lock", "a": [".card:not(.open) .bullets .bl:first-child", ".card.open .feat:first-child"], "r": "plan", "d": "<b>Before:</b> a small yellow chip. <b>After:</b> on every plan, right under the price, closed or open."}, "specs": {"n": "Speed and specs", "a": [".card.open .feats"], "r": "plan", "d": "<b>Before:</b> specs on every card, plus a \"Review details\" link that took people to another page. <b>After:</b> speed, router and devices sit inside the open plan, one tap away, in place."}, "gifts": {"n": "Gifts", "a": [".card.open .gifts-title", ".card.open .incl", ".card.open .choose", ".card:not(.open) .bullets .bl:nth-child(2)"], "r": "plan", "d": "<b>Before:</b> the biggest block on the card, a long paragraph, then a separate required gift step. <b>After:</b> one line on the closed card. Inside the open plan we redesigned the gift component: the included gift shown once, then pick 1 extra gift in a side scroll, each with its saving. No extra step."}, "setup": {"n": "Setup cost", "a": [".card.open .promo"], "r": "plan", "d": "<b>Before:</b> one grey legal note above all plans: \"$99 professional installation charge. May be waived or discounted for select plans...\". <b>After:</b> specific to each plan, inside it: \"Online only: $99 professional setup fee waived\". It also cleared space at the top."}, "addons": {"n": "Perks, TV and Phone", "a": ["#s-services .list", "#s-services .redbar"], "r": "services", "d": "<b>Before:</b> perks, Live TV and Home Phone sat in the path, right under the plans, and looked required. <b>After:</b> after adding a plan, people land in a hub. Perks, Live TV and Home Phone are optional, and checkout is always one click away."}, "checkout": {"n": "Checkout", "a": [".screen.active .js-tray"], "r": "services", "d": "<b>Before:</b> \"Select\", then \"Review order\" with one price that changed later in the cart. <b>After:</b> a sticky bar with Due today and Est monthly, always visible. The cart count updates, and Review &amp; checkout is one tap away."}}</script>
+<aside class="tt"><small>Talk track · 1.5 min</small><p>Here is what changed, side by side. On the left, the old page rebuilt in HTML. On the right, the final prototype. Both are live, so I can point to each change.</p><p>Header: "Good news" and "Add internet" became one clear header, "Select your plan". Plans: one at a time before, all stacked after. Price: we removed "as low as", which only applied to Mobile plus Home customers, since mobile customers can now sign in at the top. So every plan shows one real price.</p><p>Gifts: before, the biggest block, plus a separate required step. After, one line, and inside the open plan a redesigned gift picker. Setup cost: a legal note above all plans before, now specific to each plan, which also cleared space at the top.</p><p>Perks, TV and Phone: before, in the path under the plans. After, in a hub, all optional. And checkout: a sticky bar with due today and monthly, always visible.</p></aside></div></section>
+
+<section class="slide" data-sec="Key design highlights" data-chap="Deliverables"><div class="in" style="max-width:1240px">
+  <p class="eyebrow">Deliverables · scroll</p>
+  <div class="dstats"><span><b>40+</b>unique screens, mobile and desktop</span><span><b>80</b>use and edge cases</span><span><b>1</b>flexible card for Internet, TV and Phone</span></div>
+  <h3 class="dsec">Design updates · components</h3><div class="mas"><img src="a/de/IMG_9793.webp" alt="Design update deck slide" loading="lazy"><img src="a/de/IMG_9794.webp" alt="Design update deck slide" loading="lazy"><img src="a/de/IMG_9795.webp" alt="Design update deck slide" loading="lazy"><img src="a/de/IMG_9796.webp" alt="Design update deck slide" loading="lazy"><img src="a/de/IMG_9797.webp" alt="Design update deck slide" loading="lazy"><img src="a/de/IMG_9798.webp" alt="Design update deck slide" loading="lazy"><img src="a/de/IMG_9799.webp" alt="Design update deck slide" loading="lazy"><img src="a/de/IMG_9800.webp" alt="Design update deck slide" loading="lazy"></div>
+  <h3 class="dsec">Desktop designs</h3><div class="mas"><img src="a/de/IMG_9801.webp" alt="Desktop and mobile design" loading="lazy"><img src="a/de/IMG_9802.webp" alt="Desktop and mobile design" loading="lazy"><img src="a/de/IMG_9803.webp" alt="Desktop and mobile design" loading="lazy"><img src="a/de/IMG_9804.webp" alt="Desktop and mobile design" loading="lazy"><img src="a/de/IMG_9805.webp" alt="Desktop and mobile design" loading="lazy"><img src="a/de/IMG_9806.webp" alt="Desktop and mobile design" loading="lazy"><img src="a/de/IMG_9807.webp" alt="Desktop and mobile design" loading="lazy"><img src="a/de/IMG_9808.webp" alt="Desktop and mobile design" loading="lazy"><img src="a/de/IMG_9809.webp" alt="Desktop and mobile design" loading="lazy"><img src="a/de/IMG_9810.webp" alt="Desktop and mobile design" loading="lazy"><img src="a/de/IMG_9811.webp" alt="Desktop and mobile design" loading="lazy"><img src="a/de/IMG_9812.webp" alt="Desktop and mobile design" loading="lazy"><img src="a/de/IMG_9813.webp" alt="Desktop and mobile design" loading="lazy"></div>
+  <h3 class="dsec">Explorations</h3><div class="mas"><img src="a/de/IMG_9814.webp" alt="Plan tile exploration" loading="lazy"><img src="a/de/IMG_9815.webp" alt="Plan tile exploration" loading="lazy"><img src="a/de/IMG_9816.webp" alt="Plan tile exploration" loading="lazy"><img src="a/de/IMG_9817.webp" alt="Plan tile exploration" loading="lazy"><img src="a/de/IMG_9818.webp" alt="Plan tile exploration" loading="lazy"><img src="a/de/IMG_9819.webp" alt="Plan tile exploration" loading="lazy"><img src="a/de/IMG_9820.webp" alt="Plan tile exploration" loading="lazy"><img src="a/de/IMG_9821.webp" alt="Plan tile exploration" loading="lazy"><img src="a/de/IMG_9822.webp" alt="Plan tile exploration" loading="lazy"><img src="a/de/IMG_9823.webp" alt="Plan tile exploration" loading="lazy"><img src="a/de/IMG_9824.webp" alt="Plan tile exploration" loading="lazy"><img src="a/de/IMG_9825.webp" alt="Plan tile exploration" loading="lazy"></div>
+  <h3 class="dsec">Presentations along the way</h3><div class="mas"><img src="a/ph_project.webp" alt="Presentation slide" loading="lazy"><img src="a/op_approach.webp" alt="Presentation slide" loading="lazy"><img src="a/op_leader.webp" alt="Presentation slide" loading="lazy"><img src="a/op_heat.webp" alt="Presentation slide" loading="lazy"><img src="a/op_comp.webp" alt="Presentation slide" loading="lazy"><img src="a/op_wins.webp" alt="Presentation slide" loading="lazy"><img src="a/op_sketch.webp" alt="Presentation slide" loading="lazy"><img src="a/op_keychg.webp" alt="Presentation slide" loading="lazy"><img src="a/us_fwa.webp" alt="Presentation slide" loading="lazy"><img src="a/us_fios.webp" alt="Presentation slide" loading="lazy"><img src="a/us_mh.webp" alt="Presentation slide" loading="lazy"></div>
+<aside class="tt"><small>Talk track · 1 min</small><p>What we delivered: more than 40 unique screens across mobile and desktop, about 80 use and edge cases, and one flexible card for Internet, TV and Phone.</p><p>Here is a quick look. The design update deck with the new components. The desktop designs, aligned with mobile. Explorations of the plan tile. And some of the presentations I gave along the way, to leadership and the wider team.</p></aside></div></section>
+
+<section class="slide" data-sec="Outcome" data-chap="Outcome and learnings"><div class="in" style="max-width:1180px">
+  <p class="eyebrow">Outcome and learnings</p>
+  <h2 class="dh">Designs tested, delivered and releasing in phases.</h2>
+  <div style="margin-top:22px;display:grid;gap:26px;max-width:900px">
+    <div><p class="eyebrow">Outcome</p><ul class="ticks small">
+      <li>Tested with real users. Easier to compare plans.</li>
+      <li>40+ screens, 80 use cases, 1 flexible card</li>
+      <li>~20 new mobile web patterns with VDS</li>
+      <li>Releasing in phases</li>
+    </ul></div>
+    <div><p class="eyebrow">Key learnings</p><ul class="ticks small">
+      <li>Design for what people cannot touch or see</li>
+      <li>Shape the journey before the screens</li>
+      <li>AI for speed, judgment for quality</li>
+      <li>Let stakeholders take part</li>
+    </ul></div>
+  </div>
+<aside class="tt"><small>Talk track · 1.5 min</small><p>Where it stands. We tested the designs in a moderated study with real users, with the research team. Shoppers found it easier to compare plans, and they kept their context.</p><p>We delivered more than 40 screens for mobile and desktop, about 80 use and edge cases, and one flexible card for Internet, TV and Phone. Along the way we added about 20 new mobile web patterns with the VDS team. It is now releasing in phases, measured on shoppers who move forward from the plan page.</p><p>A few key learnings. First, designing for something people cannot touch or see, like internet. You cannot show it, so speed and value have to be explained in plain words.</p><p>Second, shape the end-to-end journey before going deep into screens. That is how we arrived at hub and spoke.</p><p>Third, AI sped up iteration, but the final quality still came down to design judgment and craft.</p><p>And fourth, let stakeholders take part. Mapping the journey with leadership in the room, and ranking the card with the product lead, made decisions faster and easier to agree on.</p></aside></div></section>
+
+<section class="slide" data-sec="Future" data-chap="The future"><div class="in">
+  <p class="eyebrow">What next · my view</p>
+  <h2 class="dh">Buying home internet will be a conversation.</h2>
+  <div class="two" style="margin-top:22px;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)">
+    <ul class="ticks small">
+      <li>Asks what you need and your budget</li>
+      <li>Detects your location, and confirms it with you</li>
+      <li>Recommends a plan, with real reviews</li>
+      <li>A short explainer video, made for your home</li>
+      <li>Share plan details with your family</li>
+      <li>Offers and perks that come with the plan</li>
+      <li>Live comparison and discounts you qualify for</li>
+      <li>If the credit check fails, the best alternative</li>
+      <li>After ordering, share technician tracking</li>
+    </ul>
+    <div class="how">
+      <div class="hbox dkb"><b>Shopping agent</b><span>Talks to the shopper. Plans the next step.</span></div>
+      <div class="hline"></div>
+      <div class="hbox"><b>Skills</b><span>Recommend · Compare · Explain · Find discounts · Credit options · Book a store</span></div>
+      <div class="hline"></div>
+      <div class="hbox"><b>Real Verizon data</b><span>Plans, prices, offers, reviews, store times</span></div>
+      <p class="cap" style="text-align:center">The shopper confirms before anything happens.</p>
+    </div>
+  </div>
+<aside class="tt"><small>Talk track · 1.5 min</small><p>Before I end, one more thing. How will people buy home internet in the future?</p><p>I believe it becomes a conversation, with all the information at your fingertips. It starts by asking what you need and your budget. It detects your location, but confirms it with you first. It recommends a plan with real reviews, and can play a short explainer video for your home. You can share the plan details with your family. It shows the offers and perks that come with the plan, compares live with other providers, and finds the discounts you qualify for. If the credit check fails, it gives you the best alternative. And once you order, you can share the technician tracking with whoever will be at home.</p><p>How it works, simply: one shopping agent talks to you. It uses skills, things it knows how to do, like recommending, comparing or finding discounts. And it always checks Verizon's real data for plans, prices and offers, so it never makes up a price. And you confirm before anything happens.</p><p>I am sure Razorpay is seeing the same shift in how people pay.</p></aside></div></section>
+
+<section class="slide dark" data-sec="Future" data-chap="Prototype"><div class="in center">
+  <p class="eyebrow">My prototype · built for this interview</p>
+  <div class="ph pro" style="width:340px;margin:16px auto 0"><div class="vp" style="height:680px"><iframe src="ai/index.html" title="AI shopping assistant prototype" loading="lazy" style="height:100%"></iframe></div></div>
+<aside class="tt"><small>Talk track · 1.5 min</small><p>I built a quick prototype of this idea for today. Let me walk through it.</p><p>It asks what I need and my budget. It detects that I am near Morristown, but asks me to confirm the address before using it. Then it recommends a plan, with real reviews.</p><p>I can ask for a short video, and it plays a 30 second explainer of what this speed means for my home. I can share the plan details with my family by link, WhatsApp, text or email. It shows the offers included, like the gift card and the waived setup, and perks I can add, like Netflix.</p><p>It compares with other providers and finds my discounts. If the credit check fails, it gives me the best alternative. Once I order, it shows when the technician is coming, with live tracking I can share with whoever will be at home. And if I would rather talk to someone, it books a store visit instead.</p></aside></div></section>
+
+<section class="slide dark" data-sec="Close" data-chap="Recognition"><div class="in center">
+  <p class="eyebrow">Recognition along the way</p>
+  <div class="certs"><div class="photo"><img src="a/cert_lq.webp" alt="Thank you note for the Loop Qualification presentation" loading="lazy"></div><div class="photo"><img src="a/cert_fr.webp" alt="Thank you note for the Frontier launch summary" loading="lazy"></div></div>
+<aside class="tt"><small>Talk track · 20 sec</small><p>The final delivery was Figma designs and specs. Along the way I also made many presentations to keep leadership and the team informed. These are some recognitions for that. Thank you.</p></aside></div></section>
+</main>
+<nav class="bar" id="bar" aria-label="Story controls">
+  <span class="chap" id="chap"></span>
+  <button type="button" id="prev" aria-label="Previous">←</button>
+  <button type="button" id="next" aria-label="Next">→</button>
+</nav>
+<script>
+(()=>{
+  const slides=[...document.querySelectorAll('.slide')],bar=document.getElementById('bar'),rail=document.getElementById('rail'),chap=document.getElementById('chap'),prev=document.getElementById('prev'),next=document.getElementById('next');
+  const secs=[...new Set(slides.map(s=>s.dataset.sec))];
+  const btns=secs.map(n=>{const b=document.createElement('button');b.type='button';b.textContent=n;b.onclick=()=>{show(slides.findIndex(s=>s.dataset.sec===n));b.blur()};rail.appendChild(b);return b});
+  let i=0;
+  const show=n=>{i=Math.max(0,Math.min(slides.length-1,n));const s=slides[i];slides.forEach((x,k)=>{x.classList.toggle('on',k===i);x.setAttribute('aria-hidden',k!==i)});
+    const si=secs.indexOf(s.dataset.sec);btns.forEach((b,k)=>{b.classList.toggle('on',k===si);b.classList.toggle('done',k<si);b.setAttribute('aria-current',k===si?'step':'false')});
+    const d=s.classList.contains('dark');bar.classList.toggle('dark',d);rail.classList.toggle('dark',d);
+    chap.textContent=(i+1)+' / '+slides.length+' · '+s.dataset.chap;prev.disabled=i===0;next.disabled=i===slides.length-1;
+    try{history.replaceState(null,'','#s'+(i+1))}catch(e){}};
+  prev.onclick=()=>show(i-1);next.onclick=()=>show(i+1);
+  addEventListener('keydown',e=>{if(e.target.closest('input,textarea'))return;if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1)}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(i-1)}});
+  let x0=null,y0=null;addEventListener('touchstart',e=>{x0=e.touches[0].clientX;y0=e.touches[0].clientY},{passive:true});
+  addEventListener('touchend',e=>{if(x0===null)return;if(e.target.closest('.strip,.vp'))return x0=null;const dx=e.changedTouches[0].clientX-x0,dy=e.changedTouches[0].clientY-y0;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.5)show(i+(dx<0?1:-1));x0=null});
+  document.querySelectorAll('#meth button').forEach(b=>b.onclick=()=>show(slides.findIndex(s=>s.dataset.chap===b.dataset.go)));
+  document.querySelectorAll('#quiz button').forEach(b=>b.onclick=()=>{document.getElementById('reveal').hidden=false});
+
+  // Hotspots on the real plan card
+  const HS=[
+    {k:'Price',y:35,h:6,x:44,st:'buried',tag:'Two prices',need:'What will I really pay each month?',shown:'$74.99 and "As low as $59.99" side by side. The real price depends on a toggle above and on discounts in the fine print.'},
+    {k:'Speed',y:31,h:4,st:'buried',tag:'Only Mbps',need:'Is this enough for my home?',shown:'"500 Mbps" and "speeds of up to 500 Mbps". Nothing about how many people or what they can do.'},
+    {k:'Price lock',y:39.5,h:3.5,x:72,st:'ok',tag:'Works',need:'Will the price jump later?',shown:'A clear "4-year price lock" chip. People trusted this. We kept it and made it stronger.'},
+    {k:'Setup',y:14,h:8,st:'buried',tag:'Off the card',need:'When will it work, and what does setup cost?',shown:'A grey note above all tiles: "$99 installation charge. May be waived or discounted...". Not on the card, and not in plain words.'},
+    {k:'Devices',y:54,h:3.5,st:'buried',tag:'Spec, not need',need:'Will all our phones and TVs work?',shown:'"Supports up to 30 devices". Correct, but nobody counts devices. Moved one tap away.'},
+    {k:'Details',y:60,h:3,st:'buried',tag:'Hidden',need:'The answers to my questions.',shown:'"Review details" hides upload speed, equipment and terms. People opened it again and again.'},
+    {k:'Gifts',y:72,h:16,st:'buried',tag:'Biggest block',need:'A bonus, once I know the plan fits.',shown:'The largest block on the card is a gift offer. It pushes the plan itself into the background.'},
+    {k:'Support',y:88,h:6,st:'missing',tag:'Not on the card',need:'Who helps me if it breaks?',shown:'Support only shows up later in the flow, in fine print. At the moment of choosing, it is nowhere to be seen.'},
+    {k:'Other plans',y:24,h:46,st:'missing',tag:'Hidden',need:'How does this compare to the others?',shown:'Other plans sit off-screen to the side. You see one plan at a time, so you cannot compare.',x:96}
+  ];
+  const wrap=document.getElementById('hswrap'),info=document.getElementById('hsinfo'),list=document.getElementById('hslist');
+  if(wrap){const vp=wrap.querySelector('.vp');vp.style.position='relative';const hl=document.createElement('div');hl.className='hshl';vp.appendChild(hl);
+    const C={buried:'var(--amber)',missing:'var(--red)',ok:'var(--green)'};
+    const pick=n=>{const d=HS[n];info.innerHTML=`<small style="color:${C[d.st]}">${d.tag}</small><b>${d.k}</b><p><strong>Shoppers ask:</strong> ${d.need}</p><p><strong>The card shows:</strong> ${d.shown}</p>`;
+      wrap.querySelectorAll('.hs').forEach((b,k)=>b.classList.toggle('on',k===n));list.querySelectorAll('button').forEach((b,k)=>b.setAttribute('aria-pressed',k===n));
+      hl.style.opacity=1;hl.style.top=(d.y-d.h/2)+'%';hl.style.height=d.h+'%';hl.style.borderColor=C[d.st];
+      if(d.k==='Other plans'){hl.style.left='88%';hl.style.right='0'}else{hl.style.left='4%';hl.style.right='4%'}};
+    HS.forEach((d,n)=>{const b=document.createElement('button');b.type='button';b.className='hs '+d.st;b.style.top=d.y+'%';b.style.left=(d.x||6)+'%';b.innerHTML='<span>'+(n+1)+'</span>';b.setAttribute('aria-label',d.k);
+      b.onmouseenter=()=>pick(n);b.onfocus=()=>pick(n);b.onclick=()=>pick(n);vp.appendChild(b);
+      const c=document.createElement('button');c.type='button';c.innerHTML=`<i style="background:${C[d.st]}"></i>${d.k}`;c.onclick=()=>pick(n);c.onmouseenter=()=>pick(n);list.appendChild(c)});
+    pick(0)}
+  addEventListener('keydown',e=>{if((e.key==='t'||e.key==='T')&&!/input|textarea/i.test(e.target.tagName))document.body.classList.toggle('tton')});
+  const fitAp=()=>document.querySelectorAll('.apf').forEach(f=>{const w=f.clientWidth;if(w)f.querySelector('iframe').style.transform='scale('+(w/1400)+')'});addEventListener('resize',fitAp);setInterval(fitAp,800);
+
+  (()=>{const fB=document.getElementById('cfB'),fA=document.getElementById('cfA');if(!fB)return;
+    const M=JSON.parse(document.getElementById('cmap').textContent);
+    const CSS='.cmp-hl{outline:3px solid #e3242b!important;outline-offset:-3px!important;border-radius:8px}';
+    const prep=f=>{try{const d=f.contentDocument;if(d&&d.head&&!d.getElementById('cmpcss')){const s=d.createElement('style');s.id='cmpcss';s.textContent=CSS;d.head.appendChild(s)}return d}catch(e){return null}};
+    const scrollIn=(f,el)=>{const w=f.contentWindow;const t=el.getBoundingClientRect().top+w.scrollY-w.innerHeight*0.28;w.scrollTo({top:Math.max(0,t),behavior:'smooth'});
+      const car=el.closest('.car');if(car){const c=el.closest('.card')||car.querySelector('[data-main]');car.scrollTo({left:c.offsetLeft-(car.clientWidth-c.clientWidth)/2,behavior:'smooth'})}};
+    const mark=(f,sels)=>{const d=prep(f);if(!d)return;d.querySelectorAll('.cmp-hl').forEach(e=>e.classList.remove('cmp-hl'));let first=null;
+      sels.forEach(s=>d.querySelectorAll(s).forEach(e=>{e.classList.add('cmp-hl');if(!first)first=e}));if(first)scrollIn(f,first)};
+    let cur=null;
+    const pick=k=>{cur=k;const c=M[k];document.querySelectorAll('#cchips button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.c===k));
+      document.getElementById('cmp').classList.remove('refon');document.getElementById('cref').textContent='Show reference screenshots';
+      mark(fB,['[data-k="'+k+'"]']);
+      const w=fA.contentWindow;let h='';try{h=w.location.hash.slice(1)||'plan'}catch(e){}
+      if(h!==c.r){try{w.location.hash=c.r}catch(e){};setTimeout(()=>{if(cur===k)mark(fA,c.a)},280)}else mark(fA,c.a);
+      document.getElementById('cexp').innerHTML='<small>'+c.n+'</small><p>'+c.d+'</p>'};
+    document.querySelectorAll('#cchips button').forEach(b=>{b.onclick=()=>pick(b.dataset.c)});
+    document.getElementById('cref').onclick=e=>{const on=document.getElementById('cmp').classList.toggle('refon');e.target.textContent=on?'Back to the live versions':'Show reference screenshots'};
+  })();
+
+  (()=>{const $=id=>document.getElementById(id);if(!$('mxTog'))return;
+    const tog=$('mxTog'),pr=$('mxPr');const fl=el=>{el.classList.remove('fl');void el.offsetWidth;el.classList.add('fl');setTimeout(()=>el.classList.remove('fl'),600)};
+    const t=()=>{const on=tog.getAttribute('aria-checked')!=='true';tog.setAttribute('aria-checked',on);pr.textContent=on?'$89.99':'$99.99';fl(pr)};
+    tog.onclick=t;tog.onkeydown=e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();t()}};
+    $('mxAdd').onclick=()=>{const b=$('mxBadge');b.hidden=!b.hidden;$('mxAdd').textContent=b.hidden?'Add to cart':'Remove';if(!b.hidden){b.classList.remove('pop');void b.offsetWidth;b.classList.add('pop')}};
+    let g=false;$('mxBump').onclick=()=>{g=!g;$('mxMo').textContent=g?'$89.99':'$0.00';$('mxBump').textContent=g?'Remove plan':'Pick 1 Gig';fl($('mxMo').parentNode)};
+    let tt;$('mxTv').onclick=()=>{const x=$('mxToast');x.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>x.classList.remove('show'),1800)};
+    $('mxGifts').querySelectorAll('span').forEach(s=>s.onclick=()=>{$('mxGifts').querySelectorAll('span').forEach(o=>o.classList.toggle('on',o===s))});
+    $('mxCard').onclick=()=>$('mxCard').classList.toggle('open');
+    $('mxPick').onclick=()=>{const u=$('mxUnlock'),on=u.getAttribute('aria-disabled')==='true';u.setAttribute('aria-disabled',!on);$('mxPick').textContent=on?'Remove plan':'Pick a plan'};
+    $('mxPerk').onclick=()=>{const b=$('mxPerk'),on=!b.classList.contains('added');b.classList.toggle('added',on);b.textContent=on?'Added ✓':'Add'};
+    $('mxOffer').onclick=()=>{const b=$('mxOffer'),on=!b.classList.contains('ok');b.classList.toggle('ok',on);b.textContent=on?'✓ Offer applied':'Apply offer'};
+  })();
+  (()=>{const f=document.getElementById('fproto');if(!f)return;
+    const now=document.getElementById('fnow'),log=document.getElementById('flog');let last=null;
+    const say=(t,d)=>{if(last){const li=document.createElement('li');li.textContent=last;log.prepend(li);while(log.children.length>4)log.lastChild.remove()}
+      last=t;now.innerHTML='<b>'+t+'</b><p>'+d+'</p>';now.classList.remove('in');void now.offsetWidth;now.classList.add('in')};
+    const GO={services:['Services hub','Perks, Live TV and Home Phone wait here, all optional. Your choices are kept, and checkout stays one tap away in the bar.'],
+      perks:['Perks','Optional streaming add-ons. Add any, or skip. Checkout stays one tap away at the bottom.'],
+      tv:['Live TV','Optional TV plans. Open one to see channels, then add it, or just go back.'],
+      phone:['Home Phone','An optional landline, with one clear price. Add it, or go back.'],
+      review:['Review your order','One summary: plan, equipment, gifts and add-ons, with the monthly total. The price matches the plan card.'],
+      plan:['Back to plans','Your plan and choices are kept.']};
+    const after=(fn)=>setTimeout(fn,80);
+    const onClick=e=>{const el=e.target.closest('button,[data-go],[role="button"]');if(!el||el.disabled)return;const c=el.classList;
+      if(el.dataset.toast)return say('Outside the prototype',el.dataset.toast);
+      if(c.contains('js-autopay'))return after(()=>{const on=el.getAttribute('aria-checked')==='true';on?say('Auto Pay on','Every plan drops by $10 a month at once, and a short note confirms it. The saving is said plainly.'):say('Auto Pay off','Every price goes back up by $10. The toggle shows exactly what changes, nothing hidden.')});
+      if(c.contains('js-toggle'))return after(()=>{const card=el.closest('.card');card&&card.classList.contains('open')?say('Plan opened in place','Price lock, speed, router and gifts show inside the card. No new page, so you keep your place while comparing.'):say('Plan closed','Back to the short view: name, price, price lock and gifts.')});
+      if(el.dataset.gift)return say('Gift picked','The check moves to your choice, and the saving shows on it. No separate gift step any more.');
+      if(c.contains('js-add'))return say('Added to cart','You move to the services hub. The cart shows 1, and the bar at the bottom now shows Due today and Est monthly. Review & checkout is active.');
+      if(c.contains('js-perk'))return after(()=>{f.contentDocument.querySelector('.js-perk[data-perk="'+el.dataset.perk+'"].added')?say('Perk added','The button now says Added, and the total at the bottom updates and flashes green.'):say('Perk removed','The total goes back down right away.')});
+      if(c.contains('js-tvtoggle'))return say('TV plan opened','Channels and details open in place, the same pattern as the internet plans.');
+      if(c.contains('js-tvadd'))return after(()=>{f.contentDocument.querySelector('.js-tvadd.added')?say('Live TV added','A short toast confirms it. The hub and the total update.'):say('Live TV removed','The total goes back down.')});
+      if(c.contains('js-phone'))return after(()=>{/Remove/.test(el.textContent)?say('Home Phone added','You go back to the hub, with Home Phone added and the total updated.'):say('Home Phone removed','Taken off the order. The total updates.')});
+      if(c.contains('js-offer'))return say('Online offer','Applied in place, with a check. Nothing else moves.');
+      if(c.contains('js-rm'))return say('Removed','Taken off the order. The total updates right away.');
+      if(c.contains('js-pay'))return say('Proceed to payment','This is where the prototype ends. A summary shows the plan, the add-ons and the monthly total.');
+      if(c.contains('js-restart'))return say('Start again','Everything resets to the plan page.');
+      if(el.dataset.go&&GO[el.dataset.go])return say(...GO[el.dataset.go]);
+    };
+    const hook=()=>{try{const d=f.contentDocument;if(!d||d.__nar)return;d.__nar=1;d.addEventListener('click',onClick,true)}catch(e){}};
+    f.addEventListener('load',hook);hook();
+  })();
+  const m=location.hash.match(/^#s(\d+)$/);show(m?+m[1]-1:0);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plan selection, before</title>
+<style>
+:root{--red:#ee0000;--ink:#000;--g6:#6f7171;--g2:#d8dada;--g1:#f6f6f6;--beige:#f3ede0;--green:#008331;--sans:"Helvetica Neue",Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;background:#fff;color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.38;-webkit-font-smoothing:antialiased}
+.top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--g2)}
+.logo{font-weight:700;font-size:21px;letter-spacing:-.05em;color:var(--red)}
+.burger{width:22px;height:14px;border-top:2px solid #000;border-bottom:2px solid #000;position:relative}.burger::after{content:"";position:absolute;left:0;right:0;top:4px;border-top:2px solid #000}
+.promo{background:var(--beige);text-align:center;font-size:13px;padding:10px 18px}
+.promo u,u{text-decoration:underline}
+.tabs{display:flex;gap:8px;padding:12px 16px 0;font-size:13px;color:var(--g6)}
+.tabs span{flex:1;text-align:center;padding-bottom:8px;border-bottom:4px solid #9a9a9a}
+.tabs span.on{color:var(--red);border-color:var(--red)}
+.good{text-align:center;padding:22px 16px 12px}
+.good b{display:block;font-size:16px}
+.good span{font-size:13.5px}
+.fios{margin:8px 16px;background:var(--g1);border-radius:10px;padding:14px;font-size:14px}
+.pill{display:inline-block;margin-top:10px;border:1.5px solid #000;border-radius:999px;padding:6px 16px;font-weight:700;font-size:13px}
+.sec{margin:14px 16px;border:1px solid var(--g2);border-radius:12px;padding:16px 14px}
+.sec h3{margin:0;font-size:16px;display:flex;justify-content:space-between;align-items:center}
+.sec h3 em{font-style:normal;font-weight:400;font-size:20px}
+.sub{border-top:1px solid var(--g2);margin-top:14px;padding-top:12px}
+.sub b{font-size:14px}
+.sub small,.sec>div>small{display:block;color:var(--g6);font-size:11.5px}
+.auto{display:flex;gap:10px;align-items:center;font-size:13px;padding:12px 0}
+.tog{flex:none;width:44px;height:24px;border-radius:999px;background:var(--green);position:relative}
+.tog::after{content:"";position:absolute;right:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff}
+.tog.off{background:#bbb}.tog.off::after{right:auto;left:3px}
+.note{background:var(--g1);border-radius:8px;padding:12px 14px;font-size:13px}
+.car{display:flex;gap:10px;margin:14px -14px 0;padding:4px 9% 6px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.car::-webkit-scrollbar{display:none}
+.card{flex:0 0 100%;scroll-snap-align:center;background:var(--beige);border-radius:18px;padding:18px 16px;display:flex;flex-direction:column}
+.sp{color:var(--red);font-weight:700;font-size:22px;letter-spacing:-.02em;margin-top:30px}
+.pr{font-size:18px}
+.low{font-size:12.5px;color:#555}
+.lock{display:inline-block;background:#ffec00;font-weight:700;font-size:12px;padding:2px 6px;margin-top:6px}
+.f{font-size:13px;margin-top:10px;padding-left:24px;position:relative}
+.f::before{content:"◎";position:absolute;left:0;color:var(--red)}
+.rev{font-size:13px;text-decoration:underline;margin-top:16px}
+.gift{background:#fff;border-radius:12px;padding:14px;margin-top:14px;font-size:13px}
+.tag{background:var(--red);color:#fff;font-weight:700;font-size:12px;padding:2px 6px;display:inline-block;margin-bottom:8px}
+.sel{margin-top:16px;background:#000;color:#fff;text-align:center;border-radius:999px;padding:12px;font-weight:700;font-size:15px}
+.card .sel{margin-top:auto}
+.card .gift{margin-bottom:16px}
+.dots{display:flex;justify-content:center;gap:5px;margin:12px 0 2px}.dots i{width:18px;height:4px;border-radius:2px;background:#ccc}.dots i.on{background:#555}
+.facts{text-align:center;font-size:13px;padding:6px 16px 4px}
+.perk{border-radius:12px;padding:14px;margin-top:10px;color:#fff;display:flex;justify-content:space-between;align-items:flex-start;min-height:96px}
+.perk.a{background:#141414}.perk.b{background:#0e2a47}.perk.c{background:#eee;color:#000}
+.perk b{font-size:13px;display:block}.perk span{font-size:11.5px;opacity:.85}
+.perk .p{text-align:right;font-size:12px}.perk .p b{font-size:16px}
+.perk .tog{width:38px;height:20px}.perk .tog::after{width:14px;height:14px}
+.row{margin:10px 16px;border:1px solid var(--g2);border-radius:12px;padding:16px 14px;display:flex;justify-content:space-between;align-items:center;font-size:15px}
+.row em{font-style:normal;font-size:22px}
+.next{margin:24px 16px 6px;font-size:11px;color:var(--g6);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:8px}
+.next::after{content:"";flex:1;border-top:1px dashed var(--g2)}
+.req{margin:0 16px;background:#fdecec;border-radius:8px;padding:10px 12px;font-size:13px;font-weight:700}
+.gstep{margin:12px 16px 18px;border:1px solid var(--g2);border-radius:12px;padding:16px 14px}
+.gstep h4{margin:0;font-size:16px;font-weight:500}
+.gstep small{display:block;font-size:12px;color:var(--g6);margin-top:4px}.gstep small b{color:var(--red);font-weight:500}
+.opt{border-radius:12px;background:var(--red);color:#fff;padding:12px;margin-top:12px;position:relative}
+.opt::after{content:"";position:absolute;right:12px;top:12px;width:16px;height:16px;border-radius:50%;background:#fff}
+.opt b{font-size:17px;display:block;margin-top:4px}
+.opt div{background:#fff;color:#000;border-radius:8px;padding:8px 10px;margin-top:8px;font-size:12.5px}
+.bar{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--g2);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;z-index:5}
+.bar b{font-size:15px}.bar small{display:block;color:var(--green);font-size:12px}
+.bar i{font-style:normal;background:#000;color:#fff;border-radius:999px;padding:10px 18px;font-weight:700;font-size:14px}
+</style></head><body>
+<div class="top"><span class="logo">verizon</span><span class="burger" aria-hidden="true"></span></div>
+<div class="promo" data-k="price">Save $15/mo when you sign in to your Verizon mobile account. | <u>Details</u></div>
+<div class="tabs" data-k="header"><span class="on">Choose your plan</span><span>Review</span><span>Checkout</span></div>
+<div class="good" data-k="header"><b>Good news, Verizon Home Internet is available.</b><span>25 Bradwahl Dr, Morristown, NJ 07960 <u>Change</u></span></div>
+<div class="fios" data-k="price">Already a Fios customer and looking for the latest plans?<br><span class="pill">Sign in</span></div>
+<div class="sec">
+  <h3 data-k="header">Add internet <em>−</em></h3>
+  <div class="auto" data-k="autopay"><span class="tog off"></span>Show pricing with Auto Pay &amp; paper-free billing discount ⓘ</div>
+  <div class="note" data-k="setup">$99 professional installation charge. May be waived or discounted for select plans, locations, service combinations and/or ordering method.</div>
+  <div class="car" data-k="plans">
+    <div class="card"><div class="sp">300 Mbps</div><div class="pr">$49.99/mo</div><div class="low">As low as $34.99/mo ⓘ</div><div><span class="lock">🔒 3-year price lock guarantee ⓘ</span></div>
+      <div class="f">Download and upload speeds of up to 300 Mbps.</div><div class="f">Router included ($18/mo savings)</div><div class="f">Supports up to 30 devices</div><div class="rev">Review details</div>
+      <div class="gift"><span class="tag">A special gift, on us</span><br>Get NFL Sunday Ticket from YouTube² and $400 off select Samsung products³ or $15/mo credit for 36 months⁴, and more. ⌄</div><div class="sel">Select</div></div>
+    <div class="card" data-main><div class="sp" data-k="speed">500 Mbps</div><div data-k="price"><div class="pr">$74.99/mo</div><div class="low">As low as $59.99/mo ⓘ</div></div><div><span class="lock" data-k="lock">🔒 4-year price lock guarantee ⓘ</span></div>
+      <div data-k="specs"><div class="f">Download and upload speeds of up to 500 Mbps.</div><div class="f">Router included ($18/mo savings)</div><div class="f">Supports up to 30 devices</div><div class="rev">Review details</div></div>
+      <div class="gift" data-k="gifts"><span class="tag">A special gift, on us</span><br>Get NFL Sunday Ticket from YouTube² and $400 off select Samsung products³ or $15/mo credit for 36 months⁴, and more. ⌄</div><div class="sel" data-k="checkout">Select</div></div>
+    <div class="card"><div class="sp">1 Gig</div><div class="pr">$89.99/mo</div><div class="low">As low as $74.99/mo ⓘ</div><div><span class="lock">🔒 4-year price lock guarantee ⓘ</span></div>
+      <div class="f">Download and upload speeds of up to 940 Mbps.</div><div class="f">Router and Whole-Home Wi-Fi included</div><div class="f">Supports up to 50 devices</div><div class="rev">Review details</div>
+      <div class="gift"><span class="tag">A special gift, on us</span><br>Get NFL Sunday Ticket from YouTube² and $400 off select Samsung products³ or $15/mo credit for 36 months⁴, and more. ⌄</div><div class="sel">Select</div></div>
+    <div class="card"><div class="sp">2 Gig</div><div class="pr">$109.99/mo</div><div class="low">As low as $94.99/mo ⓘ</div><div><span class="lock">🔒 4-year price lock guarantee ⓘ</span></div>
+      <div class="f">Download and upload speeds of up to 2 Gbps.</div><div class="f">Router and Whole-Home Wi-Fi included</div><div class="f">Supports up to 100 devices</div><div class="rev">Review details</div>
+      <div class="gift"><span class="tag">A special gift, on us</span><br>Get NFL Sunday Ticket from YouTube² and $400 off select Samsung products³ or $15/mo credit for 36 months⁴, and more. ⌄</div><div class="sel">Select</div></div>
+  </div>
+  <div class="dots"><i></i><i class="on"></i><i></i><i></i></div>
+</div>
+<div class="facts">Jump or scroll to <u>broadband facts labels</u></div>
+<div class="req" data-k="gifts">◇ Select your special gift to proceed</div>
+<div class="gstep" data-k="gifts"><h4>A special gift, on us</h4><small><b>Required</b> · Choose one gift, included with your plan.</small>
+  <div class="opt">Hot Deal<b>NFL Sunday Ticket from YouTube</b>Plus a $400 credit on a Samsung product<div>NFL Sunday Ticket from YouTube · $400 off select Samsung products · $100 Amazon Gift Card</div></div>
+  <div class="opt"><b>$15/mo bill credit</b><div>$15/mo bill credit for 36 mos · $100 Amazon Gift Card</div></div>
+</div>
+<div class="sec" data-k="addons">  <div><h3 style="display:block">Perks</h3><small>Optional · Choose your perks. Save on every one. Starting at $10/mo.</small>
+    <div class="perk a"><div><b>Netflix &amp; HBO Max</b><span>(With Ads)</span></div><div class="p"><span class="tog off"></span><br><b>$13</b>/mo<br>Save $6.98/mo</div></div>
+    <div class="perk b"><div><b>Disney+, Hulu, ESPN+</b><span>(With Ads)</span></div><div class="p"><span class="tog off"></span><br><b>$10</b>/mo<br>Save $9.99/mo</div></div>
+    <div class="perk c"><div><b>Apple One</b><span>Music, TV, Arcade</span></div><div class="p"><span class="tog off"></span></div></div>
+  </div>
+</div>
+<div class="row" data-k="addons">📺&nbsp; Add live TV <em>+</em></div>
+<div class="row" data-k="addons">☎&nbsp; Add home phone <em>+</em></div>
+<div class="bar" data-k="checkout"><div><b>$74.99/mo* ⌄</b><small>$28.00/mo saved</small></div><i>Review order</i></div>
+<script>
+(()=>{const c=document.querySelector('.car');const cards=[...c.children],dots=[...document.querySelectorAll('.dots i')];
+const center=el=>c.scrollTo({left:el.offsetLeft-(c.clientWidth-el.clientWidth)/2});
+addEventListener('load',()=>center(c.querySelector('[data-main]')));setTimeout(()=>center(c.querySelector('[data-main]')),60);
+c.addEventListener('scroll',()=>{const m=c.scrollLeft+c.clientWidth/2;let i=0,d=1e9;cards.forEach((e,j)=>{const x=Math.abs(e.offsetLeft+e.clientWidth/2-m);if(x<d){d=x;i=j}});dots.forEach((e,j)=>e.classList.toggle('on',j===i))});
+document.querySelectorAll('.tog').forEach(t=>t.addEventListener('click',()=>t.classList.toggle('off')));
+})();
+</script>
+</body></html>

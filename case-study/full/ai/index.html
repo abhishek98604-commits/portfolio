@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Home internet shopping assistant</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{--ink:#0b0b0c;--muted:#6e6e73;--soft:#f3f3f5;--line:#e3e3e8;--red:#e3242b;--green:#1f8a4c;--sans:"Geist","Helvetica Neue",Arial,sans-serif;--mono:"Geist Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#fff;color:var(--ink);font-family:var(--sans);font-size:14px;-webkit-font-smoothing:antialiased}
+.app{display:flex;flex-direction:column;height:100%}
+header{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;border-bottom:1px solid var(--line)}
+header .av{width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:14px}
+header b{font-size:15px;display:block}
+header small{color:var(--muted);font-size:11.5px}
+header button{margin-left:auto;font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 10px;cursor:pointer}
+.stage{display:flex;gap:4px;padding:8px 16px;border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.stage span{font-size:10.5px;padding:3px 8px;border-radius:999px;background:var(--soft);color:var(--muted);white-space:nowrap}
+.stage span.on{background:var(--ink);color:#fff}
+.stage span.done{color:var(--ink)}
+#log{flex:1;overflow-y:auto;padding:14px 14px 6px;display:flex;flex-direction:column;gap:10px}
+.m{max-width:90%;padding:10px 12px;border-radius:16px;line-height:1.45;animation:in .25s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+.bot{background:var(--soft);border-bottom-left-radius:4px;align-self:flex-start}
+.me{background:var(--ink);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.src{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.src i{font-style:normal;font-family:var(--mono);font-size:9.5px;padding:2px 6px;border-radius:5px;background:#fff;border:1px solid var(--line);color:var(--muted)}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:8px}
+.card .row{display:flex;justify-content:space-between;gap:8px;font-size:13px;padding:3px 0}
+.card .row b{font-variant-numeric:tabular-nums}
+.card h4{margin:0 0 6px;font-size:13px}
+.plan{border:1.5px solid var(--ink)}
+.plan .sp{font-size:22px;font-weight:600;letter-spacing:-.03em}
+.plan .fit{font-size:12.5px;background:var(--soft);border-radius:8px;padding:6px 8px;margin:6px 0}
+.ok{color:var(--green)}.red{color:var(--red)}
+.rev{font-size:12.5px;border-top:1px dashed var(--line);padding-top:6px;margin-top:6px}
+.rev b{color:#c48a12}
+.vid{height:120px;border-radius:10px;background:linear-gradient(135deg,#1c1c1e,#3a3a3c);color:#fff;display:grid;place-items:center;font-size:12.5px;margin-top:6px;position:relative}
+.vid::before{content:"▶";position:absolute;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:14px;top:28px}
+.vid span{margin-top:56px}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px}
+th,td{text-align:left;padding:5px 4px;border-bottom:1px solid var(--line)}
+th{font-weight:500;color:var(--muted);font-size:11px}
+tr.us td{font-weight:600}
+.chips{display:flex;gap:6px;flex-wrap:wrap;padding:8px 14px 12px}
+.chips button{font:inherit;font-size:13px;border:1px solid var(--ink);background:#fff;color:var(--ink);border-radius:999px;padding:8px 12px;cursor:pointer}
+.chips button.pri{background:var(--ink);color:#fff}
+.chips button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.typing{color:var(--muted)}
+.typing::after{content:"…";animation:d 1s infinite}
+@keyframes d{50%{opacity:.2}}
+.foot{font-size:10px;color:var(--muted);text-align:center;padding:0 12px 10px}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.player{margin-top:8px;border-radius:12px;overflow:hidden;background:#111;color:#fff;position:relative}
+.scene{height:150px;position:relative;overflow:hidden;background:linear-gradient(160deg,#1d2b4a,#0e1424)}
+.house{position:absolute;left:50%;top:22px;width:96px;height:70px;transform:translateX(-50%);border:2px solid #fff;border-top:0}
+.house::before{content:"";position:absolute;left:-12px;top:-34px;border-left:60px solid transparent;border-right:60px solid transparent;border-bottom:34px solid #fff;opacity:.9}
+.dev{position:absolute;font-size:18px;opacity:0;transition:opacity .4s,transform .4s;transform:scale(.6)}
+.dev.on{opacity:1;transform:none}
+.wave{position:absolute;left:50%;top:48px;width:20px;height:20px;margin-left:-10px;border-radius:50%;border:2px solid #4cd07d;opacity:0}
+.playing .wave{animation:wv 1.6s infinite}
+.playing .wave.w2{animation-delay:.5s}.playing .wave.w3{animation-delay:1s}
+@keyframes wv{0%{transform:scale(1);opacity:.9}100%{transform:scale(7);opacity:0}}
+.cap{position:absolute;left:8px;right:8px;bottom:8px;font-size:12px;background:rgba(0,0,0,.6);border-radius:6px;padding:5px 8px;text-align:center;min-height:18px}
+.ctl{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#000}
+.ctl button{font:inherit;font-size:12px;border:0;background:#fff;color:#000;border-radius:999px;width:28px;height:28px;cursor:pointer;flex:none}
+.prog{flex:1;height:4px;border-radius:2px;background:#333;overflow:hidden}.prog i{display:block;height:100%;width:0;background:#e3242b}
+.ctl small{font-family:var(--mono);font-size:10px;color:#aaa}
+.share{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.share button{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 10px;cursor:pointer}
+.share button.done{background:var(--green);color:#fff;border-color:var(--green)}
+.perkrow{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;padding:6px 0;border-top:1px dashed var(--line)}
+.perkrow button{white-space:nowrap;flex:none;font:inherit;font-size:11.5px;border:1px solid var(--ink);background:#fff;border-radius:999px;padding:4px 10px;cursor:pointer}
+.perkrow button.on{background:var(--ink);color:#fff}
+.track{list-style:none;padding:0;margin:8px 0 0;display:grid;gap:0}
+.track li{position:relative;padding:0 0 12px 22px;font-size:13px}
+.track li::before{content:"";position:absolute;left:4px;top:3px;width:10px;height:10px;border-radius:50%;background:#ccc}
+.track li::after{content:"";position:absolute;left:8px;top:14px;bottom:0;width:2px;background:#e3e3e8}
+.track li:last-child::after{display:none}
+.track li.ok::before{background:var(--green)}
+.track li.now::before{background:#e3242b;box-shadow:0 0 0 4px rgba(227,36,43,.2)}
+.track li small{display:block;color:var(--muted);font-size:11.5px}
+.map{height:70px;border-radius:10px;margin-top:6px;background:repeating-linear-gradient(0deg,#eef0f3 0 14px,#e4e7ec 14px 15px),repeating-linear-gradient(90deg,#eef0f3 0 14px,#e4e7ec 14px 15px);position:relative;background-blend-mode:multiply}
+.map .van{position:absolute;top:26px;left:12%;font-size:18px;animation:drive 6s linear infinite alternate}
+.map .pin{position:absolute;top:22px;right:12%;font-size:18px}
+@keyframes drive{to{left:62%}}
+.toast{position:absolute;left:50%;bottom:70px;transform:translateX(-50%);background:#1f1f1f;color:#fff;font-size:12px;padding:8px 12px;border-radius:8px;opacity:0;transition:.25s;pointer-events:none;z-index:9}
+.toast.show{opacity:1}
+.app{position:relative}
+</style></head>
+<body><div class="app">
+<header><div class="av" aria-hidden="true">✦</div><div><b>Home internet assistant</b><small>Concept · sample data</small></div><button type="button" id="reset">Restart</button></header>
+<div class="stage" id="stage"></div>
+<div id="log" aria-live="polite"></div>
+<div class="chips" id="chips"></div>
+<div class="toast" id="toast" role="status"></div>
+<div class="foot">Concept by Abhishek Bora. Not a live service. Prices and reviews are samples.</div>
+</div>
+<script>
+(()=>{
+const STAGES=['Needs','Budget','Address','Recommend','Offers','Compare','Checkout','Tracking'];
+const log=document.getElementById('log'),chips=document.getElementById('chips'),stage=document.getElementById('stage'),toastEl=document.getElementById('toast');
+STAGES.forEach(s=>{const e=document.createElement('span');e.textContent=s;stage.appendChild(e)});
+const setStage=n=>[...stage.children].forEach((e,k)=>{e.className=k===n?'on':k<n?'done':'';if(k===n)e.scrollIntoView({inline:'nearest',block:'nearest'})});
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const scroll=()=>log.scrollTop=log.scrollHeight;
+const toast=m=>{toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>toastEl.classList.remove('show'),1800)};
+let run=0;
+async function bot(html,src=[]){const id=run;const t=document.createElement('div');t.className='m bot typing';t.textContent='Thinking';log.appendChild(t);scroll();await wait(600);if(id!==run)return null;
+  t.classList.remove('typing');t.innerHTML=html+(src.length?'<div class="src">'+src.map(s=>`<i>${s}</i>`).join('')+'</div>':'');scroll();return t}
+function me(txt){const d=document.createElement('div');d.className='m me';d.textContent=txt;log.appendChild(d);scroll()}
+function ask(opts,multi){chips.innerHTML='';return new Promise(res=>{const sel=new Set();
+  opts.forEach(o=>{const b=document.createElement('button');b.type='button';b.textContent=o.t;if(o.pri)b.className='pri';
+    if(multi&&!o.go){b.setAttribute('aria-pressed','false');b.onclick=()=>{const on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);on?sel.add(o.t):sel.delete(o.t)}}
+    else b.onclick=()=>{chips.innerHTML='';if(multi){const v=[...sel];me(v.length?v.join(', '):o.t);res(v)}else{me(o.t);res(o.v??o.t)}};
+    chips.appendChild(b)})})}
+function shareRow(el,what){const r=document.createElement('div');r.className='share';
+  [['Copy link','Link copied'],['WhatsApp','Shared on WhatsApp'],['Text','Sent as a text'],['Email','Sent by email']].forEach(([l,m])=>{const b=document.createElement('button');b.type='button';b.textContent=l;b.onclick=()=>{b.classList.add('done');b.textContent='✓ '+l;toast(m)};r.appendChild(b)});
+  el.appendChild(r);scroll()}
+function player(el,P){
+  const caps=[`This is what ${P.sp} means for your home.`,`${P.ppl} streaming in HD, all at once.`,'Video calls stay clear, even at peak time.','Gaming with low lag, on every device.',`$${P.p}/mo, locked for ${P.lock} years.`];
+  const devs=['📺','💻','📱','🎮','📱'];const pos=[[14,30],[78,24],[20,98],[74,96],[48,108]];
+  const w=document.createElement('div');w.className='player';
+  w.innerHTML=`<div class="scene"><div class="house"></div><div class="wave"></div><div class="wave w2"></div><div class="wave w3"></div>${devs.map((d,i)=>`<span class="dev" style="left:${pos[i][0]}%;top:${pos[i][1]}px">${d}</span>`).join('')}<div class="cap">Tap play</div></div><div class="ctl"><button type="button" aria-label="Play">▶</button><div class="prog"><i></i></div><small>0:00 / 0:30</small></div>`;
+  el.appendChild(w);scroll();
+  const sc=w.querySelector('.scene'),cap=w.querySelector('.cap'),btn=w.querySelector('button'),bar=w.querySelector('.prog i'),tm=w.querySelector('small'),dv=[...w.querySelectorAll('.dev')];
+  let t=0,timer=null;const dur=10;
+  const tick=()=>{t+=.1;if(t>=dur){t=dur;stop()}const k=Math.min(caps.length-1,Math.floor(t/(dur/caps.length)));cap.textContent=caps[k];dv.forEach((d,i)=>d.classList.toggle('on',i<=k));bar.style.width=(t/dur*100)+'%';const s=Math.round(t*3);tm.textContent=`0:${String(s).padStart(2,'0')} / 0:30`};
+  const stop=()=>{clearInterval(timer);timer=null;sc.classList.remove('playing');btn.textContent='▶'};
+  btn.onclick=()=>{if(timer)return stop();if(t>=dur)t=0;sc.classList.add('playing');btn.textContent='❚❚';timer=setInterval(tick,100)};
+  setTimeout(()=>btn.click(),300);
+}
+async function flow(){
+  const id=++run;log.innerHTML='';chips.innerHTML='';const alive=()=>id===run;
+  setStage(0);
+  await bot('Hi! I can help you find the right home internet. First, what will you use it for? Pick all that apply.');
+  const who=await ask([{t:'Streaming'},{t:'Work from home'},{t:'Gaming'},{t:'4+ people at home'},{t:'Just browsing'},{t:'Done',go:1,pri:1}],true);if(!alive())return;
+  setStage(1);
+  await bot('Got it. Do you have a monthly budget in mind?');
+  const bud=await ask([{t:'Under $50',v:50},{t:'$50 to $80',v:80,pri:1},{t:'Over $80',v:999}]);if(!alive())return;
+  setStage(2);
+  await bot('It looks like you are near <b>Morristown, NJ</b>. Is this your address?<div class="card"><div class="row"><span>📍 25 Bradwahl Dr, Morristown NJ 07960</span></div></div>',['Skill · Detect location','Asks before using it']);
+  const ad=await ask([{t:'Yes, that is right',pri:1},{t:'Use a different address'}]);if(!alive())return;
+  if(ad!=='Yes, that is right'){await bot('No problem. Type your address, or pick a recent one:');await ask([{t:'14 Elm St, Newport RI',pri:1}]);if(!alive())return}
+  await bot('<b class="ok">Good news.</b> Fios fiber is available at your address.',['Skill · Check address']);
+  setStage(3);
+  const heavy=who.includes('Gaming')||who.includes('4+ people at home');
+  let P=heavy?{sp:'1 Gig',p:89.99,fit:'Great for busy homes and gaming',ppl:'6 people',lock:5}:{sp:'500 Mbps',p:79.99,fit:'Great for 3 to 4 people streaming and working',ppl:'4 people',lock:3};
+  if(bud===50)P={sp:'300 Mbps',p:49.99,fit:'Great for 1 to 2 people streaming and browsing',ppl:'2 people',lock:3};
+  const rec=await bot(`Based on what you told me, I suggest:<div class="card plan"><div class="sp">Fios ${P.sp}</div><div class="fit">${P.fit}</div><div class="row"><span>Monthly</span><b>$${P.p}/mo</b></div><div class="row"><span>Price lock</span><b>${P.lock} years</b></div><div class="rev"><b>★ 4.6</b> from 2,340 reviews · "Never drops during calls, even with the kids streaming."</div></div>`,['Skill · Recommend a plan','Skill · Real reviews']);if(!alive())return;
+  let r=await ask([{t:'Show me a video',pri:1},{t:'Share plan details'},{t:'See offers and perks'}]);if(!alive())return;
+  if(r==='Show me a video'){const v=await bot(`Here is a 30 second explainer, made for your home:`,['Skill · Create an explainer']);if(!alive())return;player(v,P);
+    r=await ask([{t:'Share plan details'},{t:'See offers and perks',pri:1}]);if(!alive())return}
+  if(r==='Share plan details'){const s=await bot(`Share Fios ${P.sp} with someone at home. They get the plan, price and price lock in one link.`,['Skill · Share plan']);if(!alive())return;shareRow(s);
+    await ask([{t:'See offers and perks',pri:1}]);if(!alive())return}
+  setStage(4);
+  const of=await bot(`With Fios ${P.sp} you get:<div class="card"><h4>Offers, included</h4><div class="row"><span>🎁 $100 Verizon Gift Card</span><b class="ok">Included</b></div><div class="row"><span>Pick 1: $400 off Samsung, or $15/mo credit for 36 months</span><b class="ok">$0</b></div><div class="row"><span>Professional setup, online only</span><b class="ok">Waived</b></div><h4 style="margin-top:10px">Perks, optional</h4>
+    <div class="perkrow"><span>Netflix &amp; HBO Max (With Ads) · $13/mo</span><button type="button">Add</button></div><div class="perkrow"><span>Disney+, Hulu, ESPN+ (With Ads) · $10/mo</span><button type="button">Add</button></div></div>`,['Skill · Find offers','Skill · Perks']);if(!alive())return;
+  of.querySelectorAll('.perkrow button').forEach(b=>b.onclick=()=>{const on=!b.classList.contains('on');b.classList.toggle('on',on);b.textContent=on?'Added ✓':'Add';toast(on?'Perk added to your plan':'Perk removed')});
+  await ask([{t:'Compare with others',pri:1}]);if(!alive())return;
+  setStage(5);
+  await bot(`Here is how it compares at your address, right now:<div class="card"><table><tr><th>Provider</th><th>Plan</th><th>Price</th><th>Lock</th></tr><tr class="us"><td>Verizon</td><td>${P.sp}</td><td>$${P.p}</td><td>${P.lock} yrs</td></tr><tr><td>Cable A</td><td>400 Mbps</td><td>$70 → $95</td><td>1 yr</td></tr><tr><td>Fiber B</td><td>500 Mbps</td><td>$75</td><td>None</td></tr></table></div>`,['Skill · Live comparison']);
+  await bot(`You also qualify for:<div class="card"><div class="row"><span>Auto Pay and paper-free billing</span><b class="ok">−$10/mo</b></div><div class="row"><span>You have a Verizon phone</span><b class="ok">−$15/mo</b></div><div class="row" style="border-top:1px solid var(--line);margin-top:4px;padding-top:6px"><span>Your price</span><b>$${(P.p-25).toFixed(2)}/mo</b></div></div>`,['Skill · Find discounts']);
+  r=await ask([{t:'Order this plan',pri:1},{t:'I would rather talk to someone'}]);if(!alive())return;
+  if(r==='Order this plan'){
+    setStage(6);
+    await bot('Before ordering, a quick credit check. It will not affect your score. Ok?',['Asks before acting']);
+    await ask([{t:'Yes, check',pri:1}]);if(!alive())return;
+    await bot('<b>We could not approve standard credit this time.</b> Here is the best option for you:<div class="card"><div class="row"><span>Same plan, with a deposit</span><b>$100 once</b></div><div class="row"><span>Or a smaller plan, no deposit</span><b>300 Mbps</b></div><div class="row"><span>Or sort it out in a store</span><b>Nearby</b></div></div>',['Skill · Credit alternatives']);
+    r=await ask([{t:'Pay the deposit',pri:1},{t:'Visit a store'}]);if(!alive())return;
+    if(r==='Pay the deposit'){
+      await bot('Your order is ready. Nothing is placed until you confirm.',['Shopper confirms']);
+      await ask([{t:'Confirm order',pri:1}]);if(!alive())return;
+      setStage(7);
+      const tr=await bot(`<b class="ok">Order placed.</b> Your technician is booked for <b>Thu, June 4, 10 am to 12 pm</b>.<div class="card"><ul class="track"><li class="ok">Order placed<small>Today, 4:12 pm</small></li><li class="ok">Technician assigned<small>Ravi, rated 4.9</small></li><li class="now">On the way<small>Arrives around 10:30 am</small></li><li>Internet ready<small>About 1 hour after arrival</small></li></ul><div class="map"><span class="van">🚐</span><span class="pin">🏠</span></div></div>Want to share tracking with someone who will be at home?`,['Skill · Track install','Skill · Share tracking']);if(!alive())return;
+      shareRow(tr);
+      await ask([{t:'Start again',pri:1}]);if(alive())flow();return}
+  }
+  setStage(7);
+  await bot('The nearest Verizon store is 1.2 miles away, on Main St. Want me to book a time?',['Skill · Book a store visit']);
+  await ask([{t:'Today, 5 pm',pri:1},{t:'Tomorrow, 11 am'}]);if(!alive())return;
+  await bot('Booked. I have shared your plan and discounts with the store, so you will not need to repeat anything.');
+  await ask([{t:'Start again',pri:1}]);if(alive())flow();
+}
+document.getElementById('reset').onclick=flow;
+flow();
+})();
+</script>
+
+</body></html>

@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Approach 1 · Plan Details Variations</title>
+<meta name="description" content="Three interactive variations of a plan details page, shown side by side in phone frames. Portfolio case study by Abhishek Bora.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23eb1d21%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%227%22 fill=%22none%22 stroke=%22%23fff%22 stroke-width=%224%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,300..400,0..1,0&display=block" rel="stylesheet">
+<style>
+
+:root{
+  --red:#eb1d21; --red-i:#ee0000; --ink7:#374151; --ink5:#6b7280; --muted:rgba(60,60,67,.6);
+  --beige:#f9f1e8; --green:#008a2f; --tile:#f5f5f5;
+  --phone-w:384px; --screen-h:780px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#fff!important}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#000;line-height:1.21;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent;text-align:inherit}
+button:focus-visible{outline:2px solid #1a73e8;outline-offset:2px}
+.ms{font-family:"Material Symbols Outlined";font-weight:300;font-style:normal;font-size:20px;line-height:1;display:inline-block;white-space:nowrap;width:1em;height:1em;overflow:hidden;flex:none;user-select:none;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 20;letter-spacing:normal;text-transform:none}
+.ms.red{color:var(--red-i)}
+.gift-ic{width:20px;height:20px;flex:none;color:var(--red-i)}
+
+/* ---------- Page ---------- */
+.stage{padding:24px 16px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh}
+.row{display:flex;gap:40px;justify-content:center;align-items:flex-start;transform-origin:top center}
+.col{display:flex;flex-direction:column;align-items:center;gap:18px}
+.cap{text-align:center}
+.cap b{display:block;font-size:15px;font-weight:700;letter-spacing:-.01em}
+.cap span{display:block;font-size:13px;color:var(--ink5);margin-top:3px}
+.note{font-size:12px;color:#9a9ea6;margin-top:22px;text-align:center}
+@media (max-width:520px){
+  .stage{padding:24px 0 20px}
+  .row{justify-content:flex-start;overflow-x:auto;scroll-snap-type:x mandatory;width:100%;padding:0 calc(50vw - var(--phone-w)/2) 8px;gap:20px;transform:none!important;scrollbar-width:none}
+  .row::-webkit-scrollbar{display:none}
+  .col{scroll-snap-align:center}
+  .swipe{display:block!important}
+}
+.swipe{display:none;font-size:12px;color:var(--ink5);margin-bottom:14px}
+
+/* ---------- Phone frame ---------- */
+.phone{width:var(--phone-w);padding:12px;border-radius:56px;background:linear-gradient(145deg,#2a2a2d,#0e0e10 55%,#1b1b1e);border:1px solid #000;box-shadow:0 0 0 1px #3a3a3e inset,0 24px 48px -20px rgba(0,0,0,.35),0 6px 14px -8px rgba(0,0,0,.2);position:relative}
+.phone::before,.phone::after{content:"";position:absolute;width:3px;border-radius:2px;background:#1a1a1c}
+.phone::before{left:-4px;top:150px;height:56px}
+.phone::after{right:-4px;top:190px;height:80px}
+.screen{position:relative;height:var(--screen-h);border-radius:44px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+.status{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:4px 30px 0 34px;font-size:15px;font-weight:600;letter-spacing:-.01em;position:relative;background:#fff}
+.island{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:96px;height:28px;border-radius:16px;background:#000}
+.status .icons{display:flex;gap:5px;align-items:center}
+.status .icons .ms{font-size:17px;font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 20}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:120px;height:4px;border-radius:3px;background:rgba(0,0,0,.28);z-index:5;pointer-events:none}
+.toast{position:absolute;left:50%;bottom:30px;transform:translate(-50%,16px);background:#1f1f1f;color:#fff;font-size:12px;font-weight:500;padding:10px 14px;border-radius:10px;opacity:0;pointer-events:none;transition:.22s;z-index:6;white-space:nowrap;display:flex;gap:6px;align-items:center}
+.toast .ms{font-size:16px;color:#7ee2a0}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- Shared site header ---------- */
+.hdr{height:54px;display:flex;align-items:center;padding:0 16px 0 14px;border-bottom:1px solid #ececec;flex:none}
+.logo{display:flex;align-items:center;gap:6px;font-weight:800;font-size:21px;letter-spacing:-.04em;color:var(--red)}
+.mark{width:20px;height:20px;border-radius:5px;background:var(--red);display:grid;place-items:center;flex:none}
+.mark::after{content:"";width:8px;height:8px;border:2.5px solid #fff;border-radius:50%}
+.hdr .ph{margin-left:auto;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:800;padding-right:10px;height:28px;border-right:1px solid #d9d9d9}
+.hdr .ph .ms{font-size:16px}
+.hdr .mn{margin-left:12px;display:grid;place-items:center}
+.hdr .mn .ms{font-size:26px;font-variation-settings:"FILL" 0,"wght" 200,"GRAD" 0,"opsz" 24}
+
+/* ---------- Shared plan bits ---------- */
+.eyebrow{font-size:12px;font-weight:600;color:var(--ink5)}
+.was{font-size:12px;color:var(--ink5);display:flex;gap:2px;justify-content:flex-end}
+.was s{text-decoration:line-through}
+.now{display:flex;align-items:baseline;gap:1px;justify-content:flex-end}
+.now i{font-style:normal;font-size:12px;font-weight:600;color:var(--ink7)}
+.tag{display:inline-flex;align-self:flex-start;padding:2px 4px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase;line-height:11px}
+.tag.green{background:#c5edc5;color:var(--ink7);margin-left:-2px}
+.tag.red{background:var(--red-i);color:#fff}
+.save{color:var(--green)}
+.btn-dark{height:32px;border-radius:20px;background:#000;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px;width:100%}
+.btn-dark.done{background:var(--green)}
+.btn-dark .ms{font-size:16px}
+.toggle{width:40px;height:24px;border-radius:12px;background:#b8bcc3;padding:2px;display:flex;align-items:center;transition:background .18s;flex:none}
+.toggle::after{content:"";width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .18s}
+.toggle[aria-checked="true"]{background:var(--green)}
+.toggle[aria-checked="true"]::after{transform:translateX(16px)}
+.hscroll{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.hscroll::-webkit-scrollbar{display:none}
+.hscroll>*{scroll-snap-align:start;flex:none}
+.dots{display:flex;gap:2px;justify-content:center}
+.dots i{width:4px;height:4px;border-radius:50%;background:#d9d9d9}
+.dots i.on{background:var(--ink5)}
+
+/* Neutral image stand-ins */
+.im{border-radius:4px;flex:none;display:grid;place-items:center;overflow:hidden}
+.im-gc{background:#232f3e;color:#fff;font-size:7px;font-weight:800;letter-spacing:.06em;text-align:center;line-height:1.1}
+.im-brand{background:#111}
+.im-brand::after{content:"";width:40%;aspect-ratio:1;border-radius:50%;border:3px solid var(--red)}
+.im-tv{background:linear-gradient(135deg,#2f6fd6,#7d3fb0 55%,#f0a030);border:2px solid #1e1e1e;border-bottom-width:4px}
+.im-tab{background:linear-gradient(160deg,#9fb6ff,#e7a5d8 60%,#ffd29a);border:3px solid #6b6f78;border-radius:5px}
+.im-credit{background:#111;color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.im-credit span{color:var(--red)}
+
+
+/* Smooth expand / collapse */
+.clp{display:grid;grid-template-rows:0fr;transition:grid-template-rows .38s cubic-bezier(.2,.7,.2,1),opacity .3s ease;opacity:0}
+.clp>.in{overflow:hidden;min-height:0}
+.card.open .clp{grid-template-rows:1fr;opacity:1}
+.clp.rev{grid-template-rows:1fr;opacity:1}
+.card.open .clp.rev{grid-template-rows:0fr;opacity:0}
+.v1 .clp,.v2 .clp{margin-top:-12px}
+.v1 .clp>.in>*,.v2 .clp>.in>*{margin-top:12px}
+.v1 .chev,.v2 .more .ms,.v3 .det-btn .ms{transition:transform .3s ease}
+.v3 .foot button{animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* Checkout bar after adding a plan */
+.cta{position:absolute;left:0;right:0;bottom:0;z-index:4;background:#f4f4f4;border-top:1px solid #ccc;border-radius:14px 14px 0 0;box-shadow:0 -2px 12px rgba(0,0,0,.1);padding:12px 16px 24px;display:flex;flex-direction:column;gap:12px;transform:translateY(105%);transition:transform .38s cubic-bezier(.2,.7,.2,1)}
+.cta.show{transform:none}
+.cta .sum-l{text-align:center;font-size:12px}
+.cta .sum-l b{font-weight:700}
+.cta .r{display:flex;gap:16px;align-items:center}
+.cta .cart{position:relative;width:56px;height:40px;border-radius:100px;background:#ffdcdc;display:grid;place-items:center;flex:none}
+.cta .cart .ms{font-size:24px;color:var(--red-i);font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24}
+.cta .badge{position:absolute;left:37px;top:-3px;width:18px;height:18px;border-radius:9px;background:var(--red-i);color:#fff;font-size:9px;font-weight:700;display:grid;place-items:center}
+.cta .go{flex:1;height:40px;border-radius:20px;background:#000;color:#fff;font-size:16px;font-weight:700;display:grid;place-items:center}
+.screen.has-cta .toast{bottom:150px}
+.screen.has-cta .scroll{padding-bottom:132px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.clp.show{grid-template-rows:1fr;opacity:1}
+
+.im-glasses{background:transparent;border-radius:0}
+.im-glasses svg{width:100%;height:100%}
+.fade{animation:fadeUp .28s ease}
+@keyframes fadeUp{from{opacity:.2;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ---------- Shared for Approach 2 ---------- */
+.top{padding:10px 16px 10px;display:flex;flex-direction:column;gap:24px}
+.close{align-self:flex-end;width:36px;height:32px;display:grid;place-items:center;padding:8px 0 0 12px}
+.close .ms{font-size:24px;color:#1c1b1f;font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);width:100%}
+.tabs.two{grid-template-columns:1fr 1fr}
+.tab{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#000}
+.tab::after{content:"";height:1px;width:100%;background:#f2f2f7;transition:background .2s}
+.tab.on{color:var(--red)}
+.tab.on::after{height:2px;background:var(--red)}
+.g .tab{color:#727272}
+.g .tab::after{height:1.5px;background:rgba(0,0,0,.1)}
+.g .tab.on{color:var(--red)}
+.g .tab.on::after{background:var(--red)}
+.disc{padding:16px;font-size:11px;line-height:1.5;color:var(--ink5)}
+.disc b{font-weight:700}
+.disc u{cursor:pointer}
+.foot{position:absolute;left:0;right:0;bottom:0;z-index:3;background:#fff;border-top:1px solid #d1d5db;padding:16px 16px 26px;transition:transform .38s cubic-bezier(.2,.7,.2,1)}
+.screen.has-cta .foot{transform:translateY(110%)}
+.screen .scroll{padding-bottom:104px}
+.pbtn{width:100%;height:48px;border-radius:100px;background:#000;color:#fff;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px}
+.pbtn .ms{font-size:24px;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24}
+.chev{font-size:20px;color:#1c1b1f;transition:transform .3s ease;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 20}
+.open>.hd .chev,.open .chev.x{transform:rotate(180deg)}
+.more-t{font-size:11px;line-height:15px;padding-top:8px}
+.addb{width:48px;height:24px;border-radius:100px;font-size:10px;font-weight:700;display:grid;place-items:center;flex:none}
+.addb.fill{background:#000;color:#fff}
+.addb.line{border:1px solid #000}
+.addb.on{background:var(--green);color:#fff;border-color:var(--green)}
+.addb .ms{font-size:16px;font-variation-settings:"FILL" 0,"wght" 500,"GRAD" 0,"opsz" 20}
+
+/* =========================================================
+   VARIATION 1 · Red feature tiles (frame 2384:10529)
+   ========================================================= */
+.a1 .body{padding:12px 16px;display:flex;flex-direction:column;gap:12px}
+.a1 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+.a1 .tile{background:var(--red-i);color:#fff;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;min-height:109px;text-align:left;text-shadow:0 1px 0 rgba(0,0,0,.1);width:100%}
+.a1 .tile .hd{display:flex;justify-content:space-between;align-items:flex-start;width:100%}
+.a1 .tile .ms{font-size:24px;color:#fff;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24}
+.a1 .tile .chev{font-size:20px;color:rgba(255,255,255,.8);margin:-4px -4px 0 0}
+.a1 .tile b{display:block;font-size:12px;font-weight:700}
+.a1 .tile small{display:block;font-size:10px;margin-top:4px;line-height:12px}
+.a1 .price{display:flex;align-items:baseline;gap:1px}
+.a1 .price big{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.a1 .price i{font-style:normal;font-size:12px;font-weight:600}
+.a1 .sec{padding:24px 16px 8px;text-align:center}
+.a1 .sec h2{font-size:22px;font-weight:800;line-height:20px;letter-spacing:-.01em}
+.a1 .sec p{font-size:12px;margin-top:8px}
+.a1 .dc{background:#fff;border:1px solid #d5d5d5;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:12px;min-height:139px;text-align:left;transition:background .2s}
+.a1 .dc.on{background:#f2fef6}
+.a1 .dc .ms{font-size:24px;color:#1c1b1f;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24}
+.a1 .dc b{display:block;font-size:12px;font-weight:700;line-height:15px}
+.a1 .dc small{display:block;font-size:11px;color:var(--ink7);margin-top:4px}
+.a1 .dc .toggle{margin-top:auto}
+.a1 .dc .toggle[aria-checked="false"]{background:#a0a0a0}
+.a1 .gc{background:#fff;border:1px solid #d5d5d5;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:12px;min-height:111px;text-align:left;width:100%;transition:background .2s,border-color .2s}
+.a1 .gc.inc,.a1 .gc[aria-checked="true"]{background:#f2fef6}
+.a1 .gc[aria-checked="true"]{border-color:var(--green);box-shadow:inset 0 0 0 .5px var(--green)}
+.a1 .gc .hd{display:flex;justify-content:space-between;align-items:flex-start}
+.a1 .gc .ck{font-size:20px;color:#c9c9c9;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 20}
+.a1 .gc[aria-checked="true"] .ck{color:var(--green);font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 20}
+.a1 .gc b{display:block;font-size:11px;font-weight:700;line-height:14px}
+.a1 .gc.inc b{font-size:12px;line-height:15px}
+.a1 .gc small{display:block;font-size:11px;color:var(--ink7);margin-top:4px}
+.a1 .gc .im{width:40px;height:27px}
+
+/* =========================================================
+   VARIATION 2 · Detail rows + Discounts/Gifts tabs (frame 2384:10670)
+   ========================================================= */
+.a2 .rows{padding:12px 16px;display:flex;flex-direction:column;gap:12px}
+.a2 .rw{background:#f7f7f7;border-radius:12px;padding:12px;text-align:left;width:100%}
+.a2 .rw .hd{display:flex;align-items:center;gap:8px;width:100%}
+.a2 .rw .ms.red{font-size:24px;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24}
+.a2 .rw .t{flex:1;font-size:12px;font-weight:700;line-height:15px}
+.a2 .rw .t small{display:block;font-size:10px;font-weight:400;margin-top:4px;line-height:12px}
+.a2 .rw .t s{font-weight:400;font-size:10px;opacity:.7;margin-left:4px}
+.a2 .rw .more-t{padding-left:32px}
+.a2 .extra{background:#fff7ed;padding:12px 0;margin-top:12px}
+.a2 .extra .tabs{padding:10px 16px 4px}
+.a2 .extra .lead{text-align:center;font-size:12px;margin:12px 0 8px}
+.a2 .list{padding:0 16px;display:flex;flex-direction:column;gap:12px}
+.a2 .gr{background:#fff;border:1px solid #dcdcdc;border-radius:12px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;transition:background .2s}
+.a2 .gr.inc,.a2 .gr.on{background:#f2fef6}
+.a2 .gr .l{display:flex;align-items:center;gap:8px}
+.a2 .gr .im{width:48px;height:32px}
+.a2 .gr b{display:block;font-size:11px;font-weight:700;line-height:14px}
+.a2 .gr small{display:block;font-size:11px;color:var(--ink7);margin-top:4px}
+.a2 .gr .tag{margin-top:5px}
+.a2 .gr .pill{border:1px solid #000;border-radius:20px;padding:5px 12px;font-size:11px;font-weight:700;flex:none}
+.a2 .gr .pill.on{background:var(--green);border-color:var(--green);color:#fff}
+.a2 .pbtn.cont{height:56px;padding:8px;justify-content:flex-start;gap:24px;font-size:14px}
+.a2 .pbtn.cont .pill-ic{width:72px;height:40px;border-radius:100px;background:#fff;display:grid;place-items:center;flex:none}
+.a2 .pbtn.cont .pill-ic .ms{color:#000;transform:rotate(-90deg)}
+
+/* =========================================================
+   VARIATION 3 · Gradient summary + gift carousel (frame 2384:10820)
+   ========================================================= */
+.a3 .hero{background:linear-gradient(180deg,#f9f1e8,#fee4e4)}
+.a3 .plan{padding:12px 23px 16px;display:flex;flex-direction:column;gap:8px}
+.a3 .plan h2{font-size:22px;font-weight:400;line-height:20px;letter-spacing:-.01em}
+.a3 .plan .pr{display:flex;align-items:baseline;gap:8px}
+.a3 .plan .pr b{font-size:22px;font-weight:800;line-height:20px;letter-spacing:-.01em}
+.a3 .plan .pr s{font-size:16px;opacity:.7}
+.a3 .plan .pr span{font-size:16px;opacity:.7;margin-left:-6px}
+.a3 .plan .pill{align-self:flex-start;background:#000;color:#fff;border-radius:20px;padding:4px 8px;font-size:10px;font-weight:700}
+.a3 .feats{padding:12px 16px 24px;display:flex;flex-direction:column;gap:12px}
+.a3 .ft{text-align:left;width:100%}
+.a3 .ft .hd{display:flex;gap:8px;align-items:flex-start;width:100%}
+.a3 .ft .ms.red{font-size:20px;font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 20}
+.a3 .ft .t{flex:1;font-size:14px;line-height:17px}
+.a3 .ft .t small{display:block;font-size:11px;margin-top:4px;line-height:13px}
+.a3 .ft .chev{font-size:16px;margin-top:8px}
+.a3 .ft .more-t{padding-left:28px}
+.a3 .gifts{background:#fff;border-radius:20px 20px 0 0;margin-top:-12px;padding:12px 0;display:flex;flex-direction:column;gap:16px;position:relative}
+.a3 .gifts h3{font-size:14px;font-weight:400;padding:0 16px}
+.a3 .car{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 16px;scroll-padding:0 16px;scrollbar-width:none}
+.a3 .car::-webkit-scrollbar{display:none}
+.a3 .gc{flex:none;scroll-snap-align:start;width:120px;min-height:140px;background:#fff;border:1px solid #dcdcdc;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;text-align:left}
+.a3 .gc.wide{width:158px}
+.a3 .gc[aria-checked="true"]{border:1.5px solid #000;padding:11.5px}
+.a3 .gc .im{width:48px;height:32px}
+.a3 .gc b{display:block;font-size:10px;font-weight:700;line-height:14px}
+.a3 .gc small{display:block;font-size:10px;color:var(--ink7);margin-top:4px}
+.a3 .gc .tag{font-size:8px;line-height:10px;margin-top:4px}
+.a3 .gc .addb{margin-top:auto}
+.a3 .gc[aria-checked="true"] .addb{background:#000;color:#fff;border-color:#000}
+.a3 .promo{margin:0 16px;background:#e0f7e0;border-radius:12px;padding:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px}
+.a3 .promo .l{display:flex;align-items:center;gap:4px}
+.a3 .promo .ms{font-size:24px;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24}
+.a3 .promo .sb{border:1px solid #000;border-radius:100px;padding:5px 16px;font-size:10px;font-weight:700;flex:none}
+.a3 .promo .sb.on{background:var(--green);border-color:var(--green);color:#fff}
+</style>
+</head>
+<body>
+<main class="stage">
+  <p class="swipe">Swipe to see all three variations →</p>
+  <div class="row" id="row">
+    <section class="col" aria-label="Variation 1">
+      <div class="phone"><div class="screen a1" data-v="1"></div></div>
+      <div class="cap"><b>Variation 1</b><span>Bold feature tiles with discount and gift cards</span></div>
+    </section>
+    <section class="col" aria-label="Variation 2">
+      <div class="phone"><div class="screen a2" data-v="2"></div></div>
+      <div class="cap"><b>Variation 2</b><span>Detail rows with Discounts and Gifts tabs</span></div>
+    </section>
+    <section class="col" aria-label="Variation 3">
+      <div class="phone"><div class="screen a3" data-v="3"></div></div>
+      <div class="cap"><b>Variation 3</b><span>Plan summary with a gift carousel</span></div>
+    </section>
+  </div>
+  <p class="note">Interactive prototype. Switch speeds, toggle discounts and pick a gift inside each phone. Portfolio prototype, not a real store; brand replaced with a placeholder.</p>
+</main>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="glasses" viewBox="0 0 54 30" fill="none" stroke="#1d1d1f" stroke-width="3"><path d="M3 9h48"/><rect x="5" y="9" width="18" height="13" rx="6"/><rect x="31" y="9" width="18" height="13" rx="6"/><path d="M23 13c2-2 6-2 8 0"/></symbol>
+</svg>
+
+<script>
+/* ---------------- Data (from the Figma frames; brand neutralised) ---------------- */
+const PLANS = [
+  {id:'300', tab:'300 Mbps', name:'300 Mbps', base:59.99, yrs:3, speed:'300 Mbps', router:'Router included', dev:50},
+  {id:'500', tab:'500 Mbps', name:'500 Mbps', base:89.99, yrs:4, speed:'500 Mbps', router:'Router included', dev:50},
+  {id:'1g',  tab:'1 Gig',    name:'1 Gig',    base:99.99, yrs:4, speed:'940 Mbps', router:'Router + Whole-Home Wi-Fi included', dev:70},
+  {id:'2g',  tab:'2 Gig',    name:'2 Gig',    base:119.99,yrs:5, speed:'2.3 Gbps', router:'Router + Whole-Home Wi-Fi included', dev:70},
+];
+const GIFTS = [
+  {id:'tv',  img:'tv',      t:'Samsung 43" Class Q7F QLED TV', s:'Retail Price: $399.99'},
+  {id:'tab', img:'tab',     t:'$500 off select Samsung products', s:'Up to $500 value'},
+  {id:'rb',  img:'glasses', t:'Ray-Ban Meta (Gen1) glasses', s:'Up to $540 in savings'},
+];
+const MORE = {
+  price: 'Includes the AutoPay & paper-free billing discount. Taxes and fees extra.',
+  yrs:   y => `No annual contract. Your monthly base price is locked for ${y} years.`,
+  speed: 'Symmetrical fiber: the same fast speed for downloads and uploads, great for video calls and backups.',
+  router:d => `Latest-gen router included${d>50?' plus Wi-Fi extenders for whole-home coverage':''}.`,
+};
+
+/* Per-phone state */
+const S = {
+  1:{plan:'1g', autopay:true, mobile:false, gift:'tv', open:null, added:null},
+  2:{plan:'1g', autopay:true, mobile:false, gift:'tv', open:null, added:null, sub:'gifts'},
+  3:{plan:'1g', autopay:true, mobile:false, gift:'tv', open:null, added:null},
+};
+const m = n => '$'+n.toFixed(2);
+const P = v => PLANS.find(p=>p.id===S[v].plan);
+const price = v => { const s=S[v], p=P(v); return p.base - (s.autopay?10:0) - (s.mobile?15:0); };
+const img = k => k==='glasses' ? `<span class="im im-glasses"><svg><use href="#glasses"/></svg></span>`
+               : k==='gc' ? `<span class="im im-gc">GIFT<br>CARD</span>` : `<span class="im im-${k}"></span>`;
+const chrome = () => `<div class="status"><span>9:41</span><span class="island"></span><span class="icons"><span class="ms">signal_cellular_alt</span><span class="ms">wifi</span><span class="ms">battery_full</span></span></div>`;
+const topBar = (v,g) => `<div class="top ${g?'g':''}"><button class="close" data-act="note" aria-label="Close"><span class="ms">close</span></button>
+  <nav class="tabs" role="tablist">${PLANS.map(p=>`<button class="tab ${S[v].plan===p.id?'on':''}" role="tab" aria-selected="${S[v].plan===p.id}" data-act="plan" data-id="${p.id}">${p.tab}</button>`).join('')}</nav></div>`;
+const disc = `<div class="disc"><b>Disclaimers</b><br>View <u data-act="note">offer, pricing and service details</u><br>View <u data-act="note">monthly bill estimate + taxes</u><br>Jump to <u data-act="note">broadband facts labels</u> for pricing and technical information.</div>`;
+const clp = (key, open, text) => `<div class="clp ${open?'show':''}" data-clp="${key}"><div class="in"><div class="more-t">${text}</div></div></div>`;
+function shell(v, inner, footBtn){
+  const s=S[v], p = s.added ? PLANS.find(x=>x.id===s.added) : null, pr = p ? price(v) : 0;
+  const cta = `<div class="cta ${p && s.ctaShown ? 'show':''}" aria-hidden="${!p}">
+    <div class="sum-l"><b>Due Today: </b>${m(pr)}&nbsp;&nbsp;•&nbsp;&nbsp;<b>Est monthly:</b> ${m(pr)}/mo</div>
+    <div class="r"><button class="cart" data-act="checkout" aria-label="Cart, 1 item"><span class="ms">shopping_cart</span><span class="badge">1</span></button>
+    <button class="go" data-act="checkout">Review &amp; checkout</button></div></div>`;
+  return `${chrome()}<div class="scroll">${inner}${disc}</div><div class="foot">${footBtn}</div>${cta}<div class="home-ind"></div><div class="toast" role="status" aria-live="polite"></div>`;
+}
+const isOpen = (v,k) => S[v].open===k;
+
+/* ---------------- Variation 1 ---------------- */
+function a1(){
+  const v=1, s=S[v], p=P(v), pr=price(v);
+  const tile = (k, icon, body, more) => `
+    <button class="tile ${isOpen(v,k)?'open':''}" data-act="more" data-id="${k}" aria-expanded="${isOpen(v,k)}">
+      <span class="hd"><span class="ms">${icon}</span>${more?'<span class="ms chev">keyboard_arrow_down</span>':''}</span>
+      <span>${body}</span>${more?clp(k,isOpen(v,k),more):''}
+    </button>`;
+  const discs = [
+    {k:'autopay', icon:'credit_score', t:'AutoPay &amp; paper-free billing discount', s:'Save $10/mo'},
+    {k:'mobile', icon:'smartphone', t:'Acme phone customers discount', s:'Save $15/mo'},
+  ].map(d=>`<div class="dc ${s[d.k]?'on':''}"><span class="ms">${d.icon}</span><div><b>${d.t}</b><small>${d.s}</small></div>
+      <button class="toggle" role="switch" aria-checked="${s[d.k]}" aria-label="${d.t.replace('&amp;','and')}" data-act="disc" data-id="${d.k}"></button></div>`).join('');
+  const gifts = `<div class="gc inc"><div class="hd">${img('gc')}<span class="ms ck" style="color:var(--green);font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 20">check_circle</span></div>
+      <div><b>$200 Acme Gift Card</b><span class="tag green" style="margin-top:4px">Included with plan</span></div></div>`
+    + GIFTS.map(g=>`<button class="gc" role="radio" aria-checked="${s.gift===g.id}" data-act="gift" data-id="${g.id}">
+      <div class="hd">${img(g.img)}<span class="ms ck">${s.gift===g.id?'check_circle':'radio_button_unchecked'}</span></div>
+      <div><b>${g.t}</b><small>${g.s}</small></div></button>`).join('');
+  return shell(v, `${topBar(v)}
+    <div class="body fade" data-fade>
+      <div class="grid">
+        ${tile('price','sell',`<span class="price"><big>${m(pr)}</big><i>/mo</i></span><small>${s.autopay||s.mobile?`with $${(s.autopay?10:0)+(s.mobile?15:0)}/mo off with ${s.autopay&&s.mobile?'AutoPay &amp; phone discount':s.autopay?'AutoPay &amp; paper-free billing':'phone discount'}`:'Turn on discounts below to save'}</small>`, '')}
+        ${tile('yrs','handshake',`<b>${p.yrs}-year price guarantee</b><small>Your price stays the same for ${p.yrs} years</small>`, MORE.yrs(p.yrs))}
+        ${tile('speed','avg_pace',`<b>Download &amp; upload speeds up to <br>${p.speed}</b>`, MORE.speed)}
+        ${tile('router','router',`<b>${p.router}</b><small>Supports up to ${p.dev} devices</small>`, MORE.router(p.dev))}
+      </div>
+    </div>
+    <div class="sec"><h2>Discounts</h2><p>Lower your monthly price with eligible discounts</p></div>
+    <div class="body"><div class="grid">${discs}</div></div>
+    <div class="sec"><h2>Gifts</h2><p>Choose 1 additional gift</p></div>
+    <div class="body"><div class="grid">${gifts}</div></div>`,
+    `<button class="pbtn" data-act="add"><span class="ms">shopping_cart</span>Add to cart</button>`);
+}
+
+/* ---------------- Variation 2 ---------------- */
+function a2(){
+  const v=2, s=S[v], p=P(v), pr=price(v);
+  const row = (k, icon, title, sub, more) => `
+    <button class="rw ${isOpen(v,k)?'open':''}" ${more?`data-act="more" data-id="${k}" aria-expanded="${isOpen(v,k)}"`:''}>
+      <span class="hd"><span class="ms red">${icon}</span><span class="t">${title}${sub?`<small>${sub}</small>`:''}</span>${more?'<span class="ms chev">keyboard_arrow_down</span>':''}</span>
+      ${more?clp(k,isOpen(v,k),more):''}
+    </button>`;
+  const giftsList = `<div class="gr inc"><div class="l">${img('brand')}<div><b>$200 Acme Gift Card</b><span class="tag green">Included with plan</span></div></div></div>`
+    + GIFTS.map(g=>`<div class="gr ${s.gift===g.id?'on':''}"><div class="l">${img(g.img)}<div><b>${g.t}</b><small>${g.s}</small></div></div>
+      <button class="addb ${s.gift===g.id?'on':'fill'}" data-act="gift" data-id="${g.id}" aria-pressed="${s.gift===g.id}">${s.gift===g.id?'<span class="ms">check</span>':'Add'}</button></div>`).join('');
+  const discList = `<div class="gr ${s.autopay?'on':''}"><div class="l"><span class="ms" style="font-size:24px">credit_score</span><div><b>AutoPay &amp; paper-free billing discount</b><small>Save $10/mo with paperless billing.</small></div></div>
+      <button class="toggle" role="switch" aria-checked="${s.autopay}" aria-label="AutoPay discount" data-act="disc" data-id="autopay"></button></div>
+    <div class="gr ${s.mobile?'on':''}"><div class="l"><span class="ms" style="font-size:24px">smartphone</span><div><b>Acme mobile customer?</b><small>Qualify for additional bundle discounts.</small></div></div>
+      <button class="pill ${s.mobile?'on':''}" data-act="disc" data-id="mobile">${s.mobile?'Applied':'Validate'}</button></div>`;
+  return shell(v, `${topBar(v,true)}
+    <div class="rows fade" data-fade>
+      ${row('price','sell',`${m(pr)}/mo<s>${m(p.base)}/mo</s>`, s.autopay||s.mobile?'With Auto Pay &amp; paperless discount'.replace('Auto Pay &amp; paperless', s.autopay&&s.mobile?'AutoPay &amp; phone':s.autopay?'Auto Pay &amp; paperless':'phone'):'No discounts applied', '')}
+      ${row('yrs','handshake',`${p.yrs}-year price guarantee`, `Your price stays the same for ${p.yrs} years`, MORE.yrs(p.yrs))}
+      ${row('speed','avg_pace',`Download &amp; upload speeds up to <br>${p.speed}`, '', MORE.speed)}
+      ${row('router','router',p.router, `Supports up to ${p.dev} devices`, MORE.router(p.dev))}
+    </div>
+    <div class="extra">
+      <nav class="tabs two g" role="tablist"><button class="tab ${s.sub==='disc'?'on':''}" data-act="sub" data-id="disc">Discounts</button><button class="tab ${s.sub==='gifts'?'on':''}" data-act="sub" data-id="gifts">Gifts</button></nav>
+      <p class="lead">${s.sub==='gifts'?'Choose 1 additional gift':'Lower your monthly price with eligible discounts'}</p>
+      <div class="list fade">${s.sub==='gifts'?giftsList:discList}</div>
+    </div>`,
+    `<button class="pbtn cont" data-act="add"><span class="pill-ic"><span class="ms">arrow_cool_down</span></span>Continue with ${p.name}</button>`);
+}
+
+/* ---------------- Variation 3 ---------------- */
+function a3(){
+  const v=3, s=S[v], p=P(v), pr=price(v);
+  const ft = (k, title, sub, more) => `
+    <button class="ft ${isOpen(v,k)?'open':''}" data-act="more" data-id="${k}" aria-expanded="${isOpen(v,k)}">
+      <span class="hd"><span class="ms red">check</span><span class="t">${title}${sub?`<small>${sub}</small>`:''}</span><span class="ms chev">keyboard_arrow_down</span></span>
+      ${clp(k,isOpen(v,k),more)}
+    </button>`;
+  const car = `<div class="gc"><span class="im im-brand" style="width:46px;height:31px"></span><div><b>$200 Acme <br>Gift Card</b><span class="tag green">Included with plan</span></div></div>`
+    + GIFTS.map(g=>`<button class="gc" role="radio" aria-checked="${s.gift===g.id}" data-act="gift" data-id="${g.id}">${img(g.img)}<div><b>${g.t}</b><small>${g.s}</small></div>
+      <span class="addb line">${s.gift===g.id?'<span class="ms">check</span>':'Add'}</span></button>`).join('')
+    + `<button class="gc wide" role="radio" aria-checked="${s.gift==='sav'}" data-act="gift" data-id="sav"><span class="im im-brand" style="width:46px;height:31px"></span><div><b>Save $15/mo for 36 months</b><small>Up to $540 in savings</small></div>
+      <span class="addb line">${s.gift==='sav'?'<span class="ms">check</span>':'Add'}</span></button>`;
+  const discTxt = s.autopay&&s.mobile ? 'With AutoPay &amp; Phone Discounts' : s.autopay ? 'With Auto Pay &amp; Paperless Discount' : s.mobile ? 'With Phone Discount' : 'No Discounts Applied';
+  return shell(v, `<div class="hero">${topBar(v,true)}
+      <div class="plan fade" data-fade><h2>Fiber ${p.name}</h2><div class="pr"><b>${m(pr)}/mo</b><s>${m(p.base)}</s><span>/mo</span></div><button class="pill" data-act="disc" data-id="autopay" title="Tap to toggle AutoPay">${discTxt}</button></div>
+      <div class="feats">
+        ${ft('yrs',`${p.yrs}-year price guarantee`, `Your price stays the same for ${p.yrs} years`, MORE.yrs(p.yrs))}
+        ${ft('speed',`Download &amp; upload speeds up to <br>${p.speed}`, '', MORE.speed)}
+        ${ft('router',p.router, `Supports up to ${p.dev} devices`, MORE.router(p.dev))}
+      </div></div>
+    <div class="gifts"><h3>Choose 1 additional gift</h3><div class="car" role="radiogroup">${car}</div>
+      <div class="promo"><span class="l"><span class="ms">handshake</span>Acme phone customers get <br>a $15 discount</span>
+        <button class="sb ${s.mobile?'on':''}" data-act="disc" data-id="mobile">${s.mobile?'Applied':'Sign In'}</button></div>
+    </div>`,
+    `<button class="pbtn" data-act="add">Next: Review Order</button>`);
+}
+
+/* ---------------- Render + events ---------------- */
+const R = {1:a1, 2:a2, 3:a3};
+function render(v, keepScroll=true, fade=false){
+  const el = document.querySelector(`.screen[data-v="${v}"]`);
+  const sc = el.querySelector('.scroll'), topY = sc ? sc.scrollTop : 0;
+  const car = el.querySelector('.car'), cx = car ? car.scrollLeft : 0;
+  el.innerHTML = R[v]();
+  if(!fade) el.querySelectorAll('.fade').forEach(f=>f.classList.remove('fade'));
+  el.classList.toggle('has-cta', !!S[v].added);
+  if(S[v].added && !S[v].ctaShown){ const c=el.querySelector('.cta'); requestAnimationFrame(()=>requestAnimationFrame(()=>c.classList.add('show'))); S[v].ctaShown=true; }
+  if(!S[v].added) S[v].ctaShown=false;
+  if(keepScroll){ el.querySelector('.scroll').scrollTop = topY; const c2=el.querySelector('.car'); if(c2) c2.scrollLeft = cx; }
+}
+function toast(v,msg){
+  const t = document.querySelector(`.screen[data-v="${v}"] .toast`);
+  t.innerHTML = `<span class="ms">check_circle</span>${msg}`; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 2000);
+}
+document.addEventListener('click', e=>{
+  const b = e.target.closest('[data-act]'); if(!b) return;
+  const screen = b.closest('.screen'), v = +screen.dataset.v, s = S[v], id = b.dataset.id;
+  switch(b.dataset.act){
+    case 'plan': if(s.plan!==id){ s.plan=id; s.added=null; s.open=null; render(v,true,true); } break;
+    case 'more': {
+      s.open = s.open===id ? null : id;
+      screen.querySelectorAll('[data-act="more"]').forEach(x=>{ const on = x.dataset.id===s.open; x.classList.toggle('open',on); x.setAttribute('aria-expanded',on); const c=x.querySelector('.clp'); if(c) c.classList.toggle('show',on); });
+      break; }
+    case 'disc': { s[id] = !s[id]; render(v); toast(v, id==='autopay' ? (s.autopay?'AutoPay discount applied: -$10/mo':'AutoPay discount removed') : (s.mobile?'Phone customer discount applied: -$15/mo':'Phone customer discount removed')); break; }
+    case 'gift': s.gift = s.gift===id ? null : id; render(v); break;
+    case 'sub': s.sub = id; render(v); break;
+    case 'add': s.added = s.plan; render(v); toast(v, `${P(v).name} added to cart`); break;
+    case 'note': toast(v, 'Not part of this prototype'); break;
+    case 'checkout': toast(v, 'Continues to Services in the full flow'); break;
+  }
+});
+
+/* Fit the three phones to the available width and height */
+function fit(){
+  const row = document.getElementById('row');
+  if(innerWidth <= 520){ row.style.transform=''; row.style.marginBottom=''; return; }
+  const W = row.scrollWidth, H = row.offsetHeight;
+  const kh = innerHeight > 360 ? (innerHeight - 96)/H : 1;
+  const k = Math.max(.35, Math.min(1, (innerWidth - 32)/W, kh));
+  row.style.transform = k<1 ? `scale(${k})` : '';
+  row.style.marginBottom = k<1 ? `${-(H*(1-k))}px` : '';
+}
+[1,2,3].forEach(v=>render(v,false));
+addEventListener('resize', fit); fit();
+document.fonts && document.fonts.ready.then(fit);
+addEventListener('load', fit); setTimeout(fit, 600);
+</script>
+</body>
+</html>

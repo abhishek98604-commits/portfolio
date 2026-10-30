@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Approach 2 · Plan Card Variations</title>
+<meta name="description" content="Three interactive variations of the plan selection screen, shown side by side in phone frames. Portfolio case study by Abhishek Bora.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23eb1d21%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%227%22 fill=%22none%22 stroke=%22%23fff%22 stroke-width=%224%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..24,300..400,0..1,0&display=block" rel="stylesheet">
+<style>
+:root{
+  --red:#eb1d21; --red-i:#ee0000; --ink7:#374151; --ink5:#6b7280; --muted:rgba(60,60,67,.6);
+  --beige:#f9f1e8; --green:#008a2f; --tile:#f5f5f5;
+  --phone-w:384px; --screen-h:780px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#fff!important}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#000;line-height:1.21;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;-webkit-tap-highlight-color:transparent;text-align:inherit}
+button:focus-visible{outline:2px solid #1a73e8;outline-offset:2px}
+.ms{font-family:"Material Symbols Outlined";font-weight:300;font-style:normal;font-size:20px;line-height:1;display:inline-block;white-space:nowrap;width:1em;height:1em;overflow:hidden;flex:none;user-select:none;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 20;letter-spacing:normal;text-transform:none}
+.ms.red{color:var(--red-i)}
+.gift-ic{width:20px;height:20px;flex:none;color:var(--red-i)}
+
+/* ---------- Page ---------- */
+.stage{padding:24px 16px 16px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh}
+.row{display:flex;gap:40px;justify-content:center;align-items:flex-start;transform-origin:top center}
+.col{display:flex;flex-direction:column;align-items:center;gap:18px}
+.cap{text-align:center}
+.cap b{display:block;font-size:15px;font-weight:700;letter-spacing:-.01em}
+.cap span{display:block;font-size:13px;color:var(--ink5);margin-top:3px}
+.note{font-size:12px;color:#9a9ea6;margin-top:22px;text-align:center}
+@media (max-width:520px){
+  .stage{padding:24px 0 20px}
+  .row{justify-content:flex-start;overflow-x:auto;scroll-snap-type:x mandatory;width:100%;padding:0 calc(50vw - var(--phone-w)/2) 8px;gap:20px;transform:none!important;scrollbar-width:none}
+  .row::-webkit-scrollbar{display:none}
+  .col{scroll-snap-align:center}
+  .swipe{display:block!important}
+}
+.swipe{display:none;font-size:12px;color:var(--ink5);margin-bottom:14px}
+
+/* ---------- Light phone frame ---------- */
+.phone{width:var(--phone-w);padding:12px;border-radius:56px;background:linear-gradient(145deg,#2a2a2d,#0e0e10 55%,#1b1b1e);border:1px solid #000;box-shadow:0 0 0 1px #3a3a3e inset,0 24px 48px -20px rgba(0,0,0,.35),0 6px 14px -8px rgba(0,0,0,.2);position:relative}
+.phone::before,.phone::after{content:"";position:absolute;width:3px;border-radius:2px;background:#1a1a1c}
+.phone::before{left:-4px;top:150px;height:56px}
+.phone::after{right:-4px;top:190px;height:80px}
+.screen{position:relative;height:var(--screen-h);border-radius:44px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+.status{height:44px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:4px 30px 0 34px;font-size:15px;font-weight:600;letter-spacing:-.01em;position:relative;background:#fff}
+.island{position:absolute;left:50%;top:10px;transform:translateX(-50%);width:96px;height:28px;border-radius:16px;background:#000}
+.status .icons{display:flex;gap:5px;align-items:center}
+.status .icons .ms{font-size:17px;font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 20}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:120px;height:4px;border-radius:3px;background:rgba(0,0,0,.28);z-index:5;pointer-events:none}
+.toast{position:absolute;left:50%;bottom:30px;transform:translate(-50%,16px);background:#1f1f1f;color:#fff;font-size:12px;font-weight:500;padding:10px 14px;border-radius:10px;opacity:0;pointer-events:none;transition:.22s;z-index:6;white-space:nowrap;display:flex;gap:6px;align-items:center}
+.toast .ms{font-size:16px;color:#7ee2a0}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- Shared site header ---------- */
+.hdr{height:54px;display:flex;align-items:center;padding:0 16px 0 14px;border-bottom:1px solid #ececec;flex:none}
+.logo{display:flex;align-items:center;gap:6px;font-weight:800;font-size:21px;letter-spacing:-.04em;color:var(--red)}
+.mark{width:20px;height:20px;border-radius:5px;background:var(--red);display:grid;place-items:center;flex:none}
+.mark::after{content:"";width:8px;height:8px;border:2.5px solid #fff;border-radius:50%}
+.hdr .ph{margin-left:auto;display:flex;align-items:center;gap:4px;font-size:12px;font-weight:800;padding-right:10px;height:28px;border-right:1px solid #d9d9d9}
+.hdr .ph .ms{font-size:16px}
+.hdr .mn{margin-left:12px;display:grid;place-items:center}
+.hdr .mn .ms{font-size:26px;font-variation-settings:"FILL" 0,"wght" 200,"GRAD" 0,"opsz" 24}
+
+/* ---------- Shared plan bits ---------- */
+.eyebrow{font-size:12px;font-weight:600;color:var(--ink5)}
+.was{font-size:12px;color:var(--ink5);display:flex;gap:2px;justify-content:flex-end}
+.was s{text-decoration:line-through}
+.now{display:flex;align-items:baseline;gap:1px;justify-content:flex-end}
+.now i{font-style:normal;font-size:12px;font-weight:600;color:var(--ink7)}
+.tag{display:inline-flex;align-self:flex-start;padding:2px 4px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase;line-height:11px}
+.tag.green{background:#c5edc5;color:var(--ink7);margin-left:-2px}
+.tag.red{background:var(--red-i);color:#fff}
+.save{color:var(--green)}
+.btn-dark{height:32px;border-radius:20px;background:#000;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px;width:100%}
+.btn-dark.done{background:var(--green)}
+.btn-dark .ms{font-size:16px}
+.toggle{width:40px;height:24px;border-radius:12px;background:#b8bcc3;padding:2px;display:flex;align-items:center;transition:background .18s;flex:none}
+.toggle::after{content:"";width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:transform .18s}
+.toggle[aria-checked="true"]{background:var(--green)}
+.toggle[aria-checked="true"]::after{transform:translateX(16px)}
+.hscroll{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.hscroll::-webkit-scrollbar{display:none}
+.hscroll>*{scroll-snap-align:start;flex:none}
+.dots{display:flex;gap:2px;justify-content:center}
+.dots i{width:4px;height:4px;border-radius:50%;background:#d9d9d9}
+.dots i.on{background:var(--ink5)}
+
+/* Neutral image stand-ins */
+.im{border-radius:4px;flex:none;display:grid;place-items:center;overflow:hidden}
+.im-gc{background:#232f3e;color:#fff;font-size:7px;font-weight:800;letter-spacing:.06em;text-align:center;line-height:1.1}
+.im-brand{background:#111}
+.im-brand::after{content:"";width:40%;aspect-ratio:1;border-radius:50%;border:3px solid var(--red)}
+.im-tv{background:linear-gradient(135deg,#2f6fd6,#7d3fb0 55%,#f0a030);border:2px solid #1e1e1e;border-bottom-width:4px}
+.im-tab{background:linear-gradient(160deg,#9fb6ff,#e7a5d8 60%,#ffd29a);border:3px solid #6b6f78;border-radius:5px}
+.im-credit{background:#111;color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.im-credit span{color:var(--red)}
+
+/* =========================================================
+   VARIATION 1 · Expandable cards (frame 2380:10092)
+   ========================================================= */
+.v1 .steps{height:35px;display:flex;align-items:center;gap:8px;padding:10px 24px;flex:none}
+.v1 .step{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);white-space:nowrap}
+.v1 .step::after{content:"";width:12px;height:1px;background:var(--muted)}
+.v1 .step:last-child::after{display:none}
+.v1 .step.on{color:#000;font-weight:800}
+.v1 .title{padding:8px 24px;display:flex;flex-direction:column;gap:4px}
+.v1 .title h1{font-size:22px;font-weight:700;line-height:28px;letter-spacing:-.03em}
+.v1 .title p{font-size:12px;display:flex;gap:8px}
+.v1 .title u{cursor:pointer}
+.v1 .cfg{padding:12px 16px;display:flex;flex-direction:column;gap:12px}
+.v1 .cfg .hscroll{gap:12px;margin:0 -16px;padding:0 16px;scroll-padding:0 16px}
+.v1 .cc{width:148px;height:94px;border-radius:16px;padding:12px 16px;display:flex;flex-direction:column;justify-content:space-between;font-size:12px;line-height:16px}
+.v1 .cc.red{background:var(--red);color:#fff;padding:12px 14px}
+.v1 .cc.red .ms{font-size:24px;color:#fff}
+.v1 .cc.bg{background:var(--beige);font-weight:500}
+.v1 .cc.sm{width:130px}
+.v1 .cc .pill{align-self:flex-start;border:1px solid #000;border-radius:20px;padding:6px 12px;font-size:12px;font-weight:700;line-height:15px}
+.v1 .list{padding:12px 16px 24px;display:flex;flex-direction:column;gap:24px}
+.v1 .card{background:#fbfbfb;border:1px solid #d5d5d5;border-radius:12px;overflow:hidden;transition:box-shadow .2s,border-color .2s,background .2s}
+.v1 .card.open{background:#fffafa;border-color:#4c4c4c;box-shadow:0 0 8px 2px rgba(0,0,0,.22)}
+.v1 .body{padding:16px;display:flex;flex-direction:column;gap:12px}
+.v1 .head{display:flex;justify-content:space-between;align-items:center;width:100%}
+.v1 .pname{font-size:22px;font-weight:700;line-height:28px;letter-spacing:-.03em;margin-top:5px}
+.v1 .pc{display:flex;flex-direction:column;justify-content:space-between;align-self:stretch;gap:4px}
+.v1 .now b{font-size:20px;font-weight:400}
+.v1 .sum{display:flex;justify-content:space-between;align-items:flex-end;width:100%}
+.v1 .bul{display:flex;flex-direction:column;gap:4px}
+.v1 .bl{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink7)}
+.v1 .chev{font-size:20px;color:#1c1b1f;margin-bottom:-4px}
+.v1 .det{display:flex;flex-direction:column;gap:12px}
+.v1 .feats{display:flex;flex-direction:column;gap:12px}
+.v1 .ft{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500}
+.v1 .ft small{display:block;font-size:12px;font-weight:400}
+.v1 .hr{height:1px;background:#e1e1e1}
+.v1 .gt{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500}
+.v1 .incl{display:flex;align-items:center;gap:12px;background:#fff;border-radius:8px;padding:8px}
+.v1 .incl .im{width:48px;height:28px}
+.v1 .incl-t{display:flex;flex-direction:column;gap:7px;font-size:11px;padding:3px 0 2px}
+.v1 .choose h3{font-size:12px;font-weight:700;margin-bottom:8px}
+.v1 .choose .hscroll{gap:12px;margin-right:-16px;padding-right:16px}
+.v1 .opt{width:224px;min-height:147px;background:#fff;border:1px solid #d1d1d1;border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;font-size:11px;line-height:16px}
+.v1 .opt[aria-checked="true"]{border:1.5px solid #000;padding:9.5px 8px 8px 9.5px}
+.v1 .opt-top{display:flex;justify-content:space-between;align-items:flex-start;min-height:24px}
+.v1 .opt .ck{font-size:24px;color:#1c1b1f;opacity:.3;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24}
+.v1 .opt[aria-checked="true"] .ck{opacity:1}
+.v1 .opt .im{width:59px;height:38px}
+.v1 .promo{background:#ffe5e5;border-radius:8px;padding:8px 16px;text-align:center;color:var(--red);font-size:11px;font-weight:700}
+
+/* =========================================================
+   VARIATION 2 · Feature tiles (frame 2380:9344)
+   ========================================================= */
+.v2 .steps{display:flex;justify-content:center;gap:24px;padding:10px 16px;flex:none}
+.v2 .step{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--muted)}
+.v2 .step::after{content:"";height:1px;background:#f2f2f7;width:calc(100% + 10px)}
+.v2 .step.on{color:var(--red)}
+.v2 .step.on::after{height:2px;background:var(--red)}
+.v2 .hero{margin:0 16px;background:var(--red);border-radius:16px;padding:12px 16px 12px 8px;display:flex;gap:8px;align-items:center;color:#fff}
+.v2 .house{width:54px;height:71px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;flex:none}
+.v2 .house .ms{font-size:28px;color:#fff;font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24}
+.v2 .house svg{width:45px;height:41px;margin-top:0}
+.v2 .hero h2{font-size:16px;font-weight:500;line-height:20px;letter-spacing:-.03em}
+.v2 .hero h2 b{font-weight:700}
+.v2 .hero p{font-size:12px;font-weight:500;margin-top:12px}
+.v2 .offers{padding:16px 16px 12px;display:flex;flex-direction:column;gap:4px}
+.v2 .offers h3{font-size:12px;font-weight:700;line-height:20px;letter-spacing:-.03em;padding:0 12px}
+.v2 .offers .hscroll{gap:12px;margin:0 -16px;padding:0 16px}
+.v2 .chip{height:40px;border-radius:20px;background:var(--tile);border:1px solid #dedede;display:flex;align-items:center;gap:8px;padding:4px 12px 4px 8px;font-size:12px;font-weight:700;white-space:nowrap}
+.v2 .chip .ms{font-size:24px;font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24;color:#1c1b1f}
+.v2 .chip[aria-pressed="false"] .ms{font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24;color:#9a9ea6}
+.v2 .chip .pill{border:1px solid #000;border-radius:20px;padding:3px 12px;font-size:12px;font-weight:700;margin-left:16px}
+.v2 .list{padding:0 16px 12px;display:flex;flex-direction:column;gap:16px}
+.v2 .card{background:#fff;border:1px solid #d6d6d6;border-radius:12px;overflow:hidden;transition:box-shadow .2s,border-color .2s}
+.v2 .card.open{border-color:#484848;box-shadow:0 0 8px 2px rgba(0,0,0,.11)}
+.v2 .promo{background:var(--beige);padding:6px 16px;text-align:center;color:var(--red-i);font-size:12px;font-weight:700}
+.v2 .body{padding:12px 16px;display:flex;flex-direction:column;gap:12px}
+.v2 .head{display:flex;justify-content:space-between;align-items:flex-end;width:100%}
+.v2 .head .l{display:flex;flex-direction:column;gap:4px}
+.v2 .pname{font-size:20px;font-weight:800;letter-spacing:-.01em;line-height:24px}
+.v2 .pc{display:flex;flex-direction:column;gap:4px}
+.v2 .now b{font-size:20px;font-weight:800;line-height:24px}
+.v2 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.v2 .tl{background:var(--tile);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:12px;min-height:81px;font-size:11px;font-weight:500;line-height:14px}
+.v2 .tl.tall{min-height:95px}
+.v2 .tl .ms{font-size:24px;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24}
+.v2 .tl small{display:block;font-size:10px;color:var(--ink5)}
+.v2 .tl .im{width:36px;height:24px}
+.v2 .more{display:flex;justify-content:center;height:8px;align-items:center;margin:0 0 4px}
+.v2 .more .ms{font-size:22px;color:#1c1b1f;transition:transform .2s}
+.v2 .card.open .more .ms{transform:rotate(180deg)}
+.v2 .det{display:flex;flex-direction:column;gap:12px}
+.v2 .det h3{font-size:14px;font-weight:700}
+.v2 .gifts{gap:12px;margin-right:-16px;padding-right:16px}
+.v2 .gc,.v3 .gc{width:120px;min-height:140px;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;border:1px solid #dcdcdc;background:var(--tile)}
+.v2 .gc[aria-checked="true"],.v3 .gc[aria-checked="true"]{border:1.5px solid #000;padding:11.5px}
+.gc .im{width:48px;height:32px}
+.gc .t{font-size:10px;font-weight:600;line-height:14px;width:108px}
+.gc.wide .t{width:134px}
+.gc .s{font-size:10px;color:var(--ink7);margin-top:4px}
+.gc .add{margin-top:auto;width:48px;height:24px;border-radius:100px;border:1px solid #000;display:grid;place-items:center;font-size:10px;font-weight:700}
+.gc .add .ms{font-size:16px;font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 20}
+.gc[aria-checked="true"] .add{background:#000;color:#fff}
+.gc.wide{width:158px}
+
+/* =========================================================
+   VARIATION 3 · Bold red plan headers (frame 2380:9681)
+   ========================================================= */
+.v3 .top{background:linear-gradient(180deg,#f9f1e8,#fee4e4);padding:8px 0 12px}
+.v3 .steps{display:flex;justify-content:center;gap:16px;padding:8px 16px}
+.v3 .step{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);line-height:18px}
+.v3 .step i{width:18px;height:18px;border-radius:9px;background:#fff;color:#7a7e86;font-style:normal;font-size:9px;font-weight:700;display:grid;place-items:center}
+.v3 .step.on{color:var(--red);font-weight:700}
+.v3 .step.on i{background:var(--red-i);color:#fff}
+.v3 .hero{padding:8px 28px 0;text-align:center;display:flex;flex-direction:column;align-items:center}
+.v3 .hero h2{font-size:16px;font-weight:400;line-height:28px;letter-spacing:-.01em}
+.v3 .hero h2 b{font-weight:800;color:var(--red)}
+.v3 .hero .ad{display:flex;align-items:center;gap:4px;font-size:11px;line-height:19px;text-decoration:underline;margin-top:4px}
+.v3 .hero .ad .ms{font-size:16px;font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 20}
+.v3 .hero p{font-size:11px;line-height:22px;letter-spacing:-.01em;margin-top:4px}
+.v3 .list{padding:12px 16px 24px;display:flex;flex-direction:column;gap:16px}
+.v3 .card{background:#fff;border:1px solid #dedede;border-radius:12px;overflow:hidden;transition:box-shadow .2s,border-color .2s}
+.v3 .card.open{border-color:#acacac;box-shadow:0 0 8px 2px rgba(0,0,0,.11)}
+.v3 .rh{display:block;width:100%;padding:8px 8px 8px}
+.v3 .rb{background:var(--red-i);border-radius:8px;padding:8px 12px;display:flex;flex-direction:column;gap:4px;color:#fff}
+.v3 .r1{display:flex;justify-content:space-between;align-items:center}
+.v3 .r1 .n{font-size:13px;font-weight:800}
+.v3 .r1 .p{display:flex;align-items:baseline;gap:4px}
+.v3 .r1 .p s{font-size:11px;opacity:.7}
+.v3 .r1 .p span{font-size:11px;opacity:.7}
+.v3 .r1 .p b{font-size:14px;font-weight:800}
+.v3 .r1 .p em{font-style:normal;font-size:14px;font-weight:600;margin-left:-3px}
+.v3 .r2{display:flex;align-items:center}
+.v3 .r2 b{font-size:18px;font-weight:800;letter-spacing:-.02em;line-height:22px}
+.v3 .sp{display:flex;align-items:center;font-size:11px;line-height:14px;margin-left:4px}
+.v3 .sp .ms{font-size:16px;color:#fff;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 20}
+.v3 .sp+.sp{margin-left:4px}
+.v3 .fts{display:flex;gap:16px;padding:8px 16px 12px 20px}
+.v3 .ft{width:140px;display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:600;line-height:14px}
+.v3 .ft .ms{font-size:24px;font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24}
+.v3 .ft small{display:block;font-size:10px;font-weight:400;color:var(--ink5)}
+.v3 .choose{display:flex;background:#f4f4f4;padding:12px 16px;flex-direction:column;gap:12px;margin-top:3px}
+.v3 .choose h3{font-size:11px;font-weight:700}
+.v3 .gifts{gap:12px;margin-right:-16px;padding-right:16px}
+.v3 .gc{background:#fff}
+.v3 .gc .t{font-weight:700}
+.v3 .foot{background:#f4f4f4;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.v3 .card.open .foot{padding:12px 16px}
+.v3 .gi{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500;line-height:14px}
+.v3 .gi .im{width:40px;height:27px}
+.v3 .det-btn{height:32px;border:1px solid #000;border-radius:20px;padding:6px 8px 6px 12px;font-size:11px;font-weight:500;display:flex;align-items:center;gap:2px;flex:none}
+.v3 .det-btn .ms{font-size:16px}
+.v3 .add-btn{height:32px;border-radius:20px;background:#000;color:#fff;padding:6px 12px;font-size:11px;font-weight:600;display:none;align-items:center;gap:4px;flex:none}
+.v3 .add-btn.done{background:var(--green)}
+.v3 .add-btn .ms{font-size:16px}
+.v3 .card.open .det-btn{display:none}
+.v3 .card.open .add-btn{display:flex}
+/* Smooth expand / collapse */
+.clp{display:grid;grid-template-rows:0fr;transition:grid-template-rows .38s cubic-bezier(.2,.7,.2,1),opacity .3s ease;opacity:0}
+.clp>.in{overflow:hidden;min-height:0}
+.card.open .clp{grid-template-rows:1fr;opacity:1}
+.clp.rev{grid-template-rows:1fr;opacity:1}
+.card.open .clp.rev{grid-template-rows:0fr;opacity:0}
+.v1 .clp,.v2 .clp{margin-top:-12px}
+.v1 .clp>.in>*,.v2 .clp>.in>*{margin-top:12px}
+.v1 .chev,.v2 .more .ms,.v3 .det-btn .ms{transition:transform .3s ease}
+.v3 .foot button{animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* Checkout bar after adding a plan */
+.cta{position:absolute;left:0;right:0;bottom:0;z-index:4;background:#f4f4f4;border-top:1px solid #ccc;border-radius:14px 14px 0 0;box-shadow:0 -2px 12px rgba(0,0,0,.1);padding:12px 16px 24px;display:flex;flex-direction:column;gap:12px;transform:translateY(105%);transition:transform .38s cubic-bezier(.2,.7,.2,1)}
+.cta.show{transform:none}
+.cta .sum-l{text-align:center;font-size:12px}
+.cta .sum-l b{font-weight:700}
+.cta .r{display:flex;gap:16px;align-items:center}
+.cta .cart{position:relative;width:56px;height:40px;border-radius:100px;background:#ffdcdc;display:grid;place-items:center;flex:none}
+.cta .cart .ms{font-size:24px;color:var(--red-i);font-variation-settings:"FILL" 0,"wght" 300,"GRAD" 0,"opsz" 24}
+.cta .badge{position:absolute;left:37px;top:-3px;width:18px;height:18px;border-radius:9px;background:var(--red-i);color:#fff;font-size:9px;font-weight:700;display:grid;place-items:center}
+.cta .go{flex:1;height:40px;border-radius:20px;background:#000;color:#fff;font-size:16px;font-weight:700;display:grid;place-items:center}
+.screen.has-cta .toast{bottom:150px}
+.screen.has-cta .scroll{padding-bottom:132px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main class="stage">
+  <p class="swipe">Swipe to see all three variations →</p>
+  <div class="row" id="row">
+    <section class="col" aria-label="Variation 1">
+      <div class="phone"><div class="screen v1" data-v="1"></div></div>
+      <div class="cap"><b>Variation 1</b><span>Expandable cards with a discounts carousel</span></div>
+    </section>
+    <section class="col" aria-label="Variation 2">
+      <div class="phone"><div class="screen v2" data-v="2"></div></div>
+      <div class="cap"><b>Variation 2</b><span>Feature tiles with offer chips</span></div>
+    </section>
+    <section class="col" aria-label="Variation 3">
+      <div class="phone"><div class="screen v3" data-v="3"></div></div>
+      <div class="cap"><b>Variation 3</b><span>Bold plan headers with speed details</span></div>
+    </section>
+  </div>
+  <p class="note">Interactive prototype. Scroll and tap inside each phone. Portfolio prototype, not a real store; brand replaced with a placeholder.</p>
+</main>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></symbol>
+</svg>
+
+<script>
+/* ---------------- Data (from the Figma frames; brand neutralised) ---------------- */
+const PLANS = [
+  {id:'300', name:'300 Mbps', was:59.99, now:49.99, y1:3, y2:3, y3:3, sp:'300 Mbps', spG:'300 Mbps', r1:'Router included', dev1:50, dev2:50, card1:'$200 Amazon Gift Card.¹', gift2:'$100 Acme gift card included + 1 choice gift', img2:'brand'},
+  {id:'500', name:'500 Mbps', was:89.99, now:79.99, y1:3, y2:4, y3:4, sp:'500 Mbps', spG:'500 Mbps', r1:'Router included', dev1:50, dev2:50, card1:'$200 Amazon Gift Card.¹', gift2:'$100 Acme gift card included + 1 choice gift', img2:'brand'},
+  {id:'1g',  name:'1 Gig',    was:99.99, now:89.99, y1:5, y2:5, y3:5, sp:'940 Mbps', spG:'940 Mbps', r1:'Router and Whole-Home Wi-Fi included', dev1:50, dev2:70, card1:'$200 Amazon Gift Card.¹', gift2:'$200 Amazon gift card included + 1 choice gift', img2:'gc', whole:true, promo:true},
+  {id:'2g',  name:'2 Gig',    was:119.99,now:109.99,y1:5, y2:5, y3:5, sp:'2.3 Gig',  spG:'2.3 Gbps', r1:'Router and Whole-Home Wi-Fi included', dev1:50, dev2:70, card1:'$200 Amazon Gift Card.¹', gift2:'$200 Amazon gift card included + 1 choice gift', img2:'gc', whole:true, promo:true},
+  {id:'5g',  name:'5 Gig',    was:129.99,now:119.99,y1:5, y2:5, y3:5, sp:'5.3 Gig',  spG:'5.3 Gbps', r1:'Router and Whole-Home Wi-Fi included', dev1:50, dev2:70, card1:'$200 Amazon Gift Card.¹', gift2:'$200 Amazon gift card included + 1 choice gift', img2:'gc', whole:true, promo:true},
+];
+const GIFTS = [
+  {id:'tv',  img:'tv',    t:'Samsung 43" Class Q7F QLED TV', s:'Retail Price: $399.99'},
+  {id:'tab', img:'tab',   t:'$500 off select Samsung products', s:'Up to $500 value'},
+  {id:'sav', img:'brand', t:'Save $15/mo for 36 months', s:'Up to $540 in savings', wide:true},
+];
+const V1GIFTS = [
+  {id:'triple', lines:'$400 off select Samsung products<br>FOX One Perk for 3 months<br>Home Device Protect for $0.99 for 3 months.²<br>Price: $0.00 &nbsp;<span class="save">Save $532.00</span>'},
+  {id:'credit', img:'credit', lines:'Get $15 credit per month for 36 months.²<br><br>Price: $0.00 &nbsp;<span class="save">Save $540.00</span>'},
+];
+
+/* Per-phone state */
+const S = {
+  1:{open:'1g', autopay:true, gift:'triple', added:null},
+  2:{open:'1g', autopay:true, gift:'tv', added:null},
+  3:{open:'1g', gift:'tv', added:null},
+};
+const m = n => '$'+n.toFixed(2);
+const gift = '<svg class="gift-ic" aria-hidden="true"><use href="#gift"/></svg>';
+const img = (k,cls='') => k==='gc' ? `<span class="im im-gc ${cls}">GIFT<br>CARD</span>` : k==='credit' ? `<span class="im im-credit ${cls}">$<span>15</span></span>` : `<span class="im im-${k} ${cls}"></span>`;
+const chrome = () => `
+  <div class="status"><span>9:41</span><span class="island"></span><span class="icons"><span class="ms">signal_cellular_alt</span><span class="ms">wifi</span><span class="ms">battery_full</span></span></div>`;
+const header = () => `
+  <header class="hdr"><span class="logo"><span class="mark"></span>acme</span>
+  <span class="ph"><span class="ms">call</span>1-800-000-0000</span><span class="mn"><span class="ms">menu</span></span></header>`;
+const shell = (inner, v) => {
+  const s=S[v], p = s.added ? PLANS.find(x=>x.id===s.added) : null;
+  const price = p ? ((v===3 || s.autopay) ? p.now : p.was) : 0;
+  const cta = `<div class="cta ${p && s.ctaShown ? 'show':''}" aria-hidden="${!p}">
+    <div class="sum-l"><b>Due Today: </b>${m(price)}&nbsp;&nbsp;•&nbsp;&nbsp;<b>Est monthly:</b> ${m(price)}/mo</div>
+    <div class="r"><button class="cart" data-act="checkout" aria-label="Cart, 1 item"><span class="ms">shopping_cart</span><span class="badge">1</span></button>
+    <button class="go" data-act="checkout">Review &amp; checkout</button></div></div>`;
+  return `${chrome()}<div class="scroll">${header()}${inner}</div>${cta}<div class="home-ind"></div><div class="toast" role="status" aria-live="polite"></div>`;
+};
+
+/* ---------------- Variation 1 ---------------- */
+function v1(){
+  const s=S[1];
+  const cards = PLANS.map(p=>{
+    const open=s.open===p.id, added=s.added===p.id, price = s.autopay?p.now:p.was;
+    const opts = V1GIFTS.map(g=>`
+      <button class="opt" role="radio" aria-checked="${s.gift===g.id}" data-act="gift" data-id="${g.id}">
+        <div class="opt-top">${g.img?img(g.img):'<span class="tag red">Triple deal</span>'}<span class="ms ck">check_circle</span></div>
+        <div>${g.lines}</div>
+      </button>`).join('');
+    return `<article class="card ${open?'open':''}" data-card="${p.id}">
+      <div class="body">
+        <button class="head" data-act="toggle" data-id="${p.id}" aria-expanded="${open}">
+          <div><div class="eyebrow">Acme Fiber</div><div class="pname">${p.name}</div></div>
+          <div class="pc"><div class="was">${s.autopay?`<s>${m(p.was)}</s> /mo`:'&nbsp;'}</div><div class="now"><b>${m(price)}</b><i>/mo</i></div></div>
+        </button>
+        <div class="clp rev"><div class="in"><button class="sum" data-act="toggle" data-id="${p.id}" tabindex="-1">
+          <div class="bul"><div class="bl"><span class="ms red">handshake</span>${p.y1}-year price guarantee*</div><div class="bl">${gift}2 special gifts</div></div>
+          <span class="ms chev">keyboard_arrow_down</span>
+        </button></div></div>
+        <div class="clp"><div class="in"><div class="det">
+          <div class="feats">
+            <div class="ft"><span class="ms red">handshake</span>${p.y1}-year price guarantee*</div>
+            <div class="ft"><span class="ms red">avg_pace</span><div>Download and upload speeds of <br>up to ${p.sp}</div></div>
+            <div class="ft"><span class="ms red">router</span><div>${p.r1}<small>Supports up to ${p.dev1} devices</small></div></div>
+          </div>
+          <div class="hr"></div>
+          <div class="gt">${gift}2 special gifts on us</div>
+          <div class="incl">${img('gc')}<div class="incl-t"><span class="tag green">Included with plan</span><span>${p.card1}</span></div></div>
+          <div class="choose"><h3>Choose 1 additional gift</h3><div class="hscroll" role="radiogroup">${opts}</div></div>
+          <div class="promo">Online only: $99 professional setup fee waived</div>
+          <button class="btn-dark ${added?'done':''}" data-act="add" data-id="${p.id}">${added?'<span class="ms">check</span>Added to cart':'Add to cart'}</button>
+        </div></div></div>
+      </div></article>`;
+  }).join('');
+  return shell(`
+    <nav class="steps"><span class="step on">Plan</span><span class="step">Services</span><span class="step">Review</span><span class="step">Checkout</span></nav>
+    <div class="title"><h1>Select your plan</h1><p><span>123 Main St, Newport, RI 02840</span><u data-act="note">Change address</u></p></div>
+    <div class="cfg">
+      <div class="hscroll" data-dots="d1">
+        <div class="cc red"><span>Internet available as soon as <b>Jun 4th</b></span><span class="ms">local_shipping</span></div>
+        <div class="cc bg"><span>AutoPay &amp; paper-free billing discount</span><button class="toggle" role="switch" aria-checked="${s.autopay}" aria-label="AutoPay discount" data-act="autopay"></button></div>
+        <div class="cc bg sm"><span>Acme mobile customer?</span><button class="pill" data-act="note">Sign-in</button></div>
+      </div>
+      <div class="dots" id="d1"><i class="on"></i><i></i></div>
+    </div>
+    <div class="list">${cards}</div>`, 1);
+}
+
+/* ---------------- Variation 2 ---------------- */
+function v2(){
+  const s=S[2];
+  const cards = PLANS.map((p,i)=>{
+    const open=s.open===p.id, added=s.added===p.id, price=s.autopay?p.now:p.was;
+    const gifts = GIFTS.map(g=>`
+      <button class="gc ${g.wide?'wide':''}" role="radio" aria-checked="${s.gift===g.id}" data-act="gift" data-id="${g.id}">
+        ${img(g.img)}<div><div class="t">${g.t}</div><div class="s">${g.s}</div></div>
+        <span class="add">${s.gift===g.id?'<span class="ms">check</span>':'Add'}</span>
+      </button>`).join('');
+    return `<article class="card ${open?'open':''}" data-card="${p.id}">
+      ${p.promo?'<div class="promo">Online only: $99 professional setup fee waived</div>':''}
+      <div class="body">
+        <button class="head" data-act="toggle" data-id="${p.id}" aria-expanded="${open}" ${i===0?'style="padding-top:8px"':''}>
+          <div class="l"><span class="eyebrow">Acme Fiber</span><span class="pname">${p.name}</span></div>
+          <div class="pc"><div class="was">${s.autopay?`<s>${m(p.was)}</s> /mo`:'&nbsp;'}</div><div class="now"><b>${m(price)}</b><i>/mo</i></div></div>
+        </button>
+        <div class="tiles">
+          <div class="tl tall"><span class="ms red">avg_pace</span><div>Download and upload speeds of up to ${p.sp}</div></div>
+          <div class="tl tall"><span class="ms red">handshake</span><div>${p.y2}-year price guarantee* <small>Price stays same for ${p.y2} years</small></div></div>
+          <div class="tl ${p.whole?'tall':''}">${img(p.img2==='gc'?'gc':'brand','')}<div>${p.gift2}</div></div>
+          <div class="tl ${p.whole?'tall':''}"><span class="ms red">router</span><div>${p.whole?'Router + Whole-Home Wi-Fi included':'Router included'}<small>Supports up to ${p.dev2} devices</small></div></div>
+        </div>
+        <div class="clp"><div class="in"><div class="det">
+          <h3>Choose 1 additional gift</h3>
+          <div class="hscroll gifts" role="radiogroup">${gifts}</div>
+          <button class="btn-dark ${added?'done':''}" data-act="add" data-id="${p.id}">${added?'<span class="ms">check</span>Added to cart':'Add to cart'}</button>
+        </div></div></div>
+        <button class="more" data-act="toggle" data-id="${p.id}" aria-label="${open?'Show less':'Show more'}"><span class="ms">keyboard_arrow_down</span></button>
+      </div></article>`;
+  }).join('');
+  return shell(`
+    <nav class="steps"><span class="step on">Plan</span><span class="step">Services</span><span class="step">Review</span><span class="step">Checkout</span></nav>
+    <div class="hero">
+      <div class="house" aria-hidden="true"><span class="ms">wifi</span>
+        <svg viewBox="0 0 45 41" fill="none"><path d="M3 20 22.5 3 42 20" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 16v20a3 3 0 0 0 3 3h21a3 3 0 0 0 3-3V16" stroke="#fff" stroke-width="3"/><circle cx="22.5" cy="27" r="6" stroke="#fff" stroke-width="3"/></svg>
+      </div>
+      <div><h2>Get Acme at your address <br>as soon as <b>Jun 4th</b></h2><p>123 Main St, Newport, RI 02840</p></div>
+    </div>
+    <div class="offers">
+      <h3>Offers &amp; Discounts</h3>
+      <div class="hscroll" data-dots="d2">
+        <button class="chip" data-act="autopay" aria-pressed="${s.autopay}"><span class="ms">check_circle</span>AutoPay &amp; paper-free billing discount</button>
+        <div class="chip">Acme mobile customer?<button class="pill" data-act="note">Validate</button></div>
+      </div>
+      <div class="dots" id="d2"><i class="on"></i><i></i></div>
+    </div>
+    <div class="list">${cards}</div>`, 2);
+}
+
+/* ---------------- Variation 3 ---------------- */
+function v3(){
+  const s=S[3];
+  const cards = PLANS.map(p=>{
+    const open=s.open===p.id, added=s.added===p.id;
+    const gifts = GIFTS.map(g=>`
+      <button class="gc" role="radio" aria-checked="${s.gift===g.id}" data-act="gift" data-id="${g.id}">
+        ${img(g.img)}<div><div class="t">${g.t}</div><div class="s">${g.s}</div></div>
+        <span class="add">${s.gift===g.id?'<span class="ms">check</span>':'Add'}</span>
+      </button>`).join('');
+    const giftTxt = p.whole ? `$200 Acme gift card <br>included + 1 choice gift` : `$100 Acme gift card <br>included + 1 choice gift`;
+    return `<article class="card ${open?'open':''}" data-card="${p.id}">
+      <button class="rh" data-act="toggle" data-id="${p.id}" aria-expanded="${open}">
+        <div class="rb">
+          <div class="r1"><span class="n">Acme Fiber</span><span class="p"><s>${m(p.was)}</s><span>/mo</span> <b>${m(p.now)}</b><em>/mo</em></span></div>
+          <div class="r2"><b>${p.name}</b><span class="sp"><span class="ms">arrow_downward</span>${p.spG}</span><span class="sp"><span class="ms">arrow_upward</span>${p.spG}</span></div>
+        </div>
+      </button>
+      <div class="fts">
+        <div class="ft"><span class="ms red">handshake</span><div>${p.y3}-year price guarantee* <small>Price stays same for ${p.y3} years</small></div></div>
+        <div class="ft"><span class="ms red">router</span><div>${p.whole?'Router + Whole-Home <br>Wi-Fi included':'Router included'}<small>Supports up to ${p.dev2} devices</small></div></div>
+      </div>
+      <div class="clp"><div class="in"><div class="choose"><h3>Choose 1 additional gift</h3><div class="hscroll gifts" role="radiogroup">${gifts}</div></div></div></div>
+      <div class="foot">
+        <div class="gi">${img(p.whole?'gc':'brand')}<span>${giftTxt}</span></div>
+        <button class="det-btn" data-act="toggle" data-id="${p.id}">Details <span class="ms">keyboard_arrow_down</span></button>
+        <button class="add-btn ${added?'done':''}" data-act="add" data-id="${p.id}"><span class="ms">${added?'check':'shopping_cart'}</span>${added?'Added':'Add to cart'}</button>
+      </div>
+    </article>`;
+  }).join('');
+  return shell(`
+    <div class="top">
+      <nav class="steps"><span class="step on"><i>1</i>Plan</span><span class="step"><i>2</i>Services</span><span class="step"><i>3</i>Review</span><span class="step"><i>4</i>Checkout</span></nav>
+      <div class="hero">
+        <h2>Get connected as soon as <b>June 4th</b></h2>
+        <span class="ad"><span class="ms">location_on</span>123 Main St, Newport, RI 02840</span>
+        <p>with <b>$10/mo off with AutoPay &amp; paper-free billing</b></p>
+      </div>
+    </div>
+    <div class="list">${cards}</div>`, 3);
+}
+
+/* ---------------- Render + events ---------------- */
+const R = {1:v1, 2:v2, 3:v3};
+function render(v, keepScroll=true){
+  const el = document.querySelector(`.screen[data-v="${v}"]`);
+  const sc = el.querySelector('.scroll'), top = sc ? sc.scrollTop : 0;
+  const hs = [...el.querySelectorAll('.hscroll')].map(h=>h.scrollLeft);
+  el.innerHTML = R[v]();
+  el.classList.toggle('has-cta', !!S[v].added);
+  if(S[v].added && !S[v].ctaShown){ const c=el.querySelector('.cta'); requestAnimationFrame(()=>requestAnimationFrame(()=>c.classList.add('show'))); S[v].ctaShown=true; }
+  if(!S[v].added) S[v].ctaShown=false;
+  if(keepScroll){ el.querySelector('.scroll').scrollTop = top; el.querySelectorAll('.hscroll').forEach((h,i)=>{ if(hs[i]!=null) h.scrollLeft = hs[i]; }); }
+  el.querySelectorAll('[data-dots]').forEach(h=>{
+    const dots = el.querySelectorAll('#'+h.dataset.dots+' i');
+    const upd = ()=>{ const end = h.scrollLeft + h.clientWidth >= h.scrollWidth - 4; dots.forEach((d,i)=>d.classList.toggle('on', end ? i===1 : i===0)); };
+    h.addEventListener('scroll', upd, {passive:true}); upd();
+  });
+}
+function toast(v,msg){
+  const t = document.querySelector(`.screen[data-v="${v}"] .toast`);
+  t.innerHTML = `<span class="ms">check_circle</span>${msg}`; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 2000);
+}
+document.addEventListener('click', e=>{
+  const b = e.target.closest('[data-act]'); if(!b) return;
+  const screen = b.closest('.screen'), v = +screen.dataset.v, s = S[v], id = b.dataset.id;
+  switch(b.dataset.act){
+    case 'toggle': {
+      const was = s.open===id; s.open = was ? null : id;
+      screen.querySelectorAll('.card[data-card]').forEach(c=>{ const on = c.dataset.card===s.open; c.classList.toggle('open', on); c.querySelectorAll('[aria-expanded]').forEach(x=>x.setAttribute('aria-expanded', on)); });
+      if(!was) setTimeout(()=>{
+        const card = screen.querySelector(`[data-act="toggle"][data-id="${id}"]`).closest('.card'); const sc=screen.querySelector('.scroll');
+        const r = card.getBoundingClientRect(), sr = sc.getBoundingClientRect();
+        const pad = screen.classList.contains('has-cta') ? 140 : 12;
+        if(r.bottom > sr.bottom - pad || r.top < sr.top) sc.scrollBy({top: Math.min(r.top - sr.top - 12, r.bottom - sr.bottom + pad), behavior:'smooth'}); }, 400);
+      break; }
+    case 'gift': s.gift = (v===3 && s.gift===id) ? null : id; render(v); break;
+    case 'autopay': s.autopay = !s.autopay; render(v); toast(v, s.autopay ? 'AutoPay discount applied: -$10/mo' : 'AutoPay discount removed'); break;
+    case 'add': { const p = PLANS.find(x=>x.id===id); s.added = s.added===id ? null : id; render(v); if(s.added) toast(v, `${p.name} added to cart`); break; }
+    case 'note': toast(v, 'Not part of this prototype'); break;
+    case 'checkout': toast(v, 'Continues to Services in the full flow'); break;
+  }
+});
+
+/* Fit the three phones to the available width on desktop */
+function fit(){
+  const row = document.getElementById('row');
+  if(innerWidth <= 520){ row.style.transform=''; row.style.marginBottom=''; return; }
+  const W = row.scrollWidth, H = row.offsetHeight;
+  const kh = innerHeight > 360 ? (innerHeight - 96)/H : 1;
+  const k = Math.max(.35, Math.min(1, (innerWidth - 32)/W, kh));
+  row.style.transform = k<1 ? `scale(${k})` : '';
+  row.style.marginBottom = k<1 ? `${-(H*(1-k))}px` : '';
+}
+[1,2,3].forEach(v=>render(v,false));
+addEventListener('resize', fit); fit();
+document.fonts && document.fonts.ready.then(fit);
+addEventListener('load', fit); setTimeout(fit, 600);
+</script>
+</body>
+</html>
