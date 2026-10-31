@@ -77,9 +77,8 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .prev{position:relative;height:300px;flex:none;overflow:hidden;background:#1a2440;margin:0 14px;border-radius:16px;border:1px solid rgba(255,255,255,.08)}
 .prev img.me,.vp img.me{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:52% 40%}
 .prev .lbl{position:absolute;left:10px;top:10px;font-size:11.5px;background:rgba(10,16,30,.6);backdrop-filter:blur(6px);padding:5px 10px;border-radius:12px;color:#e8edf7}
-.prev .wand{position:absolute;right:10px;top:10px;width:34px;height:34px;border-radius:50%;background:rgba(10,16,30,.6);backdrop-filter:blur(6px);display:grid;place-items:center;color:#fff}
-.prev .wand .i{font-size:18px;font-variation-settings:"wght" 300}.prev .wand.on{background:#3474f0}
-.gbx .i{font-variation-settings:"FILL" 1,"wght" 300}.gbx .ch .i{font-variation-settings:"wght" 300}
+.prev .wand{position:absolute;right:10px;top:10px;width:40px;height:40px;border-radius:50%;background:rgba(10,16,30,.6);backdrop-filter:blur(6px);display:grid;place-items:center;color:#fff}
+.prev .wand.on{background:#3474f0}
 .prev .bc{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:26px}
 .gctl{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11.5px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
 .gbx{display:flex;align-items:center;height:46px;border-radius:14px;background:rgba(15,22,40,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.22);color:#fff;overflow:hidden}
@@ -153,12 +152,8 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .tile .hand{position:absolute;right:6px;top:6px;width:28px;height:28px;border-radius:50%;background:#3b6fd8;display:none;place-items:center}
 .tile .hand .i{font-size:18px}
 .tile.hd .hand{display:grid}
-.fxl{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:52% 40%;display:none}
-.fxbox.fx1 .fxb1,.fxbox.fx2 .fxb1,.fxbox.fx3 .fxo,.fxbox.fx1 .fxc,.fxbox.fx2 .fxc,.fxbox.fx3 .fxc{display:block}
-.fxbox.fx1 .fxb1{filter:blur(5px);transform:scale(1.05)}.fxbox.fx2 .fxb1{filter:blur(14px);transform:scale(1.08)}
-.fxbox .me,.fxbox .fxl{transition:filter .25s}
-.fxbox.mir>img{transform:scaleX(-1)}.fxbox.mir.fx1 .fxb1{transform:scaleX(-1) scale(1.05)}.fxbox.mir.fx2 .fxb1{transform:scaleX(-1) scale(1.08)}
-.fxbox.lo>img{filter:blur(.7px) saturate(.85)}
+.tile .blurl{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 35%;filter:blur(7px);transform:scale(1.08);-webkit-mask-image:radial-gradient(ellipse 30% 46% at 50% 52%,transparent 62%,#000 100%);mask-image:radial-gradient(ellipse 30% 46% at 50% 52%,transparent 62%,#000 100%);display:none}
+.fx1 .blurl{display:block;filter:blur(4px)}.fx2 .blurl{display:block;filter:blur(10px)}
 .lowdata .tile:not(.self) img{display:none}
 .lowdata .tile:not(.self) .camoff{display:grid}
 .float{position:absolute;font-size:34px;pointer-events:none;animation:up 2.2s ease-out forwards;z-index:5}
@@ -187,43 +182,17 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .aud{display:flex;gap:12px;padding:4px 18px 12px}
 .aud button{flex:1;height:40px;border-radius:20px;border:1.5px solid var(--blue);color:var(--blue);font-weight:500;letter-spacing:.04em;font-size:14px}
 /* video prefs */
-#vprefs{background:linear-gradient(180deg,#0b1730,#0d1b38);color:#e8edf7}
-#app.nv2 .sb{background:#0b1730;color:#fff}
-.vh{display:flex;align-items:center;padding:6px 12px 10px;flex:none}
-.vh b{flex:1;text-align:center;font-size:18px;font-weight:500}
-.vh .rb{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#e8edf7}
-.vh .rb.rbo{border:1px solid rgba(120,150,210,.35);background:rgba(255,255,255,.04)}
-.vbody{flex:1;overflow:auto;scrollbar-width:none}.vbody::-webkit-scrollbar{display:none}
-.vp{position:relative;height:262px;margin:0 14px;border-radius:16px;overflow:hidden;background:#1a2440;border:1px solid rgba(255,255,255,.08)}
-.vp .lbl{position:absolute;left:10px;top:10px;font-size:11.5px;background:rgba(10,16,30,.6);backdrop-filter:blur(6px);padding:5px 10px;border-radius:12px;z-index:3}
-.campill{position:absolute;left:10px;bottom:10px;z-index:3;display:flex;align-items:center;gap:7px;height:36px;padding:0 12px;border-radius:18px;background:rgba(10,16,30,.6);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:13px}
-.campill .i{font-size:19px}
-.seg{display:flex;margin:12px 14px 0;padding:3px;border-radius:12px;background:#13213f;border:1px solid rgba(120,150,210,.2)}
-.seg button{flex:1;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14.5px;font-weight:500;color:#9db7ee}
-.seg button.on{background:#3474f0;color:#fff}
-.seg .i{font-size:20px}
-.vsec{padding:14px 16px 0}
-.vsec h4{font-size:18px;font-weight:500;color:#fff}
-.vsec .hint{font-size:13px;color:#8fb0f0;margin-top:3px}
-.bgs{display:flex;gap:8px;margin-top:12px}
-.bgt{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11.5px;color:#d5dcea}
-.bgt .th{width:100%;aspect-ratio:1;border-radius:10px;overflow:hidden;position:relative;border:2px solid transparent;background:#13213f;display:grid;place-items:center;color:#e8edf7}
-.bgt .th.ol{border-color:rgba(120,150,210,.3)}
-.bgt .th img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.bgt.on .th{border-color:#3474f0}
-.bgt .ck{position:absolute;right:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#3474f0;color:#fff;display:none;place-items:center;z-index:2}
-.bgt .ck .i{font-size:14px}
-.bgt.on .ck{display:grid}
-.vcard{margin:14px 14px 0;border-radius:12px;background:#13213f;border:1px solid rgba(120,150,210,.2)}
-.vrow{display:flex;align-items:center;gap:12px;padding:12px 14px}
-.vrow+.vrow{border-top:1px solid rgba(255,255,255,.07)}
-.vrow .i{color:#e8edf7;font-size:22px}
-.vrow .tx{flex:1}.vrow b{display:block;font-weight:500;font-size:15px;color:#fff}.vrow small{font-size:12.5px;color:#8fb0f0}
-.sw{width:46px;height:26px;border-radius:13px;background:#3a4767;position:relative;flex:none;transition:background .2s}
-.sw:after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s}
-.sw.on{background:#3474f0}.sw.on:after{left:23px}
-.vrow input[type=range]{width:100%;accent-color:#3474f0;margin-top:8px}
-.done{flex:none;margin:12px 14px 16px;height:48px;border-radius:12px;background:#3474f0;color:#fff;font-size:16px;font-weight:500}
+#vprefs{background:#000;color:#fff}
+.vp{position:relative;flex:1;overflow:hidden}
+.vp .blurl{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:52% 40%;transform:scale(1.06);-webkit-mask-image:radial-gradient(ellipse 34% 44% at 50% 50%,transparent 64%,#000 100%);mask-image:radial-gradient(ellipse 34% 44% at 50% 50%,transparent 64%,#000 100%);display:none}
+.vp.fx1 .blurl{display:block;filter:blur(5px)}.vp.fx2 .blurl{display:block;filter:blur(12px)}
+.vph{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;padding:12px 12px;background:linear-gradient(rgba(0,0,0,.45),transparent);z-index:2}
+.vph b{flex:1;text-align:center;font-weight:400;font-size:17px}
+.fxrow{display:flex;gap:10px;padding:12px 12px;background:#000;overflow-x:auto;flex:none}
+.fxb{flex:none;width:62px;height:62px;border-radius:8px;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11.5px;background:#1c1f24;color:#e5e7eb;overflow:hidden;position:relative}
+.fxb.on{border-color:#5b8def}
+.fxb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.75}
+.fxb span{position:relative}
 /* panels */
 .panel{background:#fff;color:var(--ink)}
 .ph{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid #eee;flex:none}
@@ -292,9 +261,9 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 
     <!-- Home -->
     <section class="scr" id="home">
-      <div class="hh"><span class="conn"><i></i>Connected</span><b></b><button class="gear2" data-go="settings" aria-label="Settings"><span class="i">settings</span></button></div>
-      <div class="prev fxbox" id="hprev">
-        <img class="me" src="img/u5.webp" alt=""><img class="fxl fxb1" src="img/u5.webp" alt=""><img class="fxl fxo" src="img/office.webp" alt=""><img class="fxl fxc" src="img/u5cut.webp" alt="">
+      <div class="hh"><b>BlueJeans</b><span class="conn"><i></i>Connected</span><button class="gear2" data-go="settings" aria-label="Settings"><span class="i">settings</span></button></div>
+      <div class="prev" id="hprev">
+        <img class="me" src="img/u5.webp" alt="">
         <div class="camoff"><span class="av">AM</span></div>
         <span class="lbl">Camera preview</span>
         <button class="wand" id="fxbtn" data-go="vprefs" aria-label="Video effects"><span class="i">auto_fix_high</span></button>
@@ -340,35 +309,14 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 
     <!-- Video preferences -->
     <section class="scr" id="vprefs">
-      <div class="vh"><button class="rb" data-go="back" aria-label="Back"><span class="i">arrow_back_ios_new</span></button><b>Video preferences</b><button class="rb rbo" id="flip" aria-label="Switch camera"><span class="i">cameraswitch</span></button></div>
-      <div class="vbody">
-        <div class="vp fxbox" id="vp"><img class="me" src="img/u5.webp" alt=""><img class="fxl fxb1" src="img/u5.webp" alt=""><img class="fxl fxo" src="img/office.webp" alt=""><img class="fxl fxc" src="img/u5cut.webp" alt="">
-          <span class="lbl">Camera preview</span><button class="campill" id="campill"><span class="i f">videocam</span><span id="camname">Front camera</span><span class="i">expand_more</span></button></div>
-        <div class="seg"><button class="on" data-tab="bg"><span class="i">image</span>Backgrounds</button><button data-tab="adj"><span class="i">tune</span>Adjustments</button></div>
-        <div id="tab-bg">
-          <div class="vsec"><h4>Choose your background</h4><div class="hint">Changes preview instantly</div>
-            <div class="bgs" id="bgs">
-              <button class="bgt" data-fx="0"><span class="th ol"><span class="ck"><span class="i">check</span></span><span class="i">block</span></span>None</button>
-              <button class="bgt" data-fx="1"><span class="th"><span class="ck"><span class="i">check</span></span><img src="img/u5.webp" alt="" style="filter:blur(4px);transform:scale(1.2)"></span>Soft blur</button>
-              <button class="bgt" data-fx="2"><span class="th"><span class="ck"><span class="i">check</span></span><img src="img/u5.webp" alt="" style="filter:blur(10px);transform:scale(1.3)"></span>Strong blur</button>
-              <button class="bgt" data-fx="3"><span class="th"><span class="ck"><span class="i">check</span></span><img src="img/office.webp" alt=""></span>Office</button>
-              <button class="bgt" data-fx="add"><span class="th ol"><span class="i">add</span></span>Add new</button>
-            </div></div>
-          <div class="vcard">
-            <div class="vrow"><span class="i">flip</span><div class="tx"><b>Mirror my video</b><small>Only affects your preview</small></div><button class="sw on" id="swMir" aria-label="Mirror my video"></button></div>
-            <div class="vrow"><span class="i">hd</span><div class="tx"><b>HD video</b><small>Sharper picture when available</small></div><button class="sw on" id="swHd" aria-label="HD video"></button></div>
-          </div>
-        </div>
-        <div id="tab-adj" style="display:none">
-          <div class="vsec"><h4>Adjust your video</h4><div class="hint">Changes preview instantly</div></div>
-          <div class="vcard">
-            <div class="vrow"><span class="i">light_mode</span><div class="tx"><b>Brightness</b><input type="range" id="rBright" min="80" max="130" value="100"></div></div>
-            <div class="vrow"><span class="i">face_retouching_natural</span><div class="tx"><b>Touch up appearance</b><input type="range" id="rSoft" min="0" max="100" value="0"></div></div>
-            <div class="vrow"><span class="i">nightlight</span><div class="tx"><b>Low light mode</b><small>Brightens a dark room</small></div><button class="sw" id="swLow" aria-label="Low light mode"></button></div>
-          </div>
-        </div>
+      <div class="vp" id="vp"><img class="me" src="img/u5.webp" alt=""><img class="blurl" src="img/u5.webp" alt="">
+        <div class="vph"><button data-go="back" aria-label="Back"><span class="i">arrow_back</span></button><b>Video Preferences</b><button id="flip" aria-label="Switch camera"><span class="i">flip_camera_android</span></button></div></div>
+      <div class="fxrow" id="fxrow">
+        <button class="fxb on" data-fx="0"><span class="i">block</span><span>None</span></button>
+        <button class="fxb" data-fx="add"><span class="i">add</span><span>Add</span></button>
+        <button class="fxb" data-fx="1"><span class="i">blur_on</span><span>Blur</span></button>
+        <button class="fxb" data-fx="2"><span class="i f">blur_on</span><span>Strong</span></button>
       </div>
-      <button class="done" data-go="back">Done</button>
     </section>
 
     <!-- People -->
@@ -458,8 +406,8 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const app=$('#app');
 const P=[{n:'Priya Nair',i:'u1'},{n:'You',i:'u5',self:1},{n:'Marcus Reed',i:'u2'},{n:'James Carter',i:'u3'},{n:'Emily Walsh',i:'u4'},{n:'Nia Thompson',i:'u6'}];
 const ini=n=>n.split(' ').map(w=>w[0]).join('').slice(0,2);
-const S={mir:true,hd:true,ll:false,br:100,sf:0,scr:null,hist:[],cam:true,mic:true,spk:true,fx:0,hand:false,cc:false,low:false,share:false,rec:false,tips:{},signed:false,stars:0,cmic:true};
-const theme={splash:'bl',onb:'',home:'nv',joining:'dk',meet:'dk',vprefs:'nv2',people:'',chat:'',commute:'dk',rate:''};
+const S={scr:null,hist:[],cam:true,mic:true,spk:true,fx:0,hand:false,cc:false,low:false,share:false,rec:false,tips:{},signed:false,stars:0,cmic:true};
+const theme={splash:'bl',onb:'',home:'nv',joining:'dk',meet:'dk',vprefs:'dk',people:'',chat:'',commute:'dk',rate:''};
 let timers=[];const later=(f,ms)=>timers.push(setTimeout(f,ms));
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),1900)}
 function closeOv(){$$('.sheet.on,.dlg.on').forEach(e=>e.classList.remove('on'));$('#dim').classList.remove('on')}
@@ -494,14 +442,14 @@ let auto=setInterval(()=>{if(S.scr==='onb')setSlide((slide+1)%3)},3500);
 // grid
 function buildGrid(){
   const g=$('#grid');g.innerHTML='';
-  P.forEach((p,k)=>{const t=document.createElement('div');t.className='tile'+(k===0?' big':'')+(p.self?' self fxbox':'');t.dataset.k=k;
-    t.innerHTML=`<img class="me" src="img/${p.i}.webp" alt="">${p.self?`<img class="fxl fxb1" src="img/u5.webp" alt=""><img class="fxl fxo" src="img/office.webp" alt=""><img class="fxl fxc" src="img/u5cut.webp" alt="">`:''}<div class="camoff"><span class="av">${p.self?'AM':ini(p.n)}</span></div><span class="hand"><span class="i f">back_hand</span></span><span class="nm">${p.n}</span><span class="mic"><span class="i">mic</span></span>`;
+  P.forEach((p,k)=>{const t=document.createElement('div');t.className='tile'+(k===0?' big':'')+(p.self?' self':'');t.dataset.k=k;
+    t.innerHTML=`<img src="img/${p.i}.webp" alt="">${p.self?`<img class="blurl" src="img/${p.i}.webp" alt="">`:''}<div class="camoff"><span class="av">${p.self?'AM':ini(p.n)}</span></div><span class="hand"><span class="i f">back_hand</span></span><span class="nm">${p.n}</span><span class="mic"><span class="i">mic</span></span>`;
     g.appendChild(t)});
   const cc=document.createElement('div');cc.className='cc';cc.id='cc';g.appendChild(cc);
   syncSelf();
 }
 function selfTile(){return $('#grid .tile.self')}
-function syncSelf(){const t=selfTile();if(!t)return;t.classList.toggle('co',!S.cam);t.classList.toggle('hd',S.hand);
+function syncSelf(){const t=selfTile();if(!t)return;t.classList.toggle('co',!S.cam);t.classList.toggle('hd',S.hand);t.classList.remove('fx1','fx2');if(S.fx)t.classList.add('fx'+S.fx);
   t.querySelector('.mic .i').textContent=S.mic?'mic':'mic_off';
   $('#grid').classList.toggle('lowdata',S.low)}
 let talker=0;const lines=[[0,'Let us start with the new join screen.'],[2,'The meeting list is much easier to scan now.'],[4,'Can we keep the green Join button?'],[0,'Yes, and the tooltip only shows once.'],[3,'Captions look clear on the dark tiles.'],[5,'Great, let us review commute mode next.']];let li=0;
@@ -517,10 +465,8 @@ function syncMeetCtl(){const set=(id,on,a,b)=>{const e=$(id);e.classList.toggle(
   $('#readyT').textContent=S.cam&&S.mic?'Your camera and mic are ready':!S.cam&&!S.mic?'You will join with camera and mic off':!S.cam?'You will join with camera off':'You will join muted';
   $$('#opts .opt').forEach(o=>{const k=o.dataset.o;o.classList.toggle('act',(k==='hand'&&S.hand)||(k==='cc'&&S.cc)||(k==='blur'&&S.fx>0)||(k==='low'&&S.low)||(k==='share'&&S.share)||(k==='rec'&&S.rec))});
   $('#shareBar').classList.toggle('on',S.share);
-  $('#fxbtn').classList.toggle('on',S.fx>0);syncFx()}
-function syncFx(){$$('.fxbox').forEach(b=>{b.classList.remove('fx1','fx2','fx3');if(S.fx)b.classList.add('fx'+S.fx);b.classList.toggle('mir',S.mir);b.classList.toggle('lo',!S.hd);
-    b.querySelectorAll('img.me,img.fxc').forEach(i=>i.style.filter=`brightness(${S.br/100*(S.ll?1.15:1)}) contrast(${1-S.sf/600}) saturate(${1+S.sf/500})`+(S.sf?` blur(${S.sf/160}px)`:''))});
-  $$('#bgs .bgt').forEach(b=>b.classList.toggle('on',b.dataset.fx==String(S.fx)));$('#swMir').classList.toggle('on',S.mir);$('#swHd').classList.toggle('on',S.hd);$('#swLow').classList.toggle('on',S.ll)}
+  $('#fxbtn').classList.toggle('on',S.fx>0)}
+function syncFx(){const v=$('#vp');v.classList.remove('fx1','fx2');if(S.fx)v.classList.add('fx'+S.fx);$$('#fxrow .fxb').forEach(b=>b.classList.toggle('on',b.dataset.fx==String(S.fx)))}
 // people list
 $('#plist').innerHTML=P.concat([{n:'Kim Young',i:''},{n:'Andrew Finn',i:''},{n:'Carol Hu',i:''}]).map((p,k)=>`<div class="prow">${p.i?`<img class="av" src="img/${p.i}.webp" alt="">`:`<span class="av">${ini(p.n)}</span>`}<span class="n">${p.self?'Arjun Mehta (You)':p.n}${k===0?'<small>Host</small>':''}</span><span class="i">${k%4===3?'mic_off':'mic'}</span><span class="i">${k%5===4?'videocam_off':'videocam'}</span></div>`).join('')+'<div class="prow" style="color:#6b7280;font-size:13px">and 17 more</div>';
 // clicks
@@ -562,12 +508,8 @@ $$('#opts .opt').forEach(o=>o.onclick=()=>{const k=o.dataset.o;
   syncMeetCtl();closeOv();
   if(k==='commute')show('commute');
   if(k==='vprefs')show('vprefs')});
-$$('#bgs .bgt').forEach(b=>b.onclick=()=>{if(b.dataset.fx==='add'){toast('Upload a photo as your background');return}S.fx=+b.dataset.fx;syncMeetCtl()});
-$$('.seg button').forEach(b=>b.onclick=()=>{$$('.seg button').forEach(x=>x.classList.toggle('on',x===b));$('#tab-bg').style.display=b.dataset.tab==='bg'?'':'none';$('#tab-adj').style.display=b.dataset.tab==='adj'?'':'none'});
-$('#swMir').onclick=()=>{S.mir=!S.mir;syncFx()};$('#swHd').onclick=()=>{S.hd=!S.hd;syncFx()};$('#swLow').onclick=()=>{S.ll=!S.ll;syncFx()};
-$('#rBright').oninput=e=>{S.br=+e.target.value;syncFx()};$('#rSoft').oninput=e=>{S.sf=+e.target.value;syncFx()};
-let back=false;$('#campill').onclick=()=>{back=!back;$('#camname').textContent=back?'Back camera':'Front camera';toast(back?'Switched to back camera':'Switched to front camera')};
-$('#flip').onclick=()=>$('#campill').click();
+$$('#fxrow .fxb').forEach(b=>b.onclick=()=>{if(b.dataset.fx==='add'){toast('Upload your own background');return}S.fx=+b.dataset.fx;syncFx();syncMeetCtl()});
+$('#flip').onclick=()=>toast('Switched camera');
 $('#cmic').onclick=()=>{S.cmic=!S.cmic;$('#cmic').classList.toggle('off',!S.cmic);$('#cmic .i').textContent=S.cmic?'mic':'mic_off';$('#clab').textContent=S.cmic?'Tap to mute':'Muted, tap to talk'};
 $('#cexit').onclick=()=>show('meet');
 $('#doLeave').onclick=()=>{closeOv();S.hand=false;S.share=false;S.rec=false;S.cc=false;syncMeetCtl();S.hist=[];show('rate',false)};
