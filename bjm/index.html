@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>BlueJeans mobile prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400,0..1,0&display=block">
+<style>
+:root{--blue:#2f5597;--blue2:#3d63a8;--deep:#25467f;--green:#3fae49;--red:#e8455b;--ink:#1f2328;--mute:#6b7280;--dark:#121417;--dark2:#1d2024;--line:#e5e7eb}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;overflow:clip;background:#fff}
+body{font-family:Roboto,system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;user-select:none}
+button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
+.i{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;font-size:24px;line-height:1;display:inline-block;white-space:nowrap;-webkit-font-feature-settings:'liga';font-feature-settings:'liga';font-variation-settings:'FILL' 0}
+.f{font-variation-settings:'FILL' 1}
+#app{position:relative;height:100%;overflow:hidden;overflow:clip;display:flex;flex-direction:column;background:#fff}
+.sb{height:28px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:13px;font-weight:500;z-index:30;position:relative}
+.sb .ic{display:flex;gap:4px}.sb .i{font-size:16px}
+#app.dk .sb{background:#000;color:#fff}
+#app.bl .sb{background:var(--deep);color:#fff}
+.nb{height:44px;flex:none;display:flex;justify-content:space-around;align-items:center;background:#fff;border-top:1px solid #eee;z-index:30;position:relative}
+.nb .i{font-size:22px;color:#555}
+#app.dk .nb{background:#000;border-color:#000}#app.dk .nb .i{color:#ddd}
+.stage{position:relative;flex:1;overflow:hidden;overflow:clip}
+.scr{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden;overflow:clip}
+.scr.on{display:flex;animation:fi .25s ease}
+@keyframes fi{from{opacity:.4}to{opacity:1}}
+/* splash */
+#splash{background:linear-gradient(180deg,#2c4f8f,#4b6fb0);color:#fff;justify-content:center;padding-left:44px}
+#splash b{font-size:42px;font-weight:500;letter-spacing:-.02em}#splash small{display:block;font-size:19px;margin-top:-2px;opacity:.95}
+/* onboarding */
+#onb{text-align:center}
+.gear{position:absolute;right:16px;top:12px;color:#c4c4c4}
+.slides{flex:none;width:100%;display:flex;transition:transform .35s ease}
+.sl{flex:0 0 100%;padding:56px 26px 0}
+.sl h2{font-size:21px;font-weight:500}
+.sl p{color:#4b5563;font-size:14.5px;line-height:1.45;margin-top:12px}
+.sl svg{width:250px;height:200px;margin-top:40px}
+.dots{display:flex;gap:6px;justify-content:center;margin:6px 0 20px}.dots i{width:6px;height:6px;border-radius:50%;background:#cbd5e1}.dots i.on{background:var(--blue)}
+.gbtn{margin:0 22px;height:46px;border-radius:24px;background:var(--blue);color:#fff;font-size:14px;font-weight:500;letter-spacing:.04em;display:flex;align-items:center;justify-content:center;gap:12px;position:relative}
+.gbtn .g{position:absolute;left:8px;width:32px;height:32px;border-radius:50%;background:#fff;display:grid;place-items:center;font-weight:700;color:var(--blue);font-size:17px}
+.lnk{color:var(--blue);font-weight:500;font-size:13.5px;letter-spacing:.03em;margin-top:18px;display:inline-block}
+.have{font-size:13px;color:#4b5563;margin-top:14px}.have u{color:var(--blue);font-weight:500;cursor:pointer}
+.terms{font-size:11px;color:#6b7280;margin:14px 30px 14px;line-height:1.4}.terms u{color:var(--blue)}
+/* overlays */
+.dim{position:absolute;inset:0;background:rgba(0,0,0,.42);display:none;z-index:20}
+.dim.on{display:block}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:14px 14px 0 0;transform:translateY(105%);transition:transform .28s ease,visibility 0s .28s;z-index:21;padding-bottom:6px;visibility:hidden}
+.sheet.on{transform:none;visibility:visible;transition:transform .28s ease}
+.sheet h4{font-size:14px;font-weight:500;color:#374151;padding:16px 18px 12px;border-bottom:1px solid #eee}
+.row{display:flex;align-items:center;gap:16px;padding:14px 18px;font-size:15px;width:100%;text-align:left}
+.row:active{background:#f3f4f6}
+.logo{width:22px;height:22px;display:grid;place-items:center;font-weight:700;font-size:15px;border-radius:4px}
+.dlg{position:absolute;left:24px;right:24px;top:50%;transform:translate(0,-50%) scale(.96);background:#fff;border-radius:10px;padding:20px;z-index:22;display:none;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.dlg.on{display:block;animation:pop .2s ease forwards}
+@keyframes pop{to{transform:translate(0,-50%) scale(1)}}
+.dlg h3{font-size:18px;font-weight:500;text-align:center}
+.dlg .sub{font-size:13px;color:#6b7280;text-align:center;margin-top:4px}
+.acct{display:flex;gap:12px;align-items:center;padding:12px 4px;border-bottom:1px solid #f0f0f0;width:100%;text-align:left}
+.av{width:34px;height:34px;border-radius:50%;object-fit:cover;flex:none;background:#c7d2fe;display:grid;place-items:center;font-size:13px;font-weight:500;color:#1e3a8a}
+.acct b{display:block;font-weight:500;font-size:14px}.acct small{font-size:12px;color:#6b7280}
+.bjlogo{width:44px;height:30px;margin:0 auto 6px;display:block;background:var(--blue);color:#fff;border-radius:5px;font-weight:700;display:grid;place-items:center}
+.spin{width:26px;height:26px;border-radius:50%;border:3px solid #dbe4f3;border-top-color:var(--blue);animation:rot 0.8s linear infinite;margin:18px auto 4px}
+@keyframes rot{to{transform:rotate(360deg)}}
+/* home */
+#home{background:var(--blue)}
+.prev{position:relative;height:56%;flex:none;overflow:hidden;background:#222}
+.prev img.me,.vp img.me{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:52% 40%}
+.prev .tr{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:12px}
+.cbtn{width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;display:grid;place-items:center;backdrop-filter:blur(4px)}
+.cbtn.off{background:#fff;color:var(--red)}
+.prev .bc{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:18px}
+.prev .bc .cbtn{width:52px;height:52px}
+.camoff{position:absolute;inset:0;background:#2a2d33;display:none;place-items:center;color:#9ca3af}
+.camoff .av{width:84px;height:84px;font-size:30px}
+.prev.co .camoff,.tile.co .camoff{display:grid}
+.mlist{flex:1;overflow:auto;color:#fff}
+.mt{display:flex;align-items:center;gap:14px;padding:16px 16px;border-bottom:1px solid rgba(255,255,255,.14)}
+.tag{font-size:10.5px;padding:3px 7px;border-radius:5px;background:rgba(0,0,0,.25);white-space:nowrap;width:78px;text-align:center;flex:none}
+.tag.live{background:#2c8a3a}
+.mt b{display:block;font-weight:500;font-size:16px}.mt small{font-size:13.5px;opacity:.85}
+.join{margin-left:auto;background:var(--green);color:#fff;font-weight:500;border-radius:20px;padding:9px 18px;font-size:14px}
+.hbar{flex:none;background:#fff;display:flex;justify-content:space-around;padding:12px 0 10px;font-size:15px}
+.hbar button{display:flex;gap:8px;align-items:center}
+/* tooltip */
+.tip{position:absolute;z-index:25;background:#fff;border-radius:8px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.25);font-size:13px;line-height:1.35;width:210px;display:none;color:var(--ink)}
+.tip.on{display:block;animation:fi .3s}
+.tip .got{display:block;margin:10px 0 0 auto;background:#2c8a3a;color:#fff;font-weight:500;font-size:12px;border-radius:14px;padding:5px 12px}
+.tip:after{content:"";position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg)}
+.tip.up:after{top:-5px;right:22px}.tip.down:after{bottom:-5px;left:50%;margin-left:-6px}
+/* join with id */
+.field{margin:16px 18px 6px;border:1.5px solid var(--blue);border-radius:8px;padding:10px 12px}
+.field small{font-size:11px;color:var(--blue)}.field div{font-size:18px;letter-spacing:.06em;margin-top:2px}
+.pbtn{display:block;margin:12px 18px 10px;height:44px;border-radius:22px;background:var(--blue);color:#fff;font-weight:500;width:calc(100% - 36px)}
+/* joining */
+#joining{background:var(--dark);color:#fff;align-items:center}
+#joining .t{margin-top:12px;font-size:14px;font-weight:500}
+.ring{margin-top:38%;width:96px;height:96px;border-radius:50%;border:2px solid #3a3f46;position:relative;display:grid;place-items:center}
+.ring:after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid transparent;border-top-color:#fff;animation:rot 1s linear infinite}
+.ring .i{font-size:36px;color:#cbd5e1}
+#joining .jl{font-size:13px;color:#9ca3af;margin-top:14px}
+#joining .bc{margin-top:auto;margin-bottom:26px;display:flex;gap:20px}
+/* meeting */
+#meet{background:var(--dark);color:#fff}
+.mh{display:flex;align-items:center;gap:8px;padding:8px 10px 8px 14px;flex:none}
+.mh .ttl{font-size:15px;font-weight:500;display:flex;align-items:center}
+.mh .sp{flex:1}
+.pill{display:flex;align-items:center;gap:6px;background:#2a2e34;border-radius:16px;padding:6px 11px;font-size:13.5px}
+.pill .i{font-size:19px}
+.grid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1.55fr 1fr 1fr;gap:3px;padding:0 3px;min-height:0;position:relative}
+.tile{position:relative;overflow:hidden;border-radius:6px;background:#2a2d33;border:2px solid transparent;transition:border-color .3s}
+.tile.big{grid-column:1/-1}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 35%}
+.tile .nm{position:absolute;left:6px;bottom:5px;font-size:11px;background:rgba(0,0,0,.45);padding:2px 7px;border-radius:9px;display:flex;align-items:center;gap:3px}
+.tile .mic{position:absolute;right:6px;bottom:5px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.45);display:grid;place-items:center}
+.tile .mic .i{font-size:14px}
+.tile.talk{border-color:#46c35a}
+.tile.talk .mic{background:#2c8a3a}
+.tile .hand{position:absolute;right:6px;top:6px;width:28px;height:28px;border-radius:50%;background:#3b6fd8;display:none;place-items:center}
+.tile .hand .i{font-size:18px}
+.tile.hd .hand{display:grid}
+.tile .blurl{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 35%;filter:blur(7px);transform:scale(1.08);-webkit-mask-image:radial-gradient(ellipse 30% 46% at 50% 52%,transparent 62%,#000 100%);mask-image:radial-gradient(ellipse 30% 46% at 50% 52%,transparent 62%,#000 100%);display:none}
+.fx1 .blurl{display:block;filter:blur(4px)}.fx2 .blurl{display:block;filter:blur(10px)}
+.lowdata .tile:not(.self) img{display:none}
+.lowdata .tile:not(.self) .camoff{display:grid}
+.float{position:absolute;font-size:34px;pointer-events:none;animation:up 2.2s ease-out forwards;z-index:5}
+@keyframes up{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:1;transform:translateY(-10px) scale(1)}100%{transform:translateY(-170px) scale(1.1);opacity:0}}
+.cc{position:absolute;left:10px;right:10px;bottom:8px;background:rgba(0,0,0,.72);border-radius:8px;padding:8px 10px;font-size:13.5px;line-height:1.35;display:none;z-index:4}
+.cc b{color:#93c5fd;font-weight:500}
+.cc.on{display:block}
+.share{display:none;background:#c0392b;color:#fff;font-size:13px;padding:7px 12px;align-items:center;gap:8px;flex:none}
+.share.on{display:flex}.share button{margin-left:auto;background:#fff;color:#c0392b;border-radius:12px;padding:3px 10px;font-weight:500;font-size:12px}
+.pg{display:flex;gap:5px;justify-content:center;padding:6px 0 2px}.pg i{width:5px;height:5px;border-radius:50%;background:#4b5563}.pg i.on{background:#fff}
+.ctl{display:flex;justify-content:space-around;padding:8px 6px 10px;flex:none}
+.ctl button{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11px;color:#d1d5db;width:62px}
+.ctl .c{width:48px;height:48px;border-radius:50%;background:#2a2e34;display:grid;place-items:center;color:#fff}
+.ctl .off .c{background:#fff;color:var(--red)}
+.ctl .lv .c{background:var(--red)}
+.grab{width:36px;height:4px;border-radius:2px;background:#4b5563;margin:2px auto 0}
+/* more sheet (light) */
+.more h5{font-size:12.5px;color:#4b5563;font-weight:500;padding:14px 18px 8px}
+.emo{display:flex;justify-content:space-between;padding:4px 16px 8px;font-size:30px}
+.emo button{width:44px;height:44px;border-radius:50%;display:grid;place-items:center}
+.emo button:active{background:#f3f4f6}
+.opts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 4px;padding:6px 10px 10px}
+.opt{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11.5px;color:#374151;text-align:center;line-height:1.2}
+.opt .c{width:48px;height:48px;border-radius:50%;background:#eef1f5;display:grid;place-items:center;color:#374151}
+.opt.act .c{background:var(--blue);color:#fff}
+.aud{display:flex;gap:12px;padding:4px 18px 12px}
+.aud button{flex:1;height:40px;border-radius:20px;border:1.5px solid var(--blue);color:var(--blue);font-weight:500;letter-spacing:.04em;font-size:14px}
+/* video prefs */
+#vprefs{background:#000;color:#fff}
+.vp{position:relative;flex:1;overflow:hidden}
+.vp .blurl{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:52% 40%;transform:scale(1.06);-webkit-mask-image:radial-gradient(ellipse 34% 44% at 50% 50%,transparent 64%,#000 100%);mask-image:radial-gradient(ellipse 34% 44% at 50% 50%,transparent 64%,#000 100%);display:none}
+.vp.fx1 .blurl{display:block;filter:blur(5px)}.vp.fx2 .blurl{display:block;filter:blur(12px)}
+.vph{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;padding:12px 12px;background:linear-gradient(rgba(0,0,0,.45),transparent);z-index:2}
+.vph b{flex:1;text-align:center;font-weight:400;font-size:17px}
+.fxrow{display:flex;gap:10px;padding:12px 12px;background:#000;overflow-x:auto;flex:none}
+.fxb{flex:none;width:62px;height:62px;border-radius:8px;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11.5px;background:#1c1f24;color:#e5e7eb;overflow:hidden;position:relative}
+.fxb.on{border-color:#5b8def}
+.fxb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.75}
+.fxb span{position:relative}
+/* panels */
+.panel{background:#fff;color:var(--ink)}
+.ph{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid #eee;flex:none}
+.ph b{font-weight:500;font-size:17px;flex:1}
+.plist{flex:1;overflow:auto}
+.prow{display:flex;align-items:center;gap:12px;padding:10px 16px}
+.prow .n{flex:1;font-size:15px}.prow .n small{display:block;color:#6b7280;font-size:12px}
+.prow .i{color:#6b7280;font-size:21px}
+.chat{flex:1;overflow:auto;padding:12px 14px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:80%}.msg small{font-size:11.5px;color:#6b7280}.msg p{background:#f1f3f6;border-radius:12px;padding:8px 11px;font-size:14px;margin-top:3px;line-height:1.35}
+.msg.me{align-self:flex-end;text-align:right}.msg.me p{background:#dbe6fb;text-align:left}
+.cin{display:flex;gap:8px;padding:10px 12px;border-top:1px solid #eee;flex:none}
+.cin input{flex:1;border:1px solid #d1d5db;border-radius:20px;padding:9px 14px;font:inherit;font-size:14px;outline:none}
+.cin button{color:var(--blue)}
+/* commute */
+#commute{background:#0f1720;color:#fff;align-items:center;text-align:center}
+#commute .cmh{margin-top:26px;font-size:13px;color:#9ca3af;letter-spacing:.08em}
+#commute h3{font-size:22px;font-weight:500;margin-top:6px}
+#commute .who{margin-top:12px;color:#cbd5e1;font-size:14px}
+.bigmic{margin-top:48px;width:150px;height:150px;border-radius:50%;background:#1f2a37;display:grid;place-items:center;border:3px solid #2f3e4f}
+.bigmic .i{font-size:64px}
+.bigmic.off{background:#fff;color:var(--red)}
+#commute .lab{margin-top:14px;font-size:15px;color:#cbd5e1}
+#commute .cmb{margin-top:auto;margin-bottom:22px;display:flex;flex-direction:column;gap:12px;width:calc(100% - 44px)}
+#commute .cmb button{height:52px;border-radius:26px;font-size:16px;font-weight:500}
+.exit{background:#fff;color:#111}.leave{background:var(--red)}
+/* leave + feedback */
+.lsheet .lv2{display:block;width:calc(100% - 36px);margin:6px 18px;height:46px;border-radius:23px;font-weight:500;font-size:15px}
+#rate{background:#fff;align-items:center;text-align:center;padding:0 28px}
+#rate h3{font-size:21px;font-weight:500;margin-top:30%}
+#rate p{color:#6b7280;font-size:14px;margin-top:8px}
+.stars{display:flex;gap:6px;margin-top:26px}
+.stars button .i{font-size:40px;color:#cbd5e1}
+.stars button.on .i{color:#f5b301;font-variation-settings:'FILL' 1}
+#rate .pbtn{margin-top:auto;width:100%}
+#rate .skip{margin-bottom:24px;color:var(--blue);font-weight:500}
+.toast{position:absolute;left:50%;bottom:80px;transform:translateX(-50%);background:#2b2f36;color:#fff;font-size:13px;padding:9px 14px;border-radius:18px;z-index:40;white-space:nowrap;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="sb"><span>12:30</span><span class="ic"><span class="i f">signal_wifi_4_bar</span><span class="i f">signal_cellular_alt</span><span class="i f">battery_full</span></span></div>
+  <div class="stage" id="stage">
+
+    <!-- Splash -->
+    <section class="scr" id="splash"><div><b>BlueJeans</b><small>by Verizon</small></div></section>
+
+    <!-- Onboarding -->
+    <section class="scr" id="onb">
+      <span class="i gear">settings</span>
+      <div style="overflow:hidden;flex:1;display:flex"><div class="slides" id="slides">
+        <div class="sl"><h2>Welcome to BlueJeans!</h2><p>Meet coworkers over fast and secure video conferences on the go.</p>
+          <svg viewBox="0 0 250 200"><rect x="30" y="30" width="150" height="100" rx="6" fill="#fff" stroke="#3d63a8" stroke-width="5"/><rect x="88" y="130" width="34" height="18" fill="#3d63a8"/><rect x="70" y="146" width="70" height="6" rx="3" fill="#3d63a8"/><circle cx="105" cy="68" r="15" fill="#8a4b2f"/><path d="M78 128c3-22 15-32 27-32s24 10 27 32z" fill="#4f8fe0"/><rect x="160" y="80" width="58" height="96" rx="7" fill="#fff" stroke="#3d63a8" stroke-width="5"/><circle cx="189" cy="122" r="11" fill="#3a2a22"/><path d="M168 172c2-16 10-24 21-24s19 8 21 24z" fill="#f2b33d"/><path d="M40 22l-8-8M52 16l-2-10M28 34l-10-4" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/></svg></div>
+        <div class="sl"><h2>Unlimited meeting minutes</h2><p>Meet without time limits. Continue your meetings for as long as you want.</p>
+          <svg viewBox="0 0 250 200"><rect x="62" y="28" width="160" height="110" rx="6" fill="#fff" stroke="#3d63a8" stroke-width="5"/><rect x="132" y="22" width="16" height="8" rx="2" fill="#3d63a8"/><circle cx="150" cy="70" r="15" fill="#d68b5a"/><path d="M150 52c-12 0-16 8-15 14 4-6 26-6 30 0 1-6-3-14-15-14z" fill="#b5532d"/><path d="M118 136c3-26 18-36 32-36s29 10 32 36z" fill="#4f8fe0"/><circle cx="70" cy="140" r="40" fill="#fff" stroke="#3d63a8" stroke-width="5"/><path d="M70 116v24l14 10" stroke="#3d63a8" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M30 182l-8 6M44 190l-2 8" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/></svg></div>
+        <div class="sl"><h2>Immersive meetings with Dolby</h2><p>Enhance your meeting experience with world-class audio quality from Dolby.</p>
+          <svg viewBox="0 0 250 200"><rect x="70" y="18" width="78" height="128" rx="9" fill="#fff" stroke="#3d63a8" stroke-width="5"/><rect x="98" y="14" width="22" height="8" rx="3" fill="#3d63a8"/><circle cx="109" cy="66" r="14" fill="#5a3a2a"/><path d="M80 142c2-28 14-40 29-40s27 12 29 40z" fill="#f2b33d"/><rect x="118" y="108" width="86" height="54" rx="7" fill="#fff" stroke="#3d63a8" stroke-width="5"/><g stroke="#f59e0b" stroke-width="3" stroke-linecap="round"><path d="M136 135v0M144 128v14M152 122v26M160 130v10M168 124v22M176 131v8M186 135v0"/></g><text x="161" y="182" font-size="11" fill="#3d63a8" text-anchor="middle" font-family="Roboto" font-weight="700">Dolby Voice</text></svg></div>
+      </div></div>
+      <div class="dots" id="dots"><i class="on"></i><i></i><i></i></div>
+      <button class="gbtn" data-go="google"><span class="g">G</span>CONTINUE WITH GOOGLE</button>
+      <div><button class="lnk" data-go="other">OTHER SIGN IN OPTIONS</button></div>
+      <div class="have">Already have a meeting ID? <u data-go="joinid">Join with ID</u></div>
+      <div class="terms">By continuing, I confirm that I have read and agree to the <u>Terms of Service</u> and <u>Privacy Policy</u>.</div>
+    </section>
+
+    <!-- Home -->
+    <section class="scr" id="home">
+      <div class="prev" id="hprev">
+        <img class="me" src="img/u5.webp" alt="">
+        <div class="camoff"><span class="av">AM</span></div>
+        <div class="tr"><button class="cbtn" data-go="settings" aria-label="Settings"><span class="i">settings</span></button><button class="cbtn" id="fxbtn" data-go="vprefs" aria-label="Video effects"><span class="i">blur_on</span></button></div>
+        <div class="bc"><button class="cbtn" id="hcam" aria-label="Camera"><span class="i">videocam</span></button><button class="cbtn" id="hmic" aria-label="Mic"><span class="i">mic</span></button></div>
+      </div>
+      <div class="mlist">
+        <div class="mt"><span class="tag live">In Progress</span><div><b>UX Weekly</b><small>10:00 to 11:00 AM</small></div><button class="join" data-go="joining">JOIN</button></div>
+        <div class="mt"><span class="tag">In 45 mins</span><div><b>Daily Stand up</b><small>11:15 AM to 11:30 AM</small></div></div>
+        <div class="mt"><span class="tag">In 2:00 hrs</span><div><b>Design Demo Sessions</b><small>12:00 to 12:30 PM</small></div></div>
+      </div>
+      <div class="hbar"><button data-go="joinid"><span class="i">event_available</span>Join with ID</button><button data-go="start"><span class="i">add_to_queue</span>Start a Meeting</button></div>
+    </section>
+
+    <!-- Joining -->
+    <section class="scr" id="joining">
+      <div class="ring"><span class="i">videocam</span></div>
+      <div class="t">Joining UX Weekly</div><div class="jl">Connecting audio and video</div>
+      <div class="bc"><span class="cbtn" style="background:#2a2e34"><span class="i">videocam</span></span><span class="cbtn" style="background:#2a2e34"><span class="i">mic</span></span><button class="cbtn" style="background:var(--red)" data-go="home"><span class="i">call_end</span></button></div>
+    </section>
+
+    <!-- Meeting -->
+    <section class="scr" id="meet">
+      <div class="share" id="shareBar"><span class="i" style="font-size:18px">screen_share</span>You are sharing your screen<button id="stopShare">Stop</button></div>
+      <div class="mh"><span class="ttl">UX Weekly<span class="i" style="font-size:20px">expand_more</span></span><span class="sp"></span>
+        <button class="pill" data-go="people"><span class="i">group</span>26</button><button class="pill" data-go="chat"><span class="i">chat</span><span id="chatN">12</span></button></div>
+      <div class="grid" id="grid"></div>
+      <div class="pg"><i class="on"></i><i></i><i></i></div>
+      <div class="grab"></div>
+      <div class="ctl">
+        <button class="lv" data-go="leave"><span class="c"><span class="i">logout</span></span>Leave</button>
+        <button id="mcam"><span class="c"><span class="i">videocam</span></span>Video</button>
+        <button id="mmic"><span class="c"><span class="i">mic</span></span>Mic</button>
+        <button id="mspk"><span class="c"><span class="i">volume_up</span></span>Speaker</button>
+        <button data-go="more"><span class="c"><span class="i">more_vert</span></span>More</button>
+      </div>
+    </section>
+
+    <!-- Video preferences -->
+    <section class="scr" id="vprefs">
+      <div class="vp" id="vp"><img class="me" src="img/u5.webp" alt=""><img class="blurl" src="img/u5.webp" alt="">
+        <div class="vph"><button data-go="back" aria-label="Back"><span class="i">arrow_back</span></button><b>Video Preferences</b><button id="flip" aria-label="Switch camera"><span class="i">flip_camera_android</span></button></div></div>
+      <div class="fxrow" id="fxrow">
+        <button class="fxb on" data-fx="0"><span class="i">block</span><span>None</span></button>
+        <button class="fxb" data-fx="add"><span class="i">add</span><span>Add</span></button>
+        <button class="fxb" data-fx="1"><span class="i">blur_on</span><span>Blur</span></button>
+        <button class="fxb" data-fx="2"><span class="i f">blur_on</span><span>Strong</span></button>
+      </div>
+    </section>
+
+    <!-- People -->
+    <section class="scr panel" id="people">
+      <div class="ph"><button data-go="back" aria-label="Back"><span class="i">arrow_back</span></button><b>Participants (26)</b><span class="i">person_add</span></div>
+      <div class="plist" id="plist"></div>
+    </section>
+
+    <!-- Chat -->
+    <section class="scr panel" id="chat">
+      <div class="ph"><button data-go="back" aria-label="Back"><span class="i">arrow_back</span></button><b>Meeting chat</b></div>
+      <div class="chat" id="chatlog">
+        <div class="msg"><small>Priya Nair</small><p>Sharing the new onboarding flow in a minute.</p></div>
+        <div class="msg"><small>Marcus Reed</small><p>Can we look at the join screen first?</p></div>
+        <div class="msg"><small>Emily Walsh</small><p>+1, the tooltips look great on small phones.</p></div>
+      </div>
+      <form class="cin" id="cform"><input id="cinput" placeholder="Send a message to everyone" autocomplete="off"><button aria-label="Send"><span class="i f">send</span></button></form>
+    </section>
+
+    <!-- Commute -->
+    <section class="scr" id="commute">
+      <div class="cmh">COMMUTE MODE</div><h3>UX Weekly</h3><div class="who" id="cwho">Priya Nair is talking</div>
+      <button class="bigmic" id="cmic"><span class="i">mic</span></button><div class="lab" id="clab">Tap to mute</div>
+      <div class="cmb"><button class="exit" id="cexit">Exit commute mode</button><button class="leave" data-go="leave">Leave meeting</button></div>
+    </section>
+
+    <!-- Rate -->
+    <section class="scr" id="rate">
+      <h3>How was your meeting?</h3><p>Your rating helps us improve call quality.</p>
+      <div class="stars" id="stars"><button data-s="1"><span class="i">star</span></button><button data-s="2"><span class="i">star</span></button><button data-s="3"><span class="i">star</span></button><button data-s="4"><span class="i">star</span></button><button data-s="5"><span class="i">star</span></button></div>
+      <p id="rtext" style="min-height:20px"></p>
+      <button class="pbtn" id="rsend">Submit</button><button class="skip" id="rskip">Skip</button>
+    </section>
+
+    <!-- overlays -->
+    <div class="dim" id="dim"></div>
+    <div class="sheet" id="sh-other"><h4>Other sign in options</h4>
+      <button class="row" data-go="google"><span class="logo" style="color:#4285f4">G</span>Continue with Google</button>
+      <button class="row" data-go="google"><span class="logo" style="background:linear-gradient(90deg,#f25022 50%,#7fba00 50%)"></span>Continue with Microsoft</button>
+      <button class="row" data-go="google"><span class="logo" style="background:#0a66c2;color:#fff;font-size:12px">in</span>Continue with LinkedIn</button>
+      <button class="row" data-go="google"><span class="logo" style="color:#e01e5a">#</span>Continue with Slack</button>
+      <button class="row" data-go="google"><span class="i" style="font-size:22px;color:#555">person_add</span>Continue with Email</button>
+    </div>
+    <div class="dlg" id="dl-google"><span class="bjlogo">BJ</span><h3>Choose an account</h3><div class="sub">to continue to BlueJeans</div>
+      <div id="acwrap" style="margin-top:12px">
+        <button class="acct" id="acct1"><img class="av" src="img/u5.webp" alt=""><span><b>Arjun Mehta</b><small>arjun.mehta@example.com</small></span></button>
+        <button class="acct" id="acct2"><span class="av">AM</span><span><b>Arjun Mehta</b><small>arjun@studio.example</small></span></button>
+        <button class="acct" style="border:0"><span class="i" style="width:34px;text-align:center;color:#555">person_add</span><span style="font-size:14px">Add another account</span></button>
+      </div>
+      <div id="acload" style="display:none;text-align:center"><div class="spin"></div><div class="sub">Signing you in</div></div>
+    </div>
+    <div class="sheet" id="sh-joinid"><h4>Join with meeting ID</h4>
+      <div class="field"><small>Meeting ID</small><div>254 323 414</div></div>
+      <div class="field" style="border-color:#d1d5db"><small style="color:#6b7280">Passcode (optional)</small><div style="color:#9ca3af">••••</div></div>
+      <button class="pbtn" data-go="joining">Join meeting</button>
+    </div>
+    <div class="sheet more" id="sh-more"><div class="grab" style="margin-top:8px;background:#d1d5db"></div>
+      <h5>Reactions</h5>
+      <div class="emo" id="emo"><button>👍</button><button>👏</button><button>😍</button><button>😀</button><button>😂</button><button>🎉</button></div>
+      <h5>Switch audio</h5>
+      <div class="aud"><button id="dialin">DIAL IN</button><button id="callme">CALL ME</button></div>
+      <h5>More options</h5>
+      <div class="opts" id="opts">
+        <button class="opt" data-o="hand"><span class="c"><span class="i">back_hand</span></span>Raise hand</button>
+        <button class="opt" data-o="cc"><span class="c"><span class="i">closed_caption</span></span>Closed captions</button>
+        <button class="opt" data-o="blur"><span class="c"><span class="i">blur_on</span></span>Video blur</button>
+        <button class="opt" data-o="commute"><span class="c"><span class="i">directions_car</span></span>Commute mode</button>
+        <button class="opt" data-o="share"><span class="c"><span class="i">screen_share</span></span>Share screen</button>
+        <button class="opt" data-o="vprefs"><span class="c"><span class="i">video_settings</span></span>Video preferences</button>
+        <button class="opt" data-o="low"><span class="c"><span class="i">network_check</span></span>Low data</button>
+        <button class="opt" data-o="rec"><span class="c"><span class="i">radio_button_checked</span></span>Start recording</button>
+      </div>
+    </div>
+    <div class="sheet lsheet" id="sh-leave"><h4>Leave UX Weekly?</h4><p style="font-size:13.5px;color:#6b7280;padding:12px 18px 6px">The meeting will continue for everyone else.</p>
+      <button class="lv2" style="background:var(--red);color:#fff" id="doLeave">Leave meeting</button>
+      <button class="lv2" style="color:var(--blue)" data-go="close">Cancel</button>
+    </div>
+    <div class="tip up" id="tip-home" style="right:12px;top:118px">Add video effects to enhance your self view.<button class="got" data-tip>GOT IT</button></div>
+    <div class="tip down" id="tip-meet" style="left:50%;margin-left:-105px;bottom:96px">Tap More for reactions, captions, video blur and other options.<button class="got" data-tip>GOT IT</button></div>
+    <div class="toast" id="toast"></div>
+  </div>
+  <div class="nb"><button data-go="back" aria-label="Back"><span class="i">arrow_back_ios_new</span></button><button data-go="homebtn" aria-label="Home"><span class="i">radio_button_unchecked</span></button><button aria-label="Recent"><span class="i">crop_square</span></button></div>
+</div>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const app=$('#app');
+const P=[{n:'Priya Nair',i:'u1'},{n:'You',i:'u5',self:1},{n:'Marcus Reed',i:'u2'},{n:'James Carter',i:'u3'},{n:'Emily Walsh',i:'u4'},{n:'Nia Thompson',i:'u6'}];
+const ini=n=>n.split(' ').map(w=>w[0]).join('').slice(0,2);
+const S={scr:null,hist:[],cam:true,mic:true,spk:true,fx:0,hand:false,cc:false,low:false,share:false,rec:false,tips:{},signed:false,stars:0,cmic:true};
+const theme={splash:'bl',onb:'',home:'bl',joining:'dk',meet:'dk',vprefs:'dk',people:'',chat:'',commute:'dk',rate:''};
+let timers=[];const later=(f,ms)=>timers.push(setTimeout(f,ms));
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),1900)}
+function closeOv(){$$('.sheet.on,.dlg.on').forEach(e=>e.classList.remove('on'));$('#dim').classList.remove('on')}
+function ov(id){closeOv();$('#dim').classList.add('on');$(id).classList.add('on')}
+function show(id,push=true){
+  closeOv();$$('.tip').forEach(t=>t.classList.remove('on'));
+  if(push&&S.scr&&S.scr!==id)S.hist.push(S.scr);
+  $$('.scr').forEach(s=>s.classList.toggle('on',s.id===id));S.scr=id;
+  app.className=theme[id]||'';
+  if(id==='home'&&!S.tips.home)setTimeout(()=>{if(S.scr==='home')$('#tip-home').classList.add('on')},700);
+  if(id==='meet'&&!S.tips.meet)setTimeout(()=>{if(S.scr==='meet')$('#tip-meet').classList.add('on')},1200);
+  if(id==='vprefs')syncFx();
+}
+window.go=k=>{ // used by the portfolio page
+  timers.forEach(clearTimeout);timers=[];S.hist=[];
+  if(k==='start'){S.signed=false;show('splash',false);later(()=>show('onb',false),1300)}
+  else if(k==='home')show('home',false);
+  else if(k==='meet'){show('meet',false)}
+  else if(k==='more'){show('meet',false);setTimeout(()=>ov('#sh-more'),150)}
+  else if(k==='vprefs'){S.hist=['meet'];show('vprefs',false)}
+  else if(k==='commute')show('commute',false);
+  else if(k==='leave'){show('meet',false);setTimeout(()=>ov('#sh-leave'),150)}
+};
+// onboarding carousel
+let slide=0,sx=null;
+function setSlide(n){slide=Math.max(0,Math.min(2,n));$('#slides').style.transform=`translateX(${-100*slide}%)`;$$('#dots i').forEach((d,i)=>d.classList.toggle('on',i===slide))}
+const sl=$('#slides');
+sl.addEventListener('pointerdown',e=>sx=e.clientX);
+sl.addEventListener('pointerup',e=>{if(sx==null)return;const dx=e.clientX-sx;sx=null;if(Math.abs(dx)>30)setSlide(slide+(dx<0?1:-1));else setSlide((slide+1)%3)});
+$$('#dots i').forEach((d,i)=>d.onclick=()=>setSlide(i));
+let auto=setInterval(()=>{if(S.scr==='onb')setSlide((slide+1)%3)},3500);
+// grid
+function buildGrid(){
+  const g=$('#grid');g.innerHTML='';
+  P.forEach((p,k)=>{const t=document.createElement('div');t.className='tile'+(k===0?' big':'')+(p.self?' self':'');t.dataset.k=k;
+    t.innerHTML=`<img src="img/${p.i}.webp" alt="">${p.self?`<img class="blurl" src="img/${p.i}.webp" alt="">`:''}<div class="camoff"><span class="av">${p.self?'AM':ini(p.n)}</span></div><span class="hand"><span class="i f">back_hand</span></span><span class="nm">${p.n}</span><span class="mic"><span class="i">mic</span></span>`;
+    g.appendChild(t)});
+  const cc=document.createElement('div');cc.className='cc';cc.id='cc';g.appendChild(cc);
+  syncSelf();
+}
+function selfTile(){return $('#grid .tile.self')}
+function syncSelf(){const t=selfTile();if(!t)return;t.classList.toggle('co',!S.cam);t.classList.toggle('hd',S.hand);t.classList.remove('fx1','fx2');if(S.fx)t.classList.add('fx'+S.fx);
+  t.querySelector('.mic .i').textContent=S.mic?'mic':'mic_off';
+  $('#grid').classList.toggle('lowdata',S.low)}
+let talker=0;const lines=[[0,'Let us start with the new join screen.'],[2,'The meeting list is much easier to scan now.'],[4,'Can we keep the green Join button?'],[0,'Yes, and the tooltip only shows once.'],[3,'Captions look clear on the dark tiles.'],[5,'Great, let us review commute mode next.']];let li=0;
+setInterval(()=>{if(S.scr!=='meet'&&S.scr!=='commute')return;const [k,txt]=lines[li++%lines.length];
+  $$('#grid .tile').forEach(t=>t.classList.toggle('talk',+t.dataset.k===k));
+  const cc=$('#cc');if(cc){cc.innerHTML=`<b>${P[k].n}:</b> ${txt}`;cc.classList.toggle('on',S.cc)}
+  $('#cwho').textContent=P[k].n+' is talking'},2600);
+function syncMeetCtl(){const set=(id,on,a,b)=>{const e=$(id);e.classList.toggle('off',!on);e.querySelector('.c .i').textContent=on?a:b};
+  set('#mcam',S.cam,'videocam','videocam_off');set('#mmic',S.mic,'mic','mic_off');set('#mspk',S.spk,'volume_up','volume_off');syncSelf();
+  $('#hprev').classList.toggle('co',!S.cam);
+  [['#hcam',S.cam,'videocam','videocam_off'],['#hmic',S.mic,'mic','mic_off']].forEach(([id,on,a,b])=>{const e=$(id);e.classList.toggle('off',!on);e.firstChild.textContent=on?a:b});
+  $$('#opts .opt').forEach(o=>{const k=o.dataset.o;o.classList.toggle('act',(k==='hand'&&S.hand)||(k==='cc'&&S.cc)||(k==='blur'&&S.fx>0)||(k==='low'&&S.low)||(k==='share'&&S.share)||(k==='rec'&&S.rec))});
+  $('#shareBar').classList.toggle('on',S.share);
+  const ib=$('#fxbtn');ib.style.background=S.fx?'#3b6fd8':''}
+function syncFx(){const v=$('#vp');v.classList.remove('fx1','fx2');if(S.fx)v.classList.add('fx'+S.fx);$$('#fxrow .fxb').forEach(b=>b.classList.toggle('on',b.dataset.fx==String(S.fx)))}
+// people list
+$('#plist').innerHTML=P.concat([{n:'Kim Young',i:''},{n:'Andrew Finn',i:''},{n:'Carol Hu',i:''}]).map((p,k)=>`<div class="prow">${p.i?`<img class="av" src="img/${p.i}.webp" alt="">`:`<span class="av">${ini(p.n)}</span>`}<span class="n">${p.self?'Arjun Mehta (You)':p.n}${k===0?'<small>Host</small>':''}</span><span class="i">${k%4===3?'mic_off':'mic'}</span><span class="i">${k%5===4?'videocam_off':'videocam'}</span></div>`).join('')+'<div class="prow" style="color:#6b7280;font-size:13px">and 17 more</div>';
+// clicks
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]');
+  if(e.target.closest('[data-tip]')){const t=e.target.closest('.tip');t.classList.remove('on');S.tips[t.id.slice(4)]=1;return}
+  if(e.target.id==='dim'){closeOv();return}
+  if(!g)return;const k=g.dataset.go;
+  if(k==='other')return ov('#sh-other');
+  if(k==='google'){ov('#dl-google');$('#acwrap').style.display='';$('#acload').style.display='none';return}
+  if(k==='joinid')return ov('#sh-joinid');
+  if(k==='start'){toast('Starting your personal meeting');later(()=>show('joining'),500);later(()=>show('meet'),2400);return}
+  if(k==='joining'){show('joining');later(()=>{S.hist=['home'];show('meet',false)},2000);return}
+  if(k==='more')return ov('#sh-more');
+  if(k==='leave'){if(S.scr==='commute'){show('meet');}setTimeout(()=>ov('#sh-leave'),50);return}
+  if(k==='close')return closeOv();
+  if(k==='back'){if($('.sheet.on,.dlg.on'))return closeOv();const p=S.hist.pop();if(p&&p!=='joining'&&p!=='splash')show(p,false);return}
+  if(k==='homebtn'){if(S.signed){S.hist=[];show('home',false)}return}
+  if(k==='settings')return toast('Settings: audio, video and notifications');
+  if(k==='vprefs'){show('vprefs');return}
+  show(k);
+});
+$$('.acct').forEach(a=>a.onclick=()=>{$('#acwrap').style.display='none';$('#acload').style.display='';later(()=>{S.signed=true;S.hist=[];show('home',false)},1200)});
+$('#hcam').onclick=()=>{S.cam=!S.cam;syncMeetCtl()};$('#hmic').onclick=()=>{S.mic=!S.mic;syncMeetCtl()};
+$('#mcam').onclick=()=>{S.cam=!S.cam;syncMeetCtl();toast(S.cam?'Camera on':'Camera off')};
+$('#mmic').onclick=()=>{S.mic=!S.mic;syncMeetCtl();toast(S.mic?'Unmuted':'Muted')};
+$('#mspk').onclick=()=>{S.spk=!S.spk;syncMeetCtl();toast(S.spk?'Speaker on':'Switched to earpiece')};
+$('#stopShare').onclick=()=>{S.share=false;syncMeetCtl();toast('Stopped sharing')};
+$$('#emo button').forEach(b=>b.onclick=()=>{closeOv();const t=selfTile();if(!t)return;for(let j=0;j<3;j++){const f=document.createElement('span');f.className='float';f.textContent=b.textContent;f.style.left=(20+j*22+Math.random()*10)+'%';f.style.bottom='14px';f.style.animationDelay=(j*.18)+'s';t.appendChild(f);setTimeout(()=>f.remove(),2700)}});
+$('#dialin').onclick=()=>{closeOv();toast('Dial +1 408 740 7256, ID 254 323 414')};
+$('#callme').onclick=()=>{closeOv();toast('Calling your phone to connect audio')};
+$$('#opts .opt').forEach(o=>o.onclick=()=>{const k=o.dataset.o;
+  if(k==='hand'){S.hand=!S.hand;toast(S.hand?'Hand raised':'Hand lowered')}
+  if(k==='cc'){S.cc=!S.cc;const c=$('#cc');c&&c.classList.toggle('on',S.cc);toast(S.cc?'Captions on':'Captions off')}
+  if(k==='blur'){S.fx=S.fx?0:1;toast(S.fx?'Background blur on':'Background blur off')}
+  if(k==='low'){S.low=!S.low;toast(S.low?'Low data: others’ video paused':'Low data off')}
+  if(k==='share'){S.share=!S.share;toast(S.share?'Sharing your screen':'Stopped sharing')}
+  if(k==='rec'){S.rec=!S.rec;toast(S.rec?'Recording started':'Recording stopped')}
+  syncMeetCtl();closeOv();
+  if(k==='commute')show('commute');
+  if(k==='vprefs')show('vprefs')});
+$$('#fxrow .fxb').forEach(b=>b.onclick=()=>{if(b.dataset.fx==='add'){toast('Upload your own background');return}S.fx=+b.dataset.fx;syncFx();syncMeetCtl()});
+$('#flip').onclick=()=>toast('Switched camera');
+$('#cmic').onclick=()=>{S.cmic=!S.cmic;$('#cmic').classList.toggle('off',!S.cmic);$('#cmic .i').textContent=S.cmic?'mic':'mic_off';$('#clab').textContent=S.cmic?'Tap to mute':'Muted, tap to talk'};
+$('#cexit').onclick=()=>show('meet');
+$('#doLeave').onclick=()=>{closeOv();S.hand=false;S.share=false;S.rec=false;S.cc=false;syncMeetCtl();S.hist=[];show('rate',false)};
+$$('#stars button').forEach(b=>b.onclick=()=>{S.stars=+b.dataset.s;$$('#stars button').forEach(x=>x.classList.toggle('on',+x.dataset.s<=S.stars));$('#rtext').textContent=['','Very poor','Poor','Okay','Good','Excellent'][S.stars]});
+$('#rsend').onclick=()=>{show('home',false);toast('Thanks for your feedback')};
+$('#rskip').onclick=()=>show('home',false);
+$('#cform').onsubmit=e=>{e.preventDefault();const v=$('#cinput').value.trim();if(!v)return;const m=document.createElement('div');m.className='msg me';m.innerHTML='<small>You</small><p></p>';m.querySelector('p').textContent=v;$('#chatlog').appendChild(m);$('#cinput').value='';$('#chatlog').scrollTop=1e6;
+  setTimeout(()=>{const r=document.createElement('div');r.className='msg';r.innerHTML='<small>Priya Nair</small><p>Thanks, noted 👍</p>';$('#chatlog').appendChild(r);$('#chatlog').scrollTop=1e6},1400)};
+// swipe up on meeting opens more
+let sy=null;$('#meet').addEventListener('pointerdown',e=>sy=e.clientY);$('#meet').addEventListener('pointerup',e=>{if(sy!=null&&sy-e.clientY>50)ov('#sh-more');sy=null});
+buildGrid();syncMeetCtl();
+const st=location.hash.slice(1);if(st)go(st);else go('start');
+})();
+</script>
+</body>
+</html>

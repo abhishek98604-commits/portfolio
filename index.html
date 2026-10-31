@@ -85,6 +85,13 @@ p{margin:0}
 .locked p{color:var(--muted);margin-top:4px}
 .open-link,.quiet-link{color:var(--ink);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;white-space:nowrap}
 .quiet-link{color:var(--muted);font-size:14px;align-self:center}
+.bjm{display:grid;grid-template-columns:300px minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:center;margin-top:var(--blk)}
+.bjm-side h3{font-size:clamp(22px,2.4vw,30px);font-weight:500;letter-spacing:-.02em;margin-top:10px}
+.bjm-side p{color:var(--muted);margin-top:10px;max-width:42ch}
+.bjm-steps{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.bjm-steps button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer}
+.bjm-steps button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+@media (max-width:760px){.bjm{grid-template-columns:1fr;justify-items:center}.bjm-side{text-align:center}.bjm-steps{justify-content:center}}
 .more-link{margin-top:20px}
 .lk-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
 .lk-mail{font-family:var(--mono);font-size:14px;user-select:all}
@@ -570,6 +577,25 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
       <div class="decision rv"><h3>Accessibility</h3><p>VPAT 2.4 certified against Section 508 and WCAG 2.1.</p></div>
     </div></div>
 
+    <div class="bjm rv">
+      <div class="cph"><div class="cvp"><iframe id="bjmF" src="bjm/index.html" title="BlueJeans mobile app, interactive prototype" loading="lazy"></iframe></div></div>
+      <div class="bjm-side">
+        <span class="label">Try the app</span>
+        <h3>From sign in to leaving a call</h3>
+        <p>An interactive rebuild of the BlueJeans Android app. Tap through it, or jump to a step.</p>
+        <div class="bjm-steps" id="bjmSteps">
+          <button type="button" data-s="start">Sign in</button>
+          <button type="button" data-s="home">Ready to join</button>
+          <button type="button" data-s="meet">In the meeting</button>
+          <button type="button" data-s="more">Reactions and more</button>
+          <button type="button" data-s="vprefs">Background blur</button>
+          <button type="button" data-s="commute">Commute mode</button>
+          <button type="button" data-s="leave">Leave and rate</button>
+        </div>
+      </div>
+    </div>
+    <script>(()=>{const f=document.getElementById('bjmF');document.getElementById('bjmSteps').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+      document.querySelectorAll('#bjmSteps button').forEach(x=>x.setAttribute('aria-pressed',x===b));try{f.contentWindow.go(b.dataset.s)}catch(err){f.src='bjm/index.html#'+b.dataset.s}})})();</script>
     <div class="sub">
       <div class="sub-head rv">
         <h3>Calling, messaging and meetings (UCaaS)</h3>
