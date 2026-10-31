@@ -66,26 +66,55 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .bjlogo{width:44px;height:30px;margin:0 auto 6px;display:block;background:var(--blue);color:#fff;border-radius:5px;font-weight:700;display:grid;place-items:center}
 .spin{width:26px;height:26px;border-radius:50%;border:3px solid #dbe4f3;border-top-color:var(--blue);animation:rot 0.8s linear infinite;margin:18px auto 4px}
 @keyframes rot{to{transform:rotate(360deg)}}
-/* home */
-#home{background:var(--blue)}
-.prev{position:relative;height:56%;flex:none;overflow:hidden;background:#222}
+/* home (navy) */
+#app.nv .sb{background:#0b1730;color:#fff}
+#home{background:linear-gradient(180deg,#0b1730 0%,#0d1b38 100%);color:#e8edf7}
+.hh{display:flex;align-items:center;gap:10px;padding:10px 18px 12px;flex:none}
+.hh b{font-size:21px;font-weight:500;letter-spacing:-.01em;flex:1}
+.conn{display:flex;align-items:center;gap:6px;font-size:12.5px;color:#aab6cc}
+.conn i{width:7px;height:7px;border-radius:50%;background:#5bd47a}
+.hh .gear2{color:#e8edf7}
+.prev{position:relative;height:300px;flex:none;overflow:hidden;background:#1a2440;margin:0 14px;border-radius:16px;border:1px solid rgba(255,255,255,.08)}
 .prev img.me,.vp img.me{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:52% 40%}
-.prev .tr{position:absolute;right:12px;top:12px;display:flex;flex-direction:column;gap:12px}
-.cbtn{width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.45);color:#fff;display:grid;place-items:center;backdrop-filter:blur(4px)}
-.cbtn.off{background:#fff;color:var(--red)}
-.prev .bc{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:18px}
-.prev .bc .cbtn{width:52px;height:52px}
-.camoff{position:absolute;inset:0;background:#2a2d33;display:none;place-items:center;color:#9ca3af}
+.prev .lbl{position:absolute;left:10px;top:10px;font-size:11.5px;background:rgba(10,16,30,.6);backdrop-filter:blur(6px);padding:5px 10px;border-radius:12px;color:#e8edf7}
+.prev .wand{position:absolute;right:10px;top:10px;width:40px;height:40px;border-radius:50%;background:rgba(10,16,30,.6);backdrop-filter:blur(6px);display:grid;place-items:center;color:#fff}
+.prev .wand.on{background:#3474f0}
+.prev .bc{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:26px}
+.gctl{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:11.5px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.gbx{display:flex;align-items:center;height:46px;border-radius:14px;background:rgba(15,22,40,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.22);color:#fff;overflow:hidden}
+.gbx .m{padding:0 8px 0 14px;height:100%;display:grid;place-items:center}
+.gbx .ch{padding:0 10px 0 4px;height:100%;display:grid;place-items:center}
+.gbx .ch .i{font-size:20px}
+.gbx.off{background:rgba(255,255,255,.92);color:#e8455b}
+.camoff{position:absolute;inset:0;background:#1d2742;display:none;place-items:center;color:#9ca3af}
 .camoff .av{width:84px;height:84px;font-size:30px}
 .prev.co .camoff,.tile.co .camoff{display:grid}
-.mlist{flex:1;overflow:auto;color:#fff}
-.mt{display:flex;align-items:center;gap:14px;padding:16px 16px;border-bottom:1px solid rgba(255,255,255,.14)}
-.tag{font-size:10.5px;padding:3px 7px;border-radius:5px;background:rgba(0,0,0,.25);white-space:nowrap;width:78px;text-align:center;flex:none}
-.tag.live{background:#2c8a3a}
-.mt b{display:block;font-weight:500;font-size:16px}.mt small{font-size:13.5px;opacity:.85}
-.join{margin-left:auto;background:var(--green);color:#fff;font-weight:500;border-radius:20px;padding:9px 18px;font-size:14px}
-.hbar{flex:none;background:#fff;display:flex;justify-content:space-around;padding:12px 0 10px;font-size:15px}
-.hbar button{display:flex;gap:8px;align-items:center}
+.ymh{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 10px;flex:none}
+.ymh b{font-size:20px;font-weight:500}
+.ymh span{display:flex;align-items:center;gap:6px;font-size:13px;color:#aab6cc}.ymh .i{font-size:19px}
+.mlist{flex:1;overflow:auto;padding:0 14px 6px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none}
+.mlist::-webkit-scrollbar{display:none}
+.mc{background:#13213f;border:1px solid rgba(120,150,210,.18);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;flex:none}
+.mc.live{background:#152a52;border-color:rgba(90,140,240,.45)}
+.mc .tx{flex:1;min-width:0}
+.mc b{display:block;font-size:16.5px;font-weight:500;color:#fff}
+.mc small{display:block;font-size:13.5px;color:#aab6cc;margin-top:2px}
+.livet{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.06em;color:#6fdc8c;margin-bottom:3px}
+.livet i{width:7px;height:7px;border-radius:50%;background:#6fdc8c}
+.left{font-size:12px;color:#c8d2e4;background:#1d2c4e;border-radius:10px;padding:4px 9px;white-space:nowrap}
+.mc .cal{color:#aab6cc;font-size:21px}
+.join{background:#3474f0;color:#fff;font-weight:500;border-radius:12px;padding:11px 16px;font-size:15px;display:flex;align-items:center;gap:6px;flex:none}
+.join .i{font-size:19px}
+.ppl{display:flex;align-items:center;margin-top:9px}
+.ppl img,.ppl span.more{width:26px;height:26px;border-radius:50%;object-fit:cover;border:2px solid #152a52;margin-left:-6px;background:#2a3b62;display:grid;place-items:center;font-size:10.5px;color:#cfd8ea}
+.ppl img:first-child{margin-left:0}
+.ppl em{font-style:normal;font-size:12.5px;color:#aab6cc;margin-left:8px}
+.ready{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#93a0b8;font-style:italic;padding:8px 18px 2px;flex:none}
+.ready:before,.ready:after{content:"";flex:1;height:1px;background:rgba(255,255,255,.1)}
+.ready .i{font-size:16px;font-style:normal}
+.hbar{flex:none;display:flex;gap:10px;padding:10px 14px 16px}
+.hbar button{flex:1;height:48px;border-radius:12px;border:1px solid rgba(120,150,210,.45);color:#e8edf7;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:9px;background:rgba(255,255,255,.03)}
+.hbar .i{font-size:21px}
 /* tooltip */
 .tip{position:absolute;z-index:25;background:#fff;border-radius:8px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.25);font-size:13px;line-height:1.35;width:210px;display:none;color:var(--ink)}
 .tip.on{display:block;animation:fi .3s}
@@ -232,18 +261,26 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 
     <!-- Home -->
     <section class="scr" id="home">
+      <div class="hh"><b>BlueJeans</b><span class="conn"><i></i>Connected</span><button class="gear2" data-go="settings" aria-label="Settings"><span class="i">settings</span></button></div>
       <div class="prev" id="hprev">
         <img class="me" src="img/u5.webp" alt="">
         <div class="camoff"><span class="av">AM</span></div>
-        <div class="tr"><button class="cbtn" data-go="settings" aria-label="Settings"><span class="i">settings</span></button><button class="cbtn" id="fxbtn" data-go="vprefs" aria-label="Video effects"><span class="i">blur_on</span></button></div>
-        <div class="bc"><button class="cbtn" id="hcam" aria-label="Camera"><span class="i">videocam</span></button><button class="cbtn" id="hmic" aria-label="Mic"><span class="i">mic</span></button></div>
+        <span class="lbl">Camera preview</span>
+        <button class="wand" id="fxbtn" data-go="vprefs" aria-label="Video effects"><span class="i">auto_fix_high</span></button>
+        <div class="bc">
+          <div class="gctl"><div class="gbx" id="hcamB"><button class="m" id="hcam" aria-label="Camera"><span class="i f">videocam</span></button><button class="ch" data-dd="cam" aria-label="Camera options"><span class="i">expand_more</span></button></div><span id="hcamL">Camera on</span></div>
+          <div class="gctl"><div class="gbx" id="hmicB"><button class="m" id="hmic" aria-label="Mic"><span class="i f">mic</span></button><button class="ch" data-dd="mic" aria-label="Mic options"><span class="i">expand_more</span></button></div><span id="hmicL">Mic on</span></div>
+        </div>
       </div>
+      <div class="ymh"><b>Your meetings</b><span><span class="i">calendar_month</span>Today, 31 Oct</span></div>
       <div class="mlist">
-        <div class="mt"><span class="tag live">In Progress</span><div><b>UX Weekly</b><small>10:00 to 11:00 AM</small></div><button class="join" data-go="joining">JOIN</button></div>
-        <div class="mt"><span class="tag">In 45 mins</span><div><b>Daily Stand up</b><small>11:15 AM to 11:30 AM</small></div></div>
-        <div class="mt"><span class="tag">In 2:00 hrs</span><div><b>Design Demo Sessions</b><small>12:00 to 12:30 PM</small></div></div>
+        <div class="mc live"><div class="tx"><div class="livet"><i></i>LIVE NOW</div><b>UX Weekly</b><small>10:00 – 11:00 AM</small>
+          <div class="ppl"><img src="img/u1.webp" alt=""><img src="img/u4.webp" alt=""><img src="img/u3.webp" alt=""><img src="img/u6.webp" alt=""><img src="img/u2.webp" alt=""><span class="more">+1</span><em>6 participants</em></div></div>
+          <button class="join" data-go="joining">Join<span class="i">arrow_forward</span></button></div>
+        <div class="mc"><div class="tx"><b>Daily stand-up</b><small>11:15 – 11:30 AM</small></div><span class="left">In 1 hr</span><span class="i cal">event_available</span></div><div class="mc"><div class="tx"><b>Design demo</b><small>12:00 – 12:30 PM</small></div><span class="left">In 1 hr 45 min</span><span class="i cal">event_available</span></div><div class="mc"><div class="tx"><b>1:1 with Priya</b><small>2:00 – 2:30 PM</small></div><span class="left">In 3 hrs 45 min</span><span class="i cal">event_available</span></div><div class="mc"><div class="tx"><b>Research readout</b><small>3:30 – 4:15 PM</small></div><span class="left">In 5 hrs 15 min</span><span class="i cal">event_available</span></div><div class="mc"><div class="tx"><b>Sprint planning</b><small>5:00 – 6:00 PM</small></div><span class="left">In 6 hrs 45 min</span><span class="i cal">event_available</span></div>
       </div>
-      <div class="hbar"><button data-go="joinid"><span class="i">event_available</span>Join with ID</button><button data-go="start"><span class="i">add_to_queue</span>Start a Meeting</button></div>
+      <div class="ready" id="ready"><span class="i">verified_user</span><span id="readyT">Your camera and mic are ready</span></div>
+      <div class="hbar"><button data-go="joinid"><span class="i">dialpad</span>Join with ID</button><button data-go="start"><span class="i">video_call</span>Start meeting</button></div>
     </section>
 
     <!-- Joining -->
@@ -357,11 +394,10 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
       <button class="lv2" style="background:var(--red);color:#fff" id="doLeave">Leave meeting</button>
       <button class="lv2" style="color:var(--blue)" data-go="close">Cancel</button>
     </div>
-    <div class="tip up" id="tip-home" style="right:12px;top:118px">Add video effects to enhance your self view.<button class="got" data-tip>GOT IT</button></div>
+    <div class="tip up" id="tip-home" style="right:14px;top:112px">Add video effects to enhance your self view.<button class="got" data-tip>GOT IT</button></div>
     <div class="tip down" id="tip-meet" style="left:50%;margin-left:-105px;bottom:96px">Tap More for reactions, captions, video blur and other options.<button class="got" data-tip>GOT IT</button></div>
     <div class="toast" id="toast"></div>
   </div>
-  <div class="nb"><button data-go="back" aria-label="Back"><span class="i">arrow_back_ios_new</span></button><button data-go="homebtn" aria-label="Home"><span class="i">radio_button_unchecked</span></button><button aria-label="Recent"><span class="i">crop_square</span></button></div>
 </div>
 
 <script>
@@ -371,7 +407,7 @@ const app=$('#app');
 const P=[{n:'Priya Nair',i:'u1'},{n:'You',i:'u5',self:1},{n:'Marcus Reed',i:'u2'},{n:'James Carter',i:'u3'},{n:'Emily Walsh',i:'u4'},{n:'Nia Thompson',i:'u6'}];
 const ini=n=>n.split(' ').map(w=>w[0]).join('').slice(0,2);
 const S={scr:null,hist:[],cam:true,mic:true,spk:true,fx:0,hand:false,cc:false,low:false,share:false,rec:false,tips:{},signed:false,stars:0,cmic:true};
-const theme={splash:'bl',onb:'',home:'bl',joining:'dk',meet:'dk',vprefs:'dk',people:'',chat:'',commute:'dk',rate:''};
+const theme={splash:'bl',onb:'',home:'nv',joining:'dk',meet:'dk',vprefs:'dk',people:'',chat:'',commute:'dk',rate:''};
 let timers=[];const later=(f,ms)=>timers.push(setTimeout(f,ms));
 function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),1900)}
 function closeOv(){$$('.sheet.on,.dlg.on').forEach(e=>e.classList.remove('on'));$('#dim').classList.remove('on')}
@@ -424,10 +460,12 @@ setInterval(()=>{if(S.scr!=='meet'&&S.scr!=='commute')return;const [k,txt]=lines
 function syncMeetCtl(){const set=(id,on,a,b)=>{const e=$(id);e.classList.toggle('off',!on);e.querySelector('.c .i').textContent=on?a:b};
   set('#mcam',S.cam,'videocam','videocam_off');set('#mmic',S.mic,'mic','mic_off');set('#mspk',S.spk,'volume_up','volume_off');syncSelf();
   $('#hprev').classList.toggle('co',!S.cam);
-  [['#hcam',S.cam,'videocam','videocam_off'],['#hmic',S.mic,'mic','mic_off']].forEach(([id,on,a,b])=>{const e=$(id);e.classList.toggle('off',!on);e.firstChild.textContent=on?a:b});
+  $('#hcamB').classList.toggle('off',!S.cam);$('#hcam .i').textContent=S.cam?'videocam':'videocam_off';$('#hcamL').textContent=S.cam?'Camera on':'Camera off';
+  $('#hmicB').classList.toggle('off',!S.mic);$('#hmic .i').textContent=S.mic?'mic':'mic_off';$('#hmicL').textContent=S.mic?'Mic on':'Mic off';
+  $('#readyT').textContent=S.cam&&S.mic?'Your camera and mic are ready':!S.cam&&!S.mic?'You will join with camera and mic off':!S.cam?'You will join with camera off':'You will join muted';
   $$('#opts .opt').forEach(o=>{const k=o.dataset.o;o.classList.toggle('act',(k==='hand'&&S.hand)||(k==='cc'&&S.cc)||(k==='blur'&&S.fx>0)||(k==='low'&&S.low)||(k==='share'&&S.share)||(k==='rec'&&S.rec))});
   $('#shareBar').classList.toggle('on',S.share);
-  const ib=$('#fxbtn');ib.style.background=S.fx?'#3b6fd8':''}
+  $('#fxbtn').classList.toggle('on',S.fx>0)}
 function syncFx(){const v=$('#vp');v.classList.remove('fx1','fx2');if(S.fx)v.classList.add('fx'+S.fx);$$('#fxrow .fxb').forEach(b=>b.classList.toggle('on',b.dataset.fx==String(S.fx)))}
 // people list
 $('#plist').innerHTML=P.concat([{n:'Kim Young',i:''},{n:'Andrew Finn',i:''},{n:'Carol Hu',i:''}]).map((p,k)=>`<div class="prow">${p.i?`<img class="av" src="img/${p.i}.webp" alt="">`:`<span class="av">${ini(p.n)}</span>`}<span class="n">${p.self?'Arjun Mehta (You)':p.n}${k===0?'<small>Host</small>':''}</span><span class="i">${k%4===3?'mic_off':'mic'}</span><span class="i">${k%5===4?'videocam_off':'videocam'}</span></div>`).join('')+'<div class="prow" style="color:#6b7280;font-size:13px">and 17 more</div>';
@@ -452,7 +490,7 @@ document.addEventListener('click',e=>{
   show(k);
 });
 $$('.acct').forEach(a=>a.onclick=()=>{$('#acwrap').style.display='none';$('#acload').style.display='';later(()=>{S.signed=true;S.hist=[];show('home',false)},1200)});
-$('#hcam').onclick=()=>{S.cam=!S.cam;syncMeetCtl()};$('#hmic').onclick=()=>{S.mic=!S.mic;syncMeetCtl()};
+$('#hcam').onclick=()=>{S.cam=!S.cam;syncMeetCtl()};$$('[data-dd]').forEach(b=>b.onclick=()=>toast(b.dataset.dd==='cam'?'Camera: Front camera':'Audio: Phone speaker'));$('#hmic').onclick=()=>{S.mic=!S.mic;syncMeetCtl()};
 $('#mcam').onclick=()=>{S.cam=!S.cam;syncMeetCtl();toast(S.cam?'Camera on':'Camera off')};
 $('#mmic').onclick=()=>{S.mic=!S.mic;syncMeetCtl();toast(S.mic?'Unmuted':'Muted')};
 $('#mspk').onclick=()=>{S.spk=!S.spk;syncMeetCtl();toast(S.spk?'Speaker on':'Switched to earpiece')};
