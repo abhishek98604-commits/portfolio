@@ -390,9 +390,9 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
   <div class="wrap">
     <a class="mark" href="#top">Selected work</a>
     <ul>
-      <li><a href="#aiwork">AI work</a></li>
       <li><a href="#verizon">Verizon</a></li>
       <li><a href="#bluejeans">BlueJeans</a></li>
+      <li><a href="#ai">AI prototypes</a></li>
             <li><a href="#contact">Contact</a></li>
     </ul>
     <button class="btn ghost js-resume" type="button">Resume ↓</button>
@@ -414,48 +414,6 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     <li><b>Clarice Technologies</b><span>UX Designer</span><span>2011 to 2015</span></li>
   </ul>
 </header>
-
-<!-- ============ AI WORK ============ -->
-<section class="chapter wrap" id="aiwork">
-  <div class="chapter-head"><h2>AI work</h2><span class="label">Agents · orchestration · AI-native design</span></div>
-  <article class="project" id="agent">
-    <div class="sub-chapter rv"><span class="label">01 · AI agent orchestration · Concept</span><h3>Designing an AI shopping agent that people can trust</h3></div>
-    <p class="blurb rv">An agent that helps people buy home internet: it checks the address, recommends a plan, applies offers and prepares checkout. I designed the system behind it, which agent does what, when it checks with the user, and what happens when something fails. Run a scenario below to test it.</p>
-    <div class="agent-embed rv"><iframe id="agentF" src="agent/index.html?embed=1" title="AI shopping agent orchestration, interactive" loading="lazy" scrolling="no"></iframe></div>
-    <p class="more-link rv"><a class="btn" href="agent/">Read the full case study ↗</a></p>
-  </article>
-  
-<div id="ai">
-  <div class="sub-chapter rv"><span class="label">02 · Built with AI</span><h3>Working prototypes</h3></div>
-  <p class="blurb rv">New ideas and older projects, rebuilt as working prototypes with AI (Claude). They are live right here, so click around.</p>
-  <div class="live-stack rv">
-    <figure class="live-desk">
-      <div class="tabletf"><div class="scaler" data-w="1180" data-h="820"><iframe src="protos/logdoc/index.html" title="LogDoc interactive prototype" loading="lazy"></iframe></div></div>
-      <figcaption><b>LogDoc</b>A logbook for design decisions. Log an entry, or ask LogDoc a question.</figcaption>
-    </figure>
-    <figure class="live-desk">
-      <div class="tabletf"><div class="scaler" data-w="1440" data-h="1000"><iframe src="protos/onquest/index.html" title="Onquest interactive prototype" loading="lazy"></iframe></div></div>
-      <figcaption><b>Onquest</b>A logistics dashboard that matches purchase orders to ship space.</figcaption>
-    </figure>
-  </div>
-  <div class="live-grid three rv">
-    <figure class="live-phone">
-      <div class="device"><iframe src="protos/health/index.html" title="Health Feed (Practo) interactive prototype" loading="lazy"></iframe></div>
-      <figcaption><b>Health Feed (Practo)</b>Tap an article, like, save or follow a doctor.</figcaption>
-    </figure>
-    <figure class="live-phone">
-      <div class="device"><iframe src="protos/caralta/index.html" title="Caralta interactive prototype" loading="lazy"></iframe></div>
-      <figcaption><b>Caralta</b>Swipe between overview, expenses and nearby.</figcaption>
-    </figure>
-    <figure class="live-phone">
-      <div class="device"><a class="device-scroll" href="https://abhishek98604-commits.github.io/celebration-reminder-prototype/" target="_blank" rel="noopener"><img src="m/ai-celebrate.webp" alt="Celebration Reminder prototype screen" loading="lazy"></a></div>
-      <figcaption><b>Celebration Reminder</b>Birthdays and anniversaries, with a quick wish or gift. <a href="https://abhishek98604-commits.github.io/celebration-reminder-prototype/" target="_blank" rel="noopener">Open prototype ↗</a></figcaption>
-    </figure>
-  </div>
-</div>
-
-
-</section>
 
 <!-- ============ VERIZON ============ -->
 <section class="chapter wrap" id="verizon">
@@ -498,6 +456,14 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     <div class="locked rv"><span class="lk" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v12H4z"/><path d="M8 21h8M12 17v4"/></svg></span>
       <div><b>Full case study</b><p>The complete plan selection story: research, journey map, design decisions, the final prototype and the outcome.</p>
       <div class="lk-row"><a class="btn" href="case-study/full/" target="_blank" rel="noopener">View full case study ↗</a></div></div></div>
+  </article>
+
+  <!-- AI shopping agent -->
+  <article class="project" id="agent">
+    <div class="sub-chapter rv"><span class="label">AI agent · Concept</span><h3>Designing an AI shopping agent that people can trust</h3></div>
+    <p class="blurb rv">An agent that helps people buy home internet: it checks the address, recommends a plan, applies offers and prepares checkout. I designed the system behind it, which agent does what, when it checks with the user, and what happens when something fails. Run a scenario below to test it.</p>
+    <div class="agent-embed rv"><iframe id="agentF" src="agent/index.html?embed=1" title="AI shopping agent orchestration, interactive" loading="lazy" scrolling="no"></iframe></div>
+    <p class="more-link rv"><a class="btn" href="agent/">Read the full case study ↗</a></p>
   </article>
 
   <!-- WiFi Backup -->
@@ -622,25 +588,6 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
       <div class="decision rv"><h3>Accessibility</h3><p>VPAT 2.4 certified against Section 508 and WCAG 2.1.</p></div>
     </div></div>
 
-    <div class="bjm rv">
-      <div class="cph"><div class="cvp"><iframe id="bjmF" src="bjm/index.html" title="BlueJeans mobile app, interactive prototype" loading="lazy"></iframe></div></div>
-      <div class="bjm-side">
-        <span class="label">Try the app</span>
-        <h3>From sign in to leaving a call</h3>
-        <p>An interactive rebuild of the BlueJeans Android app. Tap through it, or jump to a step.</p>
-        <div class="bjm-steps" id="bjmSteps">
-          <button type="button" data-s="start">Sign in</button>
-          <button type="button" data-s="home">Ready to join</button>
-          <button type="button" data-s="meet">In the meeting</button>
-          <button type="button" data-s="more">Reactions and more</button>
-          <button type="button" data-s="vprefs">Background blur</button>
-          <button type="button" data-s="commute">Commute mode</button>
-          <button type="button" data-s="leave">Leave and rate</button>
-        </div>
-      </div>
-    </div>
-    <script>(()=>{const f=document.getElementById('bjmF');document.getElementById('bjmSteps').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-      document.querySelectorAll('#bjmSteps button').forEach(x=>x.setAttribute('aria-pressed',x===b));try{f.contentWindow.go(b.dataset.s)}catch(err){f.src='bjm/index.html#'+b.dataset.s}})})();</script>
     <div class="sub">
       <div class="sub-head rv">
         <h3>Calling, messaging and meetings (UCaaS)</h3>
@@ -709,6 +656,37 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     <div class="outcome rv"><span class="label">Outcome</span><p>Q Score of 4.85.</p></div>
     <p class="more-link rv"><a class="btn ghost" href="https://abhishekbora.myportfolio.com/bluejeans-rooms" target="_blank" rel="noopener">Read the full Conference rooms project ↗</a></p>
   </article>
+</section>
+
+<!-- ============ AI & EARLIER WORK ============ -->
+<section class="chapter wrap" id="ai">
+  <div class="chapter-head"><h2>Built with AI</h2><span class="label">Working prototypes</span></div>
+  <p class="blurb rv">New ideas and older projects, rebuilt as working prototypes with AI (Claude). They are live right here, so click around.</p>
+  <div class="live-stack rv">
+    <figure class="live-desk">
+      <div class="tabletf"><div class="scaler" data-w="1180" data-h="820"><iframe src="protos/logdoc/index.html" title="LogDoc interactive prototype" loading="lazy"></iframe></div></div>
+      <figcaption><b>LogDoc</b>A logbook for design decisions. Log an entry, or ask LogDoc a question.</figcaption>
+    </figure>
+    <figure class="live-desk">
+      <div class="tabletf"><div class="scaler" data-w="1440" data-h="1000"><iframe src="protos/onquest/index.html" title="Onquest interactive prototype" loading="lazy"></iframe></div></div>
+      <figcaption><b>Onquest</b>A logistics dashboard that matches purchase orders to ship space.</figcaption>
+    </figure>
+  </div>
+  <div class="live-grid three rv">
+    <figure class="live-phone">
+      <div class="device"><iframe src="protos/health/index.html" title="Health Feed (Practo) interactive prototype" loading="lazy"></iframe></div>
+      <figcaption><b>Health Feed (Practo)</b>Tap an article, like, save or follow a doctor.</figcaption>
+    </figure>
+    <figure class="live-phone">
+      <div class="device"><iframe src="protos/caralta/index.html" title="Caralta interactive prototype" loading="lazy"></iframe></div>
+      <figcaption><b>Caralta</b>Swipe between overview, expenses and nearby.</figcaption>
+    </figure>
+    <figure class="live-phone">
+      <div class="device"><a class="device-scroll" href="https://abhishek98604-commits.github.io/celebration-reminder-prototype/" target="_blank" rel="noopener"><img src="m/ai-celebrate.webp" alt="Celebration Reminder prototype screen" loading="lazy"></a></div>
+      <figcaption><b>Celebration Reminder</b>Birthdays and anniversaries, with a quick wish or gift. <a href="https://abhishek98604-commits.github.io/celebration-reminder-prototype/" target="_blank" rel="noopener">Open prototype ↗</a></figcaption>
+    </figure>
+  </div>
+
 </section>
 
 <section class="chapter wrap" id="thanks">
