@@ -92,6 +92,9 @@ p{margin:0}
 .bjm-steps button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer}
 .bjm-steps button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 @media (max-width:760px){.bjm{grid-template-columns:1fr;justify-items:center}.bjm-side{text-align:center}.bjm-steps{justify-content:center}}
+
+.sub-chapter{margin-top:var(--blk)}.sub-chapter h3{font-size:clamp(24px,2.8vw,36px);margin-top:10px;max-width:24ch}
+.agent-embed{margin-top:24px}.agent-embed iframe{display:block;width:100%;height:1000px;border:0;border-radius:22px;background:#0b1020}
 .more-link{margin-top:20px}
 .lk-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
 .lk-mail{font-family:var(--mono);font-size:14px;user-select:all}
@@ -387,10 +390,10 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
   <div class="wrap">
     <a class="mark" href="#top">Selected work</a>
     <ul>
+      <li><a href="#aiwork">AI work</a></li>
       <li><a href="#verizon">Verizon</a></li>
       <li><a href="#bluejeans">BlueJeans</a></li>
-      <li><a href="#ai">AI prototypes</a></li>
-      <li><a href="#contact">Contact</a></li>
+            <li><a href="#contact">Contact</a></li>
     </ul>
     <button class="btn ghost js-resume" type="button">Resume ↓</button>
   </div>
@@ -402,7 +405,7 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
   <div class="intro">
     <p>I am a designer based in Bangalore. For the past 15 years I have worked on things people use every day without thinking about them, like buying home internet, joining a video call or booking a lab test.</p>
     <p>I care about the small details, and I do my best work when design, product and engineering figure things out together.</p>
-    <p>Right now I am a Principal Designer at Verizon, working on how people shop for home internet. Lately I have also been using AI to prototype faster and build small Figma plugins for my team.</p>
+    <p>Right now I am a Principal Designer at Verizon, working on how people shop for home internet. I design AI agents, and I use AI across my design process, from research to prototypes I build in code.</p>
   </div>
   <ul class="cos">
     <li><b>Verizon</b><span>Principal Designer</span><span>2024 to now</span></li>
@@ -411,6 +414,48 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     <li><b>Clarice Technologies</b><span>UX Designer</span><span>2011 to 2015</span></li>
   </ul>
 </header>
+
+<!-- ============ AI WORK ============ -->
+<section class="chapter wrap" id="aiwork">
+  <div class="chapter-head"><h2>AI work</h2><span class="label">Agents · orchestration · AI-native design</span></div>
+  <article class="project" id="agent">
+    <div class="sub-chapter rv"><span class="label">01 · AI agent orchestration · Concept</span><h3>Designing an AI shopping agent that people can trust</h3></div>
+    <p class="blurb rv">An agent that helps people buy home internet: it checks the address, recommends a plan, applies offers and prepares checkout. I designed the system behind it, which agent does what, when it checks with the user, and what happens when something fails. Run a scenario below to test it.</p>
+    <div class="agent-embed rv"><iframe id="agentF" src="agent/index.html?embed=1" title="AI shopping agent orchestration, interactive" loading="lazy" scrolling="no"></iframe></div>
+    <p class="more-link rv"><a class="btn" href="agent/">Read the full case study ↗</a></p>
+  </article>
+  
+<div id="ai">
+  <div class="sub-chapter rv"><span class="label">02 · Built with AI</span><h3>Working prototypes</h3></div>
+  <p class="blurb rv">New ideas and older projects, rebuilt as working prototypes with AI (Claude). They are live right here, so click around.</p>
+  <div class="live-stack rv">
+    <figure class="live-desk">
+      <div class="tabletf"><div class="scaler" data-w="1180" data-h="820"><iframe src="protos/logdoc/index.html" title="LogDoc interactive prototype" loading="lazy"></iframe></div></div>
+      <figcaption><b>LogDoc</b>A logbook for design decisions. Log an entry, or ask LogDoc a question.</figcaption>
+    </figure>
+    <figure class="live-desk">
+      <div class="tabletf"><div class="scaler" data-w="1440" data-h="1000"><iframe src="protos/onquest/index.html" title="Onquest interactive prototype" loading="lazy"></iframe></div></div>
+      <figcaption><b>Onquest</b>A logistics dashboard that matches purchase orders to ship space.</figcaption>
+    </figure>
+  </div>
+  <div class="live-grid three rv">
+    <figure class="live-phone">
+      <div class="device"><iframe src="protos/health/index.html" title="Health Feed (Practo) interactive prototype" loading="lazy"></iframe></div>
+      <figcaption><b>Health Feed (Practo)</b>Tap an article, like, save or follow a doctor.</figcaption>
+    </figure>
+    <figure class="live-phone">
+      <div class="device"><iframe src="protos/caralta/index.html" title="Caralta interactive prototype" loading="lazy"></iframe></div>
+      <figcaption><b>Caralta</b>Swipe between overview, expenses and nearby.</figcaption>
+    </figure>
+    <figure class="live-phone">
+      <div class="device"><a class="device-scroll" href="https://abhishek98604-commits.github.io/celebration-reminder-prototype/" target="_blank" rel="noopener"><img src="m/ai-celebrate.webp" alt="Celebration Reminder prototype screen" loading="lazy"></a></div>
+      <figcaption><b>Celebration Reminder</b>Birthdays and anniversaries, with a quick wish or gift. <a href="https://abhishek98604-commits.github.io/celebration-reminder-prototype/" target="_blank" rel="noopener">Open prototype ↗</a></figcaption>
+    </figure>
+  </div>
+</div>
+
+
+</section>
 
 <!-- ============ VERIZON ============ -->
 <section class="chapter wrap" id="verizon">
@@ -666,36 +711,6 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
   </article>
 </section>
 
-<!-- ============ AI & EARLIER WORK ============ -->
-<section class="chapter wrap" id="ai">
-  <div class="chapter-head"><h2>Built with AI</h2><span class="label">Working prototypes</span></div>
-  <p class="blurb rv">New ideas and older projects, rebuilt as working prototypes with AI (Claude). They are live right here, so click around.</p>
-  <div class="live-stack rv">
-    <figure class="live-desk">
-      <div class="tabletf"><div class="scaler" data-w="1180" data-h="820"><iframe src="protos/logdoc/index.html" title="LogDoc interactive prototype" loading="lazy"></iframe></div></div>
-      <figcaption><b>LogDoc</b>A logbook for design decisions. Log an entry, or ask LogDoc a question.</figcaption>
-    </figure>
-    <figure class="live-desk">
-      <div class="tabletf"><div class="scaler" data-w="1440" data-h="1000"><iframe src="protos/onquest/index.html" title="Onquest interactive prototype" loading="lazy"></iframe></div></div>
-      <figcaption><b>Onquest</b>A logistics dashboard that matches purchase orders to ship space.</figcaption>
-    </figure>
-  </div>
-  <div class="live-grid three rv">
-    <figure class="live-phone">
-      <div class="device"><iframe src="protos/health/index.html" title="Health Feed (Practo) interactive prototype" loading="lazy"></iframe></div>
-      <figcaption><b>Health Feed (Practo)</b>Tap an article, like, save or follow a doctor.</figcaption>
-    </figure>
-    <figure class="live-phone">
-      <div class="device"><iframe src="protos/caralta/index.html" title="Caralta interactive prototype" loading="lazy"></iframe></div>
-      <figcaption><b>Caralta</b>Swipe between overview, expenses and nearby.</figcaption>
-    </figure>
-    <figure class="live-phone">
-      <div class="device"><a class="device-scroll" href="https://abhishek98604-commits.github.io/celebration-reminder-prototype/" target="_blank" rel="noopener"><img src="m/ai-celebrate.webp" alt="Celebration Reminder prototype screen" loading="lazy"></a></div>
-      <figcaption><b>Celebration Reminder</b>Birthdays and anniversaries, with a quick wish or gift. <a href="https://abhishek98604-commits.github.io/celebration-reminder-prototype/" target="_blank" rel="noopener">Open prototype ↗</a></figcaption>
-    </figure>
-  </div>
-</section>
-
 <section class="chapter wrap" id="thanks">
   <div class="chapter-head"><h2>Appreciation</h2><span class="label">A few notes from leaders</span></div>
   <div class="thanks rv">
@@ -868,5 +883,6 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
 </script>
 
 
+<script>(()=>{const f=document.getElementById('agentF');if(!f)return;const fit=()=>{try{const d=f.contentDocument;if(d&&d.body){const h=d.querySelector('#lab').getBoundingClientRect().height;if(h>100)f.style.height=Math.ceil(h)+'px'}}catch(e){}};f.addEventListener('load',()=>{fit();setInterval(fit,800)});addEventListener('resize',fit)})();</script>
 </body>
 </html>

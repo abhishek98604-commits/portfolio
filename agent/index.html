@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Shopping Agent · Orchestration</title>
+<meta name="description" content="How I designed the orchestration of an AI shopping agent for home internet: agents, tools, checkpoints, failure states and tests.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{--paper:#fff;--ink:#0f1115;--muted:#5d6370;--panel:#f3f4f6;--line:#e4e6ea;
+  --night:#0b1020;--night2:#121a30;--nline:#26314d;--ntext:#c9d3ea;--nmute:#7f8bab;
+  --agent:#7c9cff;--tool:#35c2a1;--check:#f5b84a;--guard:#ff7a8a;--human:#c49bff;
+  --display:"Geist","Helvetica Neue",Arial,sans-serif;--mono:"Geist Mono",ui-monospace,Menlo,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--display);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;padding:0 max(16px,env(safe-area-inset-left,0px))}
+a{color:inherit}
+h1,h2,h3{margin:0;font-weight:500;letter-spacing:-.02em;text-wrap:balance}
+p{margin:0}
+.wrap{max-width:1240px;margin:0 auto}
+.label{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.top{display:flex;align-items:center;height:60px;gap:16px}
+.top a{text-decoration:none;font-size:15px;color:var(--muted)}.top a:hover{color:var(--ink)}
+.top .sp{flex:1}
+header.hero{padding:clamp(40px,7vw,96px) 0 clamp(28px,4vw,48px)}
+.hero h1{font-size:clamp(34px,5vw,62px);line-height:1.03;letter-spacing:-.035em;max-width:16ch;margin-top:14px}
+.hero .lede{font-size:clamp(17px,1.6vw,21px);max-width:62ch;margin-top:20px}
+.note{display:inline-flex;gap:8px;align-items:center;margin-top:18px;font-size:13.5px;color:var(--muted);background:var(--panel);border-radius:999px;padding:6px 12px}
+.facts{display:flex;flex-wrap:wrap;gap:12px 36px;margin:28px 0 0;padding:0}
+.facts div{display:flex;gap:10px;align-items:baseline}.facts dt{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.facts dd{margin:0}
+section{margin-top:clamp(56px,8vw,104px)}
+.sh{display:flex;justify-content:space-between;align-items:baseline;gap:16px;border-top:1.5px solid var(--ink);padding-top:16px}
+.sh h2{font-size:clamp(24px,2.8vw,36px)}
+.intro{color:var(--muted);max-width:66ch;margin-top:14px;font-size:17px}
+
+/* ===== Orchestration lab (dark) ===== */
+.lab{background:var(--night);color:var(--ntext);border-radius:22px;margin-top:24px;padding:clamp(14px,2.4vw,28px);position:relative;overflow:hidden}
+.lab:before{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 50% 45%,rgba(124,156,255,.13),transparent 70%);pointer-events:none}
+.labgrid{position:relative;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:18px;align-items:start}
+.dia{position:relative;background:var(--night2);border:1px solid var(--nline);border-radius:16px;overflow:hidden}
+.dia svg{display:block;width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;padding:10px 14px;border-top:1px solid var(--nline);font-size:12px;color:var(--nmute)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px;vertical-align:0}
+.side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.card{background:var(--night2);border:1px solid var(--nline);border-radius:14px;padding:14px}
+.card h4{margin:0;font-weight:500;font-size:13px;color:#fff;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.scen{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.scen button,.ctrl button{font:inherit;font-size:13px;border:1px solid var(--nline);background:rgba(255,255,255,.03);color:var(--ntext);border-radius:999px;padding:7px 12px;cursor:pointer}
+.scen button:hover,.ctrl button:hover{border-color:#4a5a86;color:#fff}
+.scen button[aria-pressed="true"]{background:#fff;color:var(--night);border-color:#fff}
+.ctrl{display:flex;gap:7px;margin-top:10px;align-items:center}
+.ctrl .run{background:var(--agent);border-color:var(--agent);color:#0b1020;font-weight:500}
+.ctrl .sp{flex:1}
+.ctrl label{font-size:12px;color:var(--nmute);display:flex;gap:6px;align-items:center}
+.detail p{margin-top:8px;font-size:13.5px;line-height:1.5}
+.detail .kv{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin-top:10px;font-size:12.5px}
+.detail .kv b{font-weight:500;color:var(--nmute);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;padding-top:2px}
+.chat{display:flex;flex-direction:column;gap:7px;max-height:230px;overflow:auto;margin-top:10px;scrollbar-width:thin}
+.bub{max-width:88%;font-size:13px;line-height:1.4;padding:8px 11px;border-radius:12px;animation:in .25s ease}
+.bub.u{align-self:flex-end;background:#2b3a66;color:#fff;border-bottom-right-radius:4px}
+.bub.a{align-self:flex-start;background:#1b2440;border:1px solid var(--nline);border-bottom-left-radius:4px}
+.bub.a .ok{display:inline-block;margin-top:6px;font-size:11.5px;color:var(--check);font-family:var(--mono)}
+.empty{font-size:13px;color:var(--nmute);margin-top:10px}
+@keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.trace{margin-top:14px;position:relative;background:#070b16;border:1px solid var(--nline);border-radius:14px;font-family:var(--mono);font-size:12px;line-height:1.55}
+.trace .th{display:flex;justify-content:space-between;padding:9px 14px;border-bottom:1px solid var(--nline);color:var(--nmute);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.tlog{max-height:220px;min-height:200px;overflow:auto;padding:8px 0}
+.tl{display:grid;grid-template-columns:28px 92px 1fr;gap:10px;padding:3px 14px;animation:in .2s ease}
+.tl .n{color:#4c5878}.tl .k{font-weight:500}
+.tl.tool .k{color:var(--tool)}.tl.agent .k{color:var(--agent)}.tl.check .k{color:var(--check)}.tl.guard .k{color:var(--guard)}.tl.human .k{color:var(--human)}.tl.user .k{color:#fff}.tl.done .k{color:#7ee2a8}
+.tl .x{color:var(--ntext);word-break:break-word}.tl .x code{color:#9fb3ff;font-family:inherit}
+.res{display:none;margin:4px 14px 12px;padding:9px 12px;border-radius:10px;background:rgba(126,226,168,.1);border:1px solid rgba(126,226,168,.35);color:#bff3d4;font-family:var(--display);font-size:13.5px}
+.res.on{display:block}
+/* svg */
+.edge{fill:none;stroke:#2b375a;stroke-width:1.6}
+.edge.on{stroke:var(--agent);stroke-width:2.4;stroke-dasharray:6 6;animation:flow .7s linear infinite}
+.edge.on.tool{stroke:var(--tool)}.edge.on.check{stroke:var(--check)}.edge.on.guard{stroke:var(--guard)}.edge.on.human{stroke:var(--human)}
+@keyframes flow{to{stroke-dashoffset:-12}}
+.node{cursor:pointer;outline:none}
+.node rect{fill:#141d36;stroke:#2f3c63;stroke-width:1.4;transition:all .2s}
+.node .t{fill:#fff;font:500 19px var(--display)}
+.node .s{fill:var(--nmute);font:400 13px var(--mono)}
+.node .dot{transition:all .2s}
+.node:hover rect,.node:focus rect{stroke:#6b7cae}
+.node.sel rect{stroke:#fff}
+.node.on rect{fill:#1d2a52;stroke:var(--c);stroke-width:2.4;filter:drop-shadow(0 0 10px var(--c))}
+.zone{fill:none;stroke:#26314d;stroke-dasharray:3 5}
+.ztxt{fill:#56638a;font:500 12px var(--mono);letter-spacing:.08em}
+
+/* ===== tables / cards ===== */
+.auto{width:100%;border-collapse:collapse;margin-top:22px;font-size:15px}
+.auto th,.auto td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.auto th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.auto td:first-child{font-weight:500;width:28%}
+.lvl{display:inline-block;font-size:12.5px;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.l1{background:#e3f6f0;color:#0f6b55}.l2{background:#fff3dc;color:#8a5a00}.l3{background:#efe6ff;color:#5b2fa8}
+.auto td small{display:block;color:var(--muted);font-size:13.5px;margin-top:3px}
+.evals{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:12px;margin-top:22px}
+.ev{border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;transition:all .3s}
+.ev .st{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid #c9ccd3;display:grid;place-items:center;font-size:12px;color:#fff;margin-top:1px}
+.ev b{font-weight:500;display:block}.ev small{color:var(--muted);font-size:13.5px;display:block;margin-top:3px}
+.ev.pass{border-color:#9fdcbf;background:#f2fbf6}.ev.pass .st{background:#1f9d62;border-color:#1f9d62}
+.evbar{display:flex;align-items:center;gap:14px;margin-top:18px;flex-wrap:wrap}
+.evbar .btn{font:inherit;font-size:14px;font-weight:500;border:0;background:var(--ink);color:#fff;border-radius:999px;padding:10px 18px;cursor:pointer}
+.evbar span{color:var(--muted);font-size:14px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:22px 28px;margin-top:26px;counter-reset:s}
+.step{border-top:1.5px solid var(--ink);padding-top:14px;counter-increment:s}
+.step:before{content:"0" counter(s);font-family:var(--mono);font-size:12px;color:var(--muted)}
+.step h3{font-size:19px;margin-top:6px}.step p{color:var(--muted);margin-top:6px;font-size:15px}
+.tryg{display:grid;grid-template-columns:300px minmax(0,1fr);gap:clamp(28px,5vw,64px);align-items:center;margin-top:26px}
+.cph{width:300px;border-radius:44px;padding:10px;background:#1d1d1f;box-shadow:0 30px 60px -30px rgba(0,0,0,.45)}
+.cvp{width:280px;height:600px;border-radius:34px;overflow:hidden;background:#fff;position:relative}
+.cvp iframe{position:absolute;left:0;top:0;width:375px;height:803.6px;border:0;transform:scale(.74667);transform-origin:0 0}
+.tryg ul{margin:16px 0 0;padding-left:18px;color:var(--muted)}.tryg li{margin-top:6px}
+.learn{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:22px;margin-top:22px}
+.learn p{font-size:17px}
+footer{margin:clamp(56px,8vw,104px) 0 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:20px}
+@media (max-width:980px){.labgrid{grid-template-columns:1fr}}
+@media (max-width:700px){.dia{overflow-x:auto}.dia svg{width:720px;max-width:none}.dia .legend{width:720px}}
+@media (max-width:760px){.tryg{grid-template-columns:1fr;justify-items:center}.auto td:first-child{width:auto}.auto thead{display:none}.auto tr{display:block;border-bottom:1px solid var(--line);padding:10px 0}.auto td{display:block;border:0;padding:4px 0}}
+/* embed mode: only the lab */
+body.embed{padding:0;background:transparent}
+body.embed .page>*:not(#lab){display:none}
+body.embed #lab{margin:0}body.embed #lab .sh,body.embed #lab .intro{display:none}body.embed .lab{margin-top:0}
+</style>
+</head>
+<body>
+<div class="page wrap">
+  <nav class="top"><a href="../">← Abhishek Bora</a><span class="sp"></span><a href="#lab">Orchestration</a><a href="#process">Process</a><a href="#try">Try it</a></nav>
+
+  <header class="hero">
+    <span class="label">Concept · AI agent · Verizon home internet</span>
+    <h1>Designing an AI shopping agent that people can trust</h1>
+    <p class="lede">Buying home internet means checking an address, comparing plans, applying offers and getting through checkout. I designed an agent that does this work for people, and the system behind it: which agent does what, when it checks with the user, and what happens when something goes wrong.</p>
+    <span class="note">A concept I designed alongside the plan selection redesign. Not a shipped Verizon product.</span>
+    <dl class="facts">
+      <div><dt>Role</dt><dd>Concept and design lead</dd></div>
+      <div><dt>Scope</dt><dd>Agent flow, orchestration, failure states, prototype</dd></div>
+      <div><dt>Built with</dt><dd>Figma, Claude</dd></div>
+    </dl>
+  </header>
+
+  <!-- ================= LAB ================= -->
+  <section id="lab">
+    <div class="sh"><h2>How the agent is orchestrated</h2><span class="label">Interactive · run a scenario</span></div>
+    <p class="intro">One orchestrator talks to the user. It hands each job to a specialist agent or tool, remembers context, checks every answer against guardrails, and stops at three checkpoints where only the user can decide. Pick a scenario and run it to watch the system work.</p>
+
+    <div class="lab">
+      <div class="labgrid">
+        <div class="dia">
+          <svg id="svg" viewBox="0 0 1000 640" role="img" aria-label="Orchestration diagram of the AI shopping agent">
+            <rect class="zone" x="636" y="16" width="350" height="608" rx="16"/><text class="ztxt" x="654" y="40">SPECIALIST AGENTS AND TOOLS</text>
+            <g id="edges"></g><g id="nodes"></g>
+          </svg>
+          <div class="legend"><span><i style="background:var(--agent)"></i>Agent</span><span><i style="background:var(--tool)"></i>Tool call</span><span><i style="background:var(--check)"></i>User checkpoint</span><span><i style="background:var(--guard)"></i>Guardrail</span><span><i style="background:var(--human)"></i>Human handoff</span></div>
+        </div>
+        <div class="side">
+          <div class="card">
+            <h4>Test scenarios</h4>
+            <div class="scen" id="scen"></div>
+            <div class="ctrl"><button class="run" id="run">▶ Run</button><button id="stepb">Step</button><button id="reset">Reset</button><span class="sp"></span><label><input type="checkbox" id="slow"> Slow</label></div>
+          </div>
+          <div class="card detail" id="detail"><h4>Select a node</h4><p>Tap any box in the diagram to see its job, what it can do on its own, and its guardrails.</p></div>
+          <div class="card"><h4>What the user sees</h4><div class="chat" id="chat"><div class="empty">Run a scenario to see the conversation.</div></div></div>
+        </div>
+      </div>
+      <div class="trace"><div class="th"><span>Agent trace</span><span id="tcount">0 steps</span></div><div class="tlog" id="tlog"></div><div class="res" id="res"></div></div>
+    </div>
+  </section>
+
+  <!-- ================= AUTONOMY ================= -->
+  <section id="autonomy">
+    <div class="sh"><h2>Deciding what the agent does on its own</h2><span class="label">Autonomy levels</span></div>
+    <p class="intro">The most important design decision was not the screens. It was deciding, for every action, whether the agent acts, suggests, or hands over. The rule: the more money or commitment involved, the more control stays with the user.</p>
+    <table class="auto">
+      <thead><tr><th>Action</th><th>Level</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Understand needs and usage</td><td><span class="lvl l1">Agent acts</span></td><td>Low risk. Asks one question at a time and only when it is unsure.</td></tr>
+        <tr><td>Check address and coverage</td><td><span class="lvl l2">Agent suggests, user confirms</span></td><td>A wrong address breaks everything after it, so the detected address is always confirmed.</td></tr>
+        <tr><td>Recommend a plan</td><td><span class="lvl l2">Agent suggests, user confirms</span></td><td>Always explains why, and shows two alternatives so the choice stays with the user.</td></tr>
+        <tr><td>Apply offers and discounts</td><td><span class="lvl l1">Agent acts</span></td><td>Only saves money. Conditions like Auto Pay are shown in plain words.</td></tr>
+        <tr><td>Add TV, phone or extras</td><td><span class="lvl l2">Agent suggests, user confirms</span></td><td>Never pre-selected. This was a key problem in the old flow.</td></tr>
+        <tr><td>Place the order and pay</td><td><span class="lvl l2">User approves</span></td><td>The agent prepares everything, the user gives the final yes.</td></tr>
+        <tr><td>Failed payment, cancellations, complaints</td><td><span class="lvl l3">Hand to a person</span></td><td>Handed off with full context, so the user never repeats themselves.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ================= EVALS ================= -->
+  <section id="evals">
+    <div class="sh"><h2>Testing the design</h2><span class="label">Design evals</span></div>
+    <p class="intro">An agent can say anything, so “looks good in Figma” is not enough. I wrote the rules the agent must always follow as test cases, and ran every scenario against them. Each one passes only when a scenario proves it.</p>
+    <div class="evals" id="evlist"></div>
+    <div class="evbar"><button class="btn" id="runall">Run all scenarios</button><span id="evsum">0 of 9 checks passed</span></div>
+  </section>
+
+  <!-- ================= PROCESS ================= -->
+  <section id="process">
+    <div class="sh"><h2>How I designed it</h2><span class="label">Process</span></div>
+    <div class="steps">
+      <div class="step"><h3>Map the journey</h3><p>Started from the buying journey map we made for plan selection, and marked every step where people get stuck.</p></div>
+      <div class="step"><h3>Split the work into jobs</h3><p>Turned each step into a job for one specialist: needs, coverage, plans, pricing, checkout, tracking.</p></div>
+      <div class="step"><h3>Decide autonomy</h3><p>For every action, decided if the agent acts, suggests or hands over, based on money and risk.</p></div>
+      <div class="step"><h3>Design failures first</h3><p>No coverage, over budget, unsure, payment failed. Each one has a clear next step and no dead ends.</p></div>
+      <div class="step"><h3>Prototype with AI</h3><p>Built the conversation and this orchestration lab with Claude, so the flow could be tested, not just reviewed.</p></div>
+      <div class="step"><h3>Test and refine</h3><p>Ran scenarios against the design evals, fixed what failed, and repeated until every check passed.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= TRY ================= -->
+  <section id="try">
+    <div class="sh"><h2>Try the agent</h2><span class="label">Prototype</span></div>
+    <div class="tryg">
+      <div class="cph"><div class="cvp"><iframe src="app/index.html" title="AI shopping assistant prototype" loading="lazy"></iframe></div></div>
+      <div>
+        <h3 style="font-size:clamp(22px,2.4vw,30px)">The user side of the same system</h3>
+        <p style="color:var(--muted);margin-top:10px;max-width:46ch">Everything in the diagram shows up here as a simple conversation. The user only sees the agent, but every answer comes from a tool and every big step needs their yes.</p>
+        <ul><li>Tell it about your home and budget</li><li>Confirm the detected address</li><li>Compare the recommended plans and offers</li><li>Approve the order, then track the install</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= LEARN ================= -->
+  <section>
+    <div class="sh"><h2>What I learned</h2><span class="label">Takeaways</span></div>
+    <div class="learn">
+      <p><b style="font-weight:500">Design the system, not just the chat.</b> <span style="color:var(--muted)">Most trust problems come from what the agent is allowed to do, not how the message looks.</span></p>
+      <p><b style="font-weight:500">Checkpoints build confidence.</b> <span style="color:var(--muted)">Three clear moments of control made people more comfortable letting the agent do the rest.</span></p>
+      <p><b style="font-weight:500">Test behaviour, not screens.</b> <span style="color:var(--muted)">Writing rules as test cases turned vague “make it trustworthy” goals into things we could check.</span></p>
+    </div>
+  </section>
+
+  <footer><span>Abhishek Bora · Designed by me, built with AI</span><a href="../">Back to portfolio</a></footer>
+</div>
+
+<script>
+(()=>{
+if(/[?&]embed/.test(location.search))document.body.classList.add('embed');
+const $=s=>document.querySelector(s);
+const C={agent:'var(--agent)',tool:'var(--tool)',check:'var(--check)',guard:'var(--guard)',human:'var(--human)',user:'#ffffff'};
+const N={
+ user:{x:30,y:268,w:170,t:'User',s:'shopper',k:'user',job:'Says what they need in their own words, and makes the final call at every checkpoint.',auto:'Decides',guard:'Can stop, change or undo at any point.'},
+ orch:{x:286,y:252,w:268,h:96,t:'Orchestrator agent',s:'plans · routes · explains',k:'agent',job:'The only agent that talks to the user. Breaks the request into jobs, calls the right specialist, and turns results into one clear answer.',auto:'Routes work, asks questions',guard:'Never states a fact a tool did not return.'},
+ guard:{x:320,y:64,w:200,t:'Guardrails',s:'policy checks',k:'guard',job:'Checks every answer before the user sees it: prices match the pricing tool, no add-ons pre-selected, no promises about coverage.',auto:'Blocks or rewrites answers',guard:'Stops retries after two failures.'},
+ mem:{x:320,y:500,w:200,t:'Memory',s:'context',k:'agent',job:'Keeps household size, budget, address and choices across the conversation, so the user never repeats themselves.',auto:'Stores and recalls',guard:'Only keeps what this purchase needs.'},
+ needs:{x:654,y:56,w:316,t:'Needs agent',s:'usage → speed',k:'agent',job:'Turns “4 people, streaming and work calls” into the speed they actually need, with a confidence score.',auto:'Estimates needs',guard:'Low confidence means ask, not guess.'},
+ cov:{x:654,y:150,w:316,t:'Coverage tool',s:'coverage.check(address)',k:'tool',job:'Checks which services are available at the address.',auto:'Read only',guard:'Address must be confirmed by the user first.'},
+ plan:{x:654,y:244,w:316,t:'Plan agent',s:'plans.recommend(needs)',k:'agent',job:'Ranks plans against needs and budget, and writes a short reason for the top pick.',auto:'Suggests',guard:'Always returns two alternatives.'},
+ price:{x:654,y:338,w:316,t:'Pricing and offers',s:'pricing.quote(plan)',k:'tool',job:'Returns the real monthly price, discounts and conditions for a plan.',auto:'Read only',guard:'Single source of truth for every price.'},
+ cart:{x:654,y:432,w:316,t:'Checkout tool',s:'cart.create · payment.charge',k:'tool',job:'Builds the cart, books an install slot and takes payment.',auto:'Only after user approval',guard:'Never charges without an explicit yes.'},
+ track:{x:654,y:526,w:316,t:'Order tracking',s:'order.track(id)',k:'tool',job:'Shares install date and live updates after the order.',auto:'Sends updates',guard:'Read only.'},
+ human:{x:30,y:500,w:170,t:'Sales expert',s:'human handoff',k:'human',job:'A real person who takes over with the full context: address, plan, cart and what went wrong.',auto:'Takes over',guard:'Gets a summary, not a transcript.'}
+};
+const E=[['user','orch'],['orch','guard'],['orch','mem'],['orch','needs'],['orch','cov'],['orch','plan'],['orch','price'],['orch','cart'],['orch','track'],['orch','human'],['human','user']];
+const ns='http://www.w3.org/2000/svg',el=(t,a)=>{const e=document.createElementNS(ns,t);for(const k in a)e.setAttribute(k,a[k]);return e};
+const H=n=>n.h||64;const cx=n=>n.x+n.w/2,cy=n=>n.y+H(n)/2;
+const eg=$('#edges'),ng=$('#nodes');
+function path(a,b){const A=N[a],B=N[b];
+  if(a==='orch'&&B.x>600){const x1=A.x+A.w,y1=cy(A),x2=B.x,y2=cy(B);return `M${x1} ${y1} C${x1+70} ${y1},${x2-70} ${y2},${x2} ${y2}`}
+  if(a==='user'&&b==='orch')return `M${A.x+A.w} ${cy(A)} L${B.x} ${cy(B)}`;
+  if(b==='guard')return `M${cx(A)} ${A.y} L${cx(B)} ${B.y+H(B)}`;
+  if(b==='mem')return `M${cx(A)} ${A.y+H(A)} L${cx(B)} ${B.y}`;
+  if(b==='human')return `M${A.x} ${A.y+H(A)-14} C${A.x-60} ${A.y+150},${B.x+B.w+60} ${cy(B)},${B.x+B.w} ${cy(B)}`;
+  if(a==='human')return `M${cx(A)} ${A.y} L${cx(B)} ${B.y+H(B)}`;
+}
+E.forEach(([a,b])=>eg.appendChild(el('path',{d:path(a,b),class:'edge',id:`e-${a}-${b}`})));
+for(const id in N){const n=N[id];const g=el('g',{class:'node',id:'n-'+id,tabindex:0,role:'button','aria-label':n.t});g.style.setProperty('--c',C[n.k]);
+  g.appendChild(el('rect',{x:n.x,y:n.y,width:n.w,height:H(n),rx:12}));
+  g.appendChild(el('circle',{class:'dot',cx:n.x+18,cy:n.y+H(n)/2,r:5,fill:C[n.k]}));
+  const t=el('text',{class:'t',x:n.x+32,y:n.y+H(n)/2-3});t.textContent=n.t;g.appendChild(t);
+  const s=el('text',{class:'s',x:n.x+32,y:n.y+H(n)/2+15});s.textContent=n.s;g.appendChild(s);
+  g.addEventListener('click',()=>pick(id));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(id)}});
+  ng.appendChild(g)}
+function pick(id){document.querySelectorAll('.node').forEach(n=>n.classList.toggle('sel',n.id==='n-'+id));const n=N[id];
+  $('#detail').innerHTML=`<h4 style="color:${C[n.k]}">${n.t}</h4><p>${n.job}</p><div class="kv"><b>Can do</b><span>${n.auto}</span><b>Guardrail</b><span>${n.guard}</span></div>`}
+
+/* ---------- scenarios ---------- */
+// step: [from,to,kind,label,text, chat?{u|a}, check?]
+const S={
+ happy:{name:'Happy path',ev:['e1','e2','e3','e4'],res:'Order placed. 3 user approvals, 0 surprises, 0 handoffs.',steps:[
+  ['user','orch','user','User','“We are 4 people, lots of streaming and work calls. Under $70 a month.”',{u:'We are 4 people, lots of streaming and work calls. Under $70 a month.'}],
+  ['orch','mem','agent','Memory','save <code>household=4, budget=$70, use=[streaming, video calls]</code>'],
+  ['orch','needs','agent','Needs agent','needs.estimate → <code>~300 Mbps+, confidence 0.92</code>'],
+  ['orch','cov','tool','Coverage','coverage.check(<code>account address</code>) → Fios available'],
+  ['orch','user','check','Checkpoint','Ask user to confirm the detected address',{a:'Is this your home address? 25 Maple Ave, Morristown NJ.',ok:'CHECKPOINT · user confirms'}],
+  ['user','orch','user','User','Confirms address',{u:'Yes, that is right.'}],
+  ['orch','plan','agent','Plan agent','plans.recommend → <code>500 Mbps</code> + 2 alternatives, with reason'],
+  ['orch','price','tool','Pricing','pricing.quote(500) → <code>$59.99/mo with Auto Pay, setup fee waived</code>'],
+  ['orch','guard','guard','Guardrails','✓ price matches pricing tool · ✓ no add-ons pre-selected · ✓ reason shown'],
+  ['orch','user','check','Checkpoint','Show pick with reason and alternatives',{a:'I suggest Fios 500 Mbps at $59.99/mo. It handles 4 people streaming and calls at once. Also see 300 Mbps ($49.99) and 1 Gig ($79.99).',ok:'CHECKPOINT · user picks a plan'}],
+  ['user','orch','user','User','Picks 500 Mbps',{u:'500 Mbps sounds good.'}],
+  ['orch','cart','tool','Checkout','cart.create(500, install=Sat 9–11am) → ready'],
+  ['orch','user','check','Checkpoint','Final approval before payment',{a:'Ready to order: $59.99/mo, $0 due today, install Saturday 9 to 11am. Place order?',ok:'CHECKPOINT · user approves payment'}],
+  ['user','orch','user','User','Approves',{u:'Place order.'}],
+  ['orch','cart','tool','Checkout','payment.charge → <code>success</code>, order #VZ-48213'],
+  ['orch','track','tool','Tracking','order.track(VZ-48213) → install Saturday, technician updates on'],
+  ['orch','user','done','Done','Confirmation sent',{a:'Done. Your install is on Saturday, 9 to 11am. I will update you here when the technician is on the way.'}]]},
+ nocov:{name:'No coverage',ev:['e5'],res:'No dead end. The user got an honest answer and two next steps.',steps:[
+  ['user','orch','user','User','“Can I get fast internet at 18 Hill Rd?”',{u:'Can I get fast internet at 18 Hill Rd?'}],
+  ['orch','cov','tool','Coverage','coverage.check(18 Hill Rd) → <code>Fios: no · 5G Home: yes</code>'],
+  ['orch','guard','guard','Guardrails','Block: do not imply Fios is coming soon. No date from the tool.'],
+  ['orch','plan','agent','Plan agent','plans.recommend(available=[5G Home])'],
+  ['orch','user','check','Checkpoint','Explain honestly and offer options',{a:'Fios is not available at 18 Hill Rd yet. 5G Home Internet is, at $50/mo. Want to see it, or should I tell you when Fios arrives?',ok:'CHECKPOINT · user chooses'}],
+  ['user','orch','user','User','Chooses notify',{u:'Tell me when Fios arrives.'}],
+  ['orch','mem','agent','Memory','save <code>notify_fios=18 Hill Rd</code>'],
+  ['orch','user','done','Done','Confirms alert',{a:'Done. I will message you when Fios is available at your address.'}]]},
+ budget:{name:'Over budget',ev:['e2','e7'],res:'Fit the budget using a real offer, with its condition shown clearly.',steps:[
+  ['user','orch','user','User','“Fast plan for gaming and streaming, max $65.”',{u:'Fast plan for gaming and streaming, max $65.'}],
+  ['orch','mem','agent','Memory','save <code>budget=$65</code>'],
+  ['orch','needs','agent','Needs agent','needs.estimate → <code>500 Mbps+</code>'],
+  ['orch','price','tool','Pricing','pricing.quote(500) → <code>$74.99</code> · over budget'],
+  ['orch','price','tool','Pricing','pricing.offers(500) → <code>Auto Pay −$10, Mobile bundle −$15</code>'],
+  ['orch','guard','guard','Guardrails','✓ discounted price comes from tool · ✓ conditions must be shown'],
+  ['orch','user','check','Checkpoint','Offer a way to fit the budget',{a:'500 Mbps is $74.99. With Auto Pay it is $64.99, within your $65 budget. It needs Auto Pay from a bank account. Use that?',ok:'CHECKPOINT · user accepts condition'}],
+  ['user','orch','user','User','Accepts',{u:'Yes, set up Auto Pay.'}],
+  ['orch','user','done','Done','Continues to checkout with budget kept',{a:'Great, 500 Mbps at $64.99/mo. Moving to checkout.'}]]},
+ change:{name:'Changes mind',ev:['e7','e9'],res:'Recalculated without starting over, and showed exactly what changed.',steps:[
+  ['user','orch','user','User','“Actually, add TV too.”',{u:'Actually, add TV too.'}],
+  ['orch','mem','agent','Memory','recall <code>plan=500, budget=$70</code> · add <code>tv=true</code>'],
+  ['orch','plan','agent','Plan agent','plans.recommend(bundle=TV) → <code>500 + Fios TV Test Drive</code>'],
+  ['orch','price','tool','Pricing','pricing.quote(bundle) → <code>$59.99 → $89.99</code>'],
+  ['orch','guard','guard','Guardrails','Flag: new total is over the saved budget. Must say so.'],
+  ['orch','user','check','Checkpoint','Show what changed',{a:'With TV your total goes from $59.99 to $89.99/mo, $19.99 over your budget. Keep it, or try a smaller TV package?',ok:'CHECKPOINT · user decides'}],
+  ['user','orch','user','User','Picks smaller package',{u:'Try a smaller one.'}],
+  ['orch','price','tool','Pricing','pricing.quote(500 + streaming TV) → <code>$69.99</code>'],
+  ['orch','user','done','Done','Within budget',{a:'500 Mbps with streaming TV is $69.99/mo, within budget. Add it?'}]]},
+ unsure:{name:'Agent unsure',ev:['e6'],res:'Asked one clear question instead of guessing.',steps:[
+  ['user','orch','user','User','“Something good for gaming.”',{u:'Something good for gaming.'}],
+  ['orch','needs','agent','Needs agent','needs.estimate → <code>confidence 0.41</code> · missing: players, streaming'],
+  ['orch','guard','guard','Guardrails','Confidence below 0.7 → ask, do not recommend'],
+  ['orch','user','check','Checkpoint','One clarifying question',{a:'Quick question so I get this right: how many people play online at the same time?',ok:'ASK · one question'}],
+  ['user','orch','user','User','Answers',{u:'Two, and we stream on Twitch.'}],
+  ['orch','needs','agent','Needs agent','needs.estimate → <code>1 Gig, confidence 0.9</code> · upload matters'],
+  ['orch','plan','agent','Plan agent','plans.recommend(1 Gig) with reason: fast upload for streaming'],
+  ['orch','user','done','Done','Recommends with reason',{a:'For two players and streaming, 1 Gig is best because of its fast upload speed. $79.99/mo.'}]]},
+ payfail:{name:'Payment fails',ev:['e1','e8'],res:'Handed to a person with full context. The user did not repeat anything.',steps:[
+  ['orch','cart','tool','Checkout','payment.charge → <code>declined</code> (attempt 1)'],
+  ['orch','user','check','Checkpoint','Explain and retry',{a:'Your card was declined. Want to try again or use another card?',ok:'ASK · user retries'}],
+  ['user','orch','user','User','Retries',{u:'Try again.'}],
+  ['orch','cart','tool','Checkout','payment.charge → <code>declined</code> (attempt 2)'],
+  ['orch','guard','guard','Guardrails','2 failures → stop retrying, hand to a person'],
+  ['orch','human','human','Handoff','handoff.create(<code>summary, address, cart, error</code>)'],
+  ['human','user','human','Sales expert','Joins with context',{a:'Hi, I am Maria from Verizon. I can see your 500 Mbps order for 25 Maple Ave. Let us sort out the payment together.'}],
+  ['orch','user','done','Done','User kept their cart and progress']]}
+};
+const EV={e1:['Asks before charging','Never places an order or takes payment without a clear yes.'],
+ e2:['Prices come from the tool','Never shows a price the pricing tool did not return.'],
+ e3:['Explains the pick','Every recommendation comes with a short reason and alternatives.'],
+ e4:['No pre-selected add-ons','TV, phone and extras are only suggested, never added.'],
+ e5:['No dead ends','When service is unavailable, gives an honest answer and a next step.'],
+ e6:['Asks when unsure','Low confidence means one clear question, not a guess.'],
+ e7:['Remembers context','Keeps budget and choices across the conversation.'],
+ e8:['Hands off with context','After 2 failures, a person takes over with the full summary.'],
+ e9:['Shows what changed','When the user changes their mind, shows the old and new total.']};
+const passed=new Set();
+$('#evlist').innerHTML=Object.entries(EV).map(([k,[t,d]])=>`<div class="ev" id="ev-${k}"><span class="st"></span><div><b>${t}</b><small>${d}</small></div></div>`).join('');
+function markEv(ids){ids.forEach(i=>{passed.add(i);const e=$('#ev-'+i);e.classList.add('pass');e.querySelector('.st').textContent='✓'});$('#evsum').textContent=`${passed.size} of 9 checks passed`}
+
+let cur='happy',i=0,timer=null;
+$('#scen').innerHTML=Object.entries(S).map(([k,v])=>`<button type="button" data-s="${k}" aria-pressed="${k===cur}">${v.name}</button>`).join('');
+$('#scen').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cur=b.dataset.s;document.querySelectorAll('#scen button').forEach(x=>x.setAttribute('aria-pressed',x===b));reset()});
+function clearHi(){document.querySelectorAll('.edge').forEach(e=>e.setAttribute('class','edge'));document.querySelectorAll('.node').forEach(n=>n.classList.remove('on'))}
+function reset(){stop();i=0;clearHi();$('#tlog').innerHTML='';$('#chat').innerHTML='<div class="empty">Run a scenario to see the conversation.</div>';$('#res').classList.remove('on');$('#tcount').textContent='0 steps'}
+function edgeEl(a,b){return $(`#e-${a}-${b}`)||$(`#e-${b}-${a}`)}
+function step(){const sc=S[cur];if(i>=sc.steps.length){finish();return false}
+  const [a,b,k,lab,txt,chat]=sc.steps[i];clearHi();
+  const ed=edgeEl(a,b);if(ed)ed.setAttribute('class','edge on '+(k==='user'||k==='done'?'':k));
+  [a,b].forEach(id=>{const n=$('#n-'+id);if(n)n.classList.add('on')});
+  if(i===0)$('#chat').innerHTML='';
+  const row=document.createElement('div');row.className='tl '+k;row.innerHTML=`<span class="n">${String(i+1).padStart(2,'0')}</span><span class="k">${lab}</span><span class="x">${txt}</span>`;
+  $('#tlog').appendChild(row);$('#tlog').scrollTop=1e6;
+  if(chat){const d=document.createElement('div');d.className='bub '+(chat.u?'u':'a');d.textContent=chat.u||chat.a;if(chat.ok){const o=document.createElement('span');o.className='ok';o.textContent=chat.ok;d.appendChild(document.createElement('br'));d.appendChild(o)}$('#chat').appendChild(d);$('#chat').scrollTop=1e6}
+  i++;$('#tcount').textContent=`${i} of ${sc.steps.length} steps`;
+  if(i>=sc.steps.length)finish();return i<sc.steps.length}
+function finish(){stop();const sc=S[cur];const r=$('#res');r.textContent='✓ '+sc.res;r.classList.add('on');markEv(sc.ev)}
+function stop(){clearInterval(timer);timer=null;$('#run').textContent='▶ Run'}
+function run(cb){if(timer){stop();return}if(i>=S[cur].steps.length)reset();$('#run').textContent='❚❚ Pause';
+  timer=setInterval(()=>{if(!step()){stop();cb&&cb()}},$('#slow').checked?1800:900)}
+$('#run').onclick=()=>run();$('#stepb').onclick=()=>{stop();if(i>=S[cur].steps.length)reset();step()};$('#reset').onclick=reset;
+$('#runall').onclick=()=>{const keys=Object.keys(S);let j=0;document.getElementById('lab').scrollIntoView({behavior:'smooth'});
+  const next=()=>{if(j>=keys.length)return;cur=keys[j++];document.querySelectorAll('#scen button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.s===cur));reset();
+    const sc=S[cur];let t=setInterval(()=>{if(!step()){clearInterval(t);setTimeout(next,700)}},260)};next()};
+pick('orch');
+})();
+</script>
+</body>
+</html>
