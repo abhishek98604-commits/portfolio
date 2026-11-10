@@ -110,13 +110,13 @@ body.embed{padding:0;background:transparent}body.embed .page>*:not(#lab){display
 </head>
 <body>
 <div class="page wrap">
-  <nav class="top"><a href="../">← Abhishek Bora</a><span class="sp"></span><a href="#lab">Try it</a><a href="#how">How it works</a><a href="#process">Process</a></nav>
+  <nav class="top"><a href="../">← Abhishek Bora</a><span class="sp"></span><a href="#lab">Try it</a><a href="#how">How it works</a><a href="#system">Rules</a></nav>
 
   <header class="hero">
-    <span class="label">Personal project · AI agent · Design process</span>
+    <span class="label">Verizon · AI agent · Design process</span>
     <h1>A design review agent that checks every screen before review</h1>
-    <p class="lede">Design reviews spend too much time on the same mistakes: low contrast, off-grid spacing, wrong colours, small tap targets, unclear buttons. I built an agent that catches them in seconds, explains why each one matters, and fixes them, so reviews can focus on the real design decisions.</p>
-    <span class="note">Started as a Figma plugin idea for our design quality checks. Rebuilt here so you can run it in the browser.</span>
+    <p class="lede">Design reviews kept repeating the same comments: low contrast, off-grid spacing, wrong colours, small tap targets, unclear buttons. I built an agent that checks a screen against the design system in seconds and fixes what it can, so reviews focus on design decisions.</p>
+    <span class="note">Under NDA. What you see here is a demo that recreates my work at Verizon with sample data, not real Verizon screens or code.</span>
     <dl class="facts"><div><dt>Role</dt><dd>Designer and builder</dd></div><div><dt>Checks</dt><dd>8 rules from the design system</dd></div><div><dt>Built with</dt><dd>Claude, Figma plugin API</dd></div></dl>
   </header>
 
@@ -153,7 +153,7 @@ body.embed{padding:0;background:transparent}body.embed .page>*:not(#lab){display
       <div class="ab"><span class="label">AI</span><h3>Judge and explain</h3><p>An LLM reviews copy and hierarchy, explains each issue in plain words and suggests the fix.</p></div>
       <div class="ab"><span class="label">Output</span><h3>Fix and report</h3><p>One click applies token fixes. The report goes to the designer before the review, not after.</p></div>
     </div>
-    <p class="intro">Rules handle what can be measured, so results are consistent. AI handles what needs judgement, like whether a button label is clear. In this browser version the AI suggestions are pre-written for the sample screens.</p>
+    <p class="intro">Measurable checks run as code, so results are consistent. Judgement calls, like whether a button label is clear, go to the LLM. In this demo the AI suggestions are pre-written.</p>
   </section>
 
   <section id="system">
@@ -166,25 +166,9 @@ body.embed{padding:0;background:transparent}body.embed .page>*:not(#lab){display
     </div>
   </section>
 
-  <section id="process">
-    <div class="sh"><h2>How I built it</h2><span class="label">Process</span></div>
-    <div class="steps">
-      <div class="step"><h3>Listed review comments</h3><p>Went through past design review notes and grouped the comments that kept repeating.</p></div>
-      <div class="step"><h3>Turned them into rules</h3><p>Each repeated comment became a rule tied to a design system token, with a clear pass and fail.</p></div>
-      <div class="step"><h3>Split rules and AI</h3><p>Measurable checks run as code. Judgement calls like copy and hierarchy go to the LLM.</p></div>
-      <div class="step"><h3>Built it with Claude</h3><p>Wrote the plugin and this browser version with Claude, testing each rule on real screens.</p></div>
-      <div class="step"><h3>Designed the report</h3><p>Every issue says what is wrong, why it matters and how to fix it, with one-click fixes where safe.</p></div>
-    </div>
-  </section>
+  
 
-  <section>
-    <div class="sh"><h2>What it changes</h2><span class="label">Impact</span></div>
-    <div class="impact">
-      <p>Reviews focus on decisions. <span>The basic checks are done before anyone looks at the screen.</span></p>
-      <p>Faster feedback. <span>A designer gets a full check in seconds instead of waiting for the next review.</span></p>
-      <p>A stronger design system. <span>Every fix points back to a token, so one-off styles stop spreading.</span></p>
-    </div>
-  </section>
+  
 
   <footer><span>Abhishek Bora · Designed by me, built with AI</span><a href="../">Back to portfolio</a></footer>
 </div>

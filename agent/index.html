@@ -128,16 +128,16 @@ body.embed #lab{margin:0}body.embed #lab .sh,body.embed #lab .intro{display:none
 </head>
 <body>
 <div class="page wrap">
-  <nav class="top"><a href="../">← Abhishek Bora</a><span class="sp"></span><a href="#lab">Orchestration</a><a href="#process">Process</a><a href="#try">Try it</a></nav>
+  <nav class="top"><a href="../">← Abhishek Bora</a><span class="sp"></span><a href="#lab">Orchestration</a><a href="#autonomy">Autonomy</a><a href="#evals">Tests</a></nav>
 
   <header class="hero">
-    <span class="label">Concept · AI agent · Verizon home internet</span>
+    <span class="label">Verizon · AI agent · Home internet</span>
     <h1>Designing an AI shopping agent that people can trust</h1>
-    <p class="lede">Buying home internet means checking an address, comparing plans, applying offers and getting through checkout. I designed an agent that does this work for people, and the system behind it: which agent does what, when it checks with the user, and what happens when something goes wrong.</p>
-    <span class="note">A concept I designed alongside the plan selection redesign. Not a shipped Verizon product.</span>
+    <p class="lede">An agent that helps people buy home internet: it checks the address, recommends a plan, applies offers and prepares checkout. I designed the system behind it: which agent does what, when the user decides, and what happens when something fails.</p>
+    <span class="note">Under NDA. What you see here is a demo that recreates my work at Verizon with sample data, not real Verizon screens or code.</span>
     <dl class="facts">
-      <div><dt>Role</dt><dd>Concept and design lead</dd></div>
-      <div><dt>Scope</dt><dd>Agent flow, orchestration, failure states, prototype</dd></div>
+      <div><dt>Role</dt><dd>Design lead</dd></div>
+      <div><dt>Scope</dt><dd>Orchestration, autonomy, failure states</dd></div>
       <div><dt>Built with</dt><dd>Figma, Claude</dd></div>
     </dl>
   </header>
@@ -194,42 +194,6 @@ body.embed #lab{margin:0}body.embed #lab .sh,body.embed #lab .intro{display:none
     <p class="intro">An agent can say anything, so “looks good in Figma” is not enough. I wrote the rules the agent must always follow as test cases, and ran every scenario against them. Each one passes only when a scenario proves it.</p>
     <div class="evals" id="evlist"></div>
     <div class="evbar"><button class="btn" id="runall">Run all scenarios</button><span id="evsum">0 of 9 checks passed</span></div>
-  </section>
-
-  <!-- ================= PROCESS ================= -->
-  <section id="process">
-    <div class="sh"><h2>How I designed it</h2><span class="label">Process</span></div>
-    <div class="steps">
-      <div class="step"><h3>Map the journey</h3><p>Started from the buying journey map we made for plan selection, and marked every step where people get stuck.</p></div>
-      <div class="step"><h3>Split the work into jobs</h3><p>Turned each step into a job for one specialist: needs, coverage, plans, pricing, checkout, tracking.</p></div>
-      <div class="step"><h3>Decide autonomy</h3><p>For every action, decided if the agent acts, suggests or hands over, based on money and risk.</p></div>
-      <div class="step"><h3>Design failures first</h3><p>No coverage, over budget, unsure, payment failed. Each one has a clear next step and no dead ends.</p></div>
-      <div class="step"><h3>Prototype with AI</h3><p>Built the conversation and this orchestration lab with Claude, so the flow could be tested, not just reviewed.</p></div>
-      <div class="step"><h3>Test and refine</h3><p>Ran scenarios against the design evals, fixed what failed, and repeated until every check passed.</p></div>
-    </div>
-  </section>
-
-  <!-- ================= TRY ================= -->
-  <section id="try">
-    <div class="sh"><h2>Try the agent</h2><span class="label">Prototype</span></div>
-    <div class="tryg">
-      <div class="cph"><div class="cvp"><iframe src="app/index.html" title="AI shopping assistant prototype" loading="lazy"></iframe></div></div>
-      <div>
-        <h3 style="font-size:clamp(22px,2.4vw,30px)">The user side of the same system</h3>
-        <p style="color:var(--muted);margin-top:10px;max-width:46ch">Everything in the diagram shows up here as a simple conversation. The user only sees the agent, but every answer comes from a tool and every big step needs their yes.</p>
-        <ul><li>Tell it about your home and budget</li><li>Confirm the detected address</li><li>Compare the recommended plans and offers</li><li>Approve the order, then track the install</li></ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= LEARN ================= -->
-  <section>
-    <div class="sh"><h2>What I learned</h2><span class="label">Takeaways</span></div>
-    <div class="learn">
-      <p><b style="font-weight:500">Design the system, not just the chat.</b> <span style="color:var(--muted)">Most trust problems come from what the agent is allowed to do, not how the message looks.</span></p>
-      <p><b style="font-weight:500">Checkpoints build confidence.</b> <span style="color:var(--muted)">Three clear moments of control made people more comfortable letting the agent do the rest.</span></p>
-      <p><b style="font-weight:500">Test behaviour, not screens.</b> <span style="color:var(--muted)">Writing rules as test cases turned vague “make it trustworthy” goals into things we could check.</span></p>
-    </div>
   </section>
 
   <footer><span>Abhishek Bora · Designed by me, built with AI</span><a href="../">Back to portfolio</a></footer>

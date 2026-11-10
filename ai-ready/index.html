@@ -48,6 +48,7 @@ code,pre{font-family:var(--mono)}
 .prev{background:#fff;border-radius:10px;padding:18px;min-height:210px}
 .prev iframe{width:100%;height:220px;border:0;display:block}
 .code{background:#070b16;border:1px solid var(--nline);border-radius:10px;padding:12px 14px;font-size:12.2px;line-height:1.6;overflow:auto;max-height:420px;white-space:pre;color:#cfd8f0;margin:0}
+details.more{margin-top:10px}details.more summary{cursor:pointer;font-size:13px;color:var(--nmute);padding:6px 0}details.more summary span{font-family:var(--mono);font-size:11px}#snip{max-height:none;white-space:pre-wrap}
 .code .hl{background:rgba(255,107,125,.18);border-bottom:1px solid var(--err);border-radius:2px}
 .code .tk{color:#9fb3ff}.code .tg{color:#7ee2c0}.code .cm{color:#56638a}
 .res{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin-top:14px}
@@ -110,18 +111,18 @@ body.embed{padding:0;background:transparent}body.embed .page>*:not(#lab){display
   <nav class="top"><a href="../">← Abhishek Bora</a><span class="sp"></span><a href="#lab">Demo</a><a href="#audit">Audit</a><a href="#people">Working with teams</a><a href="article.html">Article</a></nav>
 
   <header class="hero">
-    <span class="label">Playbook · Personal project · Design systems</span>
+    <span class="label">Verizon · Design systems · AI</span>
     <h1>Making a legacy design system AI-ready</h1>
-    <p class="lede">Designers and developers now build with AI tools like Claude Code, Cursor and Figma-to-code. Pointed at an older design system, these tools guess. They hard-code colours, invent spacing and turn buttons into divs. This is how I approach fixing that: what to audit, what to review in the HTML and CSS with developers, and how to work with the design system team so the fix sticks.</p>
-    <span class="note">The problems come from my experience with large, long-lived design systems. The before and after below uses Northstar, a sample system I built for this project. It is not Verizon code.</span>
-    <dl class="facts"><div><dt>Role</dt><dd>Designer, auditor, builder</dd></div><div><dt>Partners</dt><dd>Design system team, front-end developers</dd></div><div><dt>Built with</dt><dd>Figma, Claude Code, Stylelint</dd></div></dl>
+    <p class="lede">Teams started building with AI tools like Claude Code and Figma-to-code. Pointed at our older design system, the tools guessed: hard-coded colours, made-up spacing, buttons made of divs. I worked with the design system team and front-end developers to fix the system so AI output comes out right.</p>
+    <span class="note">Under NDA. What you see here is a demo that recreates my work at Verizon with sample data, not real Verizon screens or code.</span>
+    <dl class="facts"><div><dt>Role</dt><dd>Design lead</dd></div><div><dt>Partners</dt><dd>Design system team, front-end developers</dd></div><div><dt>Built with</dt><dd>Figma, Claude Code, Stylelint</dd></div></dl>
     <a class="cta" href="article.html">Read the article ↗</a>
   </header>
 
   <!-- ===== LAB ===== -->
   <section id="lab">
     <div class="sh"><h2>Same prompt, two design systems</h2><span class="label">Live demo</span></div>
-    <p class="intro">I gave Claude the same request twice. First with the legacy system as it was: a Storybook link, screenshots and value-named tokens. Then with the AI-ready version. Switch between them and run the lint check. The checks run live on the code.</p>
+    <p class="intro">The same request, given to Claude twice: once with the legacy system, once with the AI-ready version. Switch between them and run the check.</p>
     <div class="lab">
       <div class="prompt"><span class="label">Prompt</span><span>“Build a plan card for Fiber 500 with the price, the Auto Pay offer and a select button. Use our design system.”</span></div>
       <div class="tabs"><button type="button" data-v="legacy" aria-pressed="true">Legacy system</button><button type="button" data-v="ready" aria-pressed="false">AI-ready system</button><button type="button" class="lint" id="lint">Run lint check</button></div>
@@ -130,7 +131,7 @@ body.embed{padding:0;background:transparent}body.embed .page>*:not(#lab){display
           <div class="box"><h4>What the AI was given</h4><div class="ctx" id="ctx"></div></div>
           <div class="box"><h4>Rendered result</h4><div class="prev"><iframe id="pv" title="Rendered output"></iframe></div></div>
         </div>
-        <div class="box"><h4>Code the AI wrote <span id="lines"></span></h4><pre class="code" id="code"></pre>
+        <div class="box"><h4>Key lines from the AI’s code</h4><pre class="code" id="snip"></pre><details class="more"><summary>View the full code <span id="lines"></span></summary><pre class="code" id="code"></pre></details>
           <div class="res"><div class="big" id="score">–<small>lint issues</small></div><div class="hits" id="hits"><span class="hit">Run the lint check to scan this code</span></div></div>
         </div>
       </div>
@@ -146,37 +147,21 @@ body.embed{padding:0;background:transparent}body.embed .page>*:not(#lab){display
   <!-- ===== AUDIT ===== -->
   <section id="audit">
     <div class="sh"><h2>The audit: why AI tools get it wrong</h2><span class="label">Six problems</span></div>
-    <p class="intro">Most legacy systems work fine for people who already know them. AI tools do not have that memory. They only see what is written down, so every gap becomes a guess.</p>
+    <p class="intro">AI tools only see what is written down. Every gap in the system becomes a guess.</p>
     <div class="aud">
-      <div class="ai"><span class="n">01</span><h3>Figma and code drifted apart</h3><p>The Figma button had 5 variants, the code had 9, and the names did not match. <b>The AI cannot map a design to the right component.</b></p>
-<pre class="snip"><span class="c">Figma:</span> Button / Primary / Large
-<span class="c">Code: </span> &lt;Btn kind="<span class="x">cta-blue</span>" size="<span class="x">xl</span>"&gt;</pre></div>
-      <div class="ai"><span class="n">02</span><h3>Tokens named by value, not purpose</h3><p><code>blue-600</code> says what it looks like, not when to use it. <b>The AI picks colours by eye, so the same blue ends up on links, buttons and info banners.</b></p>
-<pre class="snip">--blue-600: #2754e6;   <span class="c">/* button? link? info? */</span>
---gray-300: #d1d5db;   <span class="c">/* border? disabled text? */</span></pre></div>
-      <div class="ai"><span class="n">03</span><h3>Hard-coded values in product code</h3><p>Years of quick fixes left hex colours, pixel spacing and <code>!important</code> overrides across product code. <b>AI tools copy the patterns they find in the codebase.</b></p>
-<pre class="snip">.promo-banner {
-  color: <span class="x">#b7791f !important</span>;
-  margin-top: <span class="x">17px</span>;
-}</pre></div>
-      <div class="ai"><span class="n">04</span><h3>Inaccessible markup</h3><p>Clickable divs, inputs without labels, missing focus styles, errors shown only in red. <b>Generated code repeats the same accessibility gaps.</b></p>
-<pre class="snip">&lt;<span class="x">div</span> class="btn" <span class="x">onclick</span>="next()"&gt;SELECT&lt;/div&gt;
-&lt;input placeholder="<span class="x">Email</span>"&gt;  <span class="c">&lt;!-- no label --&gt;</span></pre></div>
-      <div class="ai"><span class="n">05</span><h3>Docs written only for people</h3><p>Screenshots, PDFs and Storybook pages with no written rules. <b>An AI cannot read “use this for the main action only” from a picture.</b></p>
-<pre class="snip"><span class="c">Button docs today:</span>
-  [image] [image] [image]
-  <span class="x">“See examples above.”</span></pre></div>
-      <div class="ai"><span class="n">06</span><h3>No single source of truth</h3><p>Some teams kept their own copies of components and changed them. <b>The AI finds three versions of the same card and does not know which one is right.</b></p>
-<pre class="snip">/checkout/components/<span class="x">PlanCard.jsx</span>
-/shop/shared/<span class="x">PlanCard.jsx</span>
-/legacy/ui/<span class="x">plan-card-v2.jsx</span></pre></div>
+      <div class="ai"><span class="n">01</span><h3>Figma and code drifted apart</h3><p>The Figma button had 5 variants, the code had 9, and the names did not match. <b>The AI cannot map a design to the right component.</b></p></div>
+      <div class="ai"><span class="n">02</span><h3>Tokens named by value, not purpose</h3><p><code>blue-600</code> says what it looks like, not when to use it. <b>The AI picks colours by eye, so the same blue ends up on links, buttons and info banners.</b></p></div>
+      <div class="ai"><span class="n">03</span><h3>Hard-coded values in product code</h3><p>Years of quick fixes left hex colours, pixel spacing and <code>!important</code> overrides across product code. <b>AI tools copy the patterns they find in the codebase.</b></p></div>
+      <div class="ai"><span class="n">04</span><h3>Inaccessible markup</h3><p>Clickable divs, inputs without labels, missing focus styles, errors shown only in red. <b>Generated code repeats the same accessibility gaps.</b></p></div>
+      <div class="ai"><span class="n">05</span><h3>Docs written only for people</h3><p>Screenshots, PDFs and Storybook pages with no written rules. <b>An AI cannot read “use this for the main action only” from a picture.</b></p></div>
+      <div class="ai"><span class="n">06</span><h3>No single source of truth</h3><p>Some teams kept their own copies of components and changed them. <b>The AI finds three versions of the same card and does not know which one is right.</b></p></div>
     </div>
   </section>
 
   <!-- ===== REVIEW ===== -->
   <section id="review">
     <div class="sh"><h2>The HTML and CSS review with developers</h2><span class="label">What we checked</span></div>
-    <p class="intro">I did not review screens alone. I sat with front-end developers and went through the component code line by line. This is the checklist we used, with a real example of each fix.</p>
+    <p class="intro">I went through the component code with front-end developers, line by line, using this checklist.</p>
     <table class="rv">
       <thead><tr><th>Check</th><th>Before</th><th>After</th><th>Why it matters</th></tr></thead>
       <tbody>
@@ -196,41 +181,22 @@ body.embed{padding:0;background:transparent}body.embed .page>*:not(#lab){display
   <section id="layers">
     <div class="sh"><h2>The fix, in four layers</h2><span class="label">What changed</span></div>
     <div class="layers">
-      <div class="ly"><span class="n">01 · Tokens</span><h3>Name by purpose</h3><p>A purpose layer sits on top of the old colour palette. Old names still work as aliases, so nothing breaks on day one.</p>
-<pre class="snip"><span class="c">// tokens.json (one file, Figma and code)</span>
-"color-action-primary": "{blue-600}",
-"color-text-secondary": "{gray-600}",
-"color-border-subtle":  "{gray-200}",
-"space-4": "1rem"</pre></div>
+      <div class="ly"><span class="n">01 · Tokens</span><h3>Name by purpose</h3><p>A purpose layer sits on top of the old colour palette. Old names still work as aliases, so nothing breaks on day one.</p></div>
       <div class="ly"><span class="n">02 · Components</span><h3>Match Figma to code</h3><p>Every Figma variant maps one to one to a code prop, and each Figma component links to its code, so tools can see both.</p>
-<table class="map"><tr><td>Primary / Large</td><td>→</td><td><code>variant="primary" size="lg"</code></td></tr><tr><td>Secondary / Medium</td><td>→</td><td><code>variant="secondary"</code></td></tr><tr><td>Text link</td><td>→</td><td><code>variant="ghost"</code></td></tr></table></div>
-      <div class="ly"><span class="n">03 · Docs for AI</span><h3>Write the rules down</h3><p>A short markdown file per component that people and AI tools both read: purpose, when not to use it, required props, accessibility.</p>
-<pre class="snip"><span class="c"># button.md</span>
-Use: one primary button per view.
-Do not: use for navigation, use a link.
-Label: verb + object, e.g. “Select plan”.
-Props: variant, size, disabled.
-A11y: never remove focus outline.</pre></div>
-      <div class="ly"><span class="n">04 · Guardrails</span><h3>Catch drift automatically</h3><p>Lint rules block hard-coded colours and pixel values in pull requests, and the <a href="../review/">design review agent</a> checks screens before review.</p>
-<pre class="snip"><span class="c">// .stylelintrc</span>
-"color-no-hex": true,
-"declaration-no-important": true,
-"unit-disallowed-list": ["px"],
-"scale-unlimited/declaration-strict-value":
-  ["/color/", "font-size"]</pre></div>
+</div>
+      <div class="ly"><span class="n">03 · Docs for AI</span><h3>Write the rules down</h3><p>A short markdown file per component that people and AI tools both read: purpose, when not to use it, required props, accessibility.</p></div>
+      <div class="ly"><span class="n">04 · Guardrails</span><h3>Catch drift automatically</h3><p>Lint rules block hard-coded colours and pixel values in pull requests, and the <a href="../review/">design review agent</a> checks screens before review.</p></div>
     </div>
   </section>
 
   <!-- ===== PEOPLE ===== -->
   <section id="people">
     <div class="sh"><h2>Working with the design system team and developers</h2><span class="label">How the work runs</span></div>
-    <p class="intro">A design system belongs to a team, not to one designer. The technical fix is the easy part. Getting many product teams to change how they work is the real job.</p>
+    <p class="intro">The technical fix was the easy part. Getting product teams to change how they work was the real job.</p>
     <div class="how">
       <div class="st"><h3>Audit together</h3><p>One shared sheet with the design system team: every component, its Figma name, code name, and gaps found.</p></div>
-      <div class="st"><h3>Agree the rules first</h3><p>Token names and the component checklist were agreed with the system team before any code changed.</p></div>
       <div class="st"><h3>Pilot one flow</h3><p>Start with one real flow, like plan selection, prove it works, then scale to other teams.</p></div>
       <div class="st"><h3>Review in pull requests</h3><p>Designers review component code in pull requests, not just screens in Figma.</p></div>
-      <div class="st"><h3>Weekly triage</h3><p>A short weekly session to sort new gaps: fix in the system, or fix in the product.</p></div>
       <div class="st"><h3>Contribution model</h3><p>Product teams propose new components, the system team approves, so copies stop spreading.</p></div>
     </div>
     <div class="tens">
@@ -239,17 +205,7 @@ A11y: never remove focus outline.</pre></div>
       <div class="tn"><span class="label">Tension</span><h3>“Design and code use different names.”</h3><p><b>Resolution:</b> code names win, because that is what ships. Figma keeps friendly display names, mapped one to one in the component docs.</p></div>
     </div>
   </section>
-
-  <!-- ===== METRICS ===== -->
-  <section id="metrics">
-    <div class="sh"><h2>How to know it is working</h2><span class="label">Measures</span></div>
-    <div class="metrics">
-      <div class="mt"><b>Token coverage</b><p>Share of colours, spacing and type in product code that come from tokens.</p></div>
-      <div class="mt"><b>Hard-coded values</b><p>Count from the lint report each sprint. It should only go down.</p></div>
-      <div class="mt"><b>AI first-pass rate</b><p>How often AI-generated UI passes the lint check and review agent with no changes.</p></div>
-      <div class="mt"><b>Time to prototype</b><p>Time from a design to a working, on-brand prototype.</p></div>
-    </div>
-  </section>
+  
 
   <section>
     <div class="art"><div><span class="label">Article</span><h3>Your design system was built for people. Now it needs to work for AI too.</h3><p>The same story in plain words: what breaks, what to fix first, and how to bring the team along.</p></div><a class="cta" href="article.html" style="margin:0">Read the article ↗</a></div>
@@ -330,6 +286,19 @@ css:`/* tokens.css (generated from tokens.json) */
 .ns-button--primary { background: var(--color-action-primary); color: var(--color-on-action); }
 .ns-button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }`}
 };
+const SN={legacy:`<div class="btn-blue" onclick="next()">SELECT</div>
+
+background: #0066cc !important;
+color: #a7a7a7;      /* "As low as" text */
+font-size: 13px;
+margin-top: 17px;`,ready:`<button class="ns-button ns-button--primary" type="button">
+  Select Fiber 500
+</button>
+
+background: var(--color-action-primary);
+color: var(--color-text-secondary);
+font-size: var(--font-size-sm);
+.ns-button:focus-visible { outline: 2px solid var(--color-focus); }`};
 let cur='legacy';
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function bodyCss(css){return css.replace(/:root\s*\{[\s\S]*?\}/,'')}
@@ -357,13 +326,13 @@ function hl(css,bad){let out=esc(css);
 function hlHtml(h){return esc(h).replace(/(&lt;\/?)([a-z0-9]+)/g,'$1<span class="tg">$2</span>')}
 let linted=false;
 function show(v){cur=v;linted=false;document.querySelectorAll('.tabs [data-v]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
-  const d=V[v];$('#ctx').innerHTML=d.ctx;$('#code').innerHTML=hlHtml(d.html)+'\n\n'+hl(d.css);$('#lines').textContent=(d.html+d.css).split('\n').length+' lines';
+  const d=V[v];$('#ctx').innerHTML=d.ctx;$('#code').innerHTML=hlHtml(d.html)+'\n\n'+hl(d.css);$('#lines').textContent='· '+(d.html+d.css).split('\n').length+' lines';$('#snip').innerHTML=v==='ready'?hl(SN[v]).replace(/(&lt;\/?)(button)/g,'$1<span class="tg">$2</span>'):esc(SN[v]);
   $('#pv').srcdoc=`<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;font-family:Inter,Arial,sans-serif}${d.css}</style></head><body>${d.html.replace('onclick="next()"','')}</body></html>`;
-  $('#score').innerHTML='–<small>lint issues</small>';$('#hits').innerHTML='<span class="hit">Run the lint check to scan this code</span>';['#k1','#k2','#k3','#k4'].forEach(s=>$(s).textContent='–')}
+  $('#score').innerHTML='–<small>lint issues</small>';$('#score').style.color='';$('#hits').innerHTML='<span class="hit">Run the lint check to scan this code</span>';['#k1','#k2','#k3','#k4'].forEach(s=>$(s).textContent='–')}
 function runLint(){const a=lint(cur),L=lint('legacy'),R=lint('ready');
   // highlight offending tokens in code
   let code=$('#code').innerHTML;
-  if(cur==='legacy'){code=code.replace(/(#[0-9a-fA-F]{3,6}\b|\b(?:[3-9]|1\d|[2-9]\d)px\b|!important|onclick|SELECT)/g,'<span class="hl">$1</span>');$('#code').innerHTML=code}
+  if(cur==='legacy'){$('#snip').innerHTML=$('#snip').innerHTML.replace(/(#[0-9a-fA-F]{3,6}\b|\b(?:[3-9]|1\d|[2-9]\d)px\b|!important|onclick|SELECT|&lt;div)/g,'<span class="hl">$1</span>');code=code.replace(/(#[0-9a-fA-F]{3,6}\b|\b(?:[3-9]|1\d|[2-9]\d)px\b|!important|onclick|SELECT)/g,'<span class="hl">$1</span>');$('#code').innerHTML=code}
   $('#score').innerHTML=`${a.n}<small>lint issues</small>`;$('#score').style.color=a.n?'#ff9aa7':'#7ee2a8';
   $('#hits').innerHTML=a.r.map(([k,t])=>`<span class="hit ${k}">${k==='bad'?'✕':'✓'} ${t}</span>`).join('');
   $('#k1').innerHTML=`${L.hex}<i>→</i>${R.hex}`;$('#k2').innerHTML=`${L.px}<i>→</i>${R.px}`;$('#k3').innerHTML=`${L.ctrl}<i>→</i>${R.ctrl}`;$('#k4').innerHTML=`${L.tok}%<i>→</i>${R.tok}%`}
