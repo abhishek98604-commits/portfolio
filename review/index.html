@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design Review Agent</title>
+<meta name="description" content="An AI agent that reviews screens against a design system: contrast, tokens, spacing, tap targets, copy and visual hierarchy, then fixes the issues.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{--paper:#fff;--ink:#0f1115;--muted:#5d6370;--panel:#f3f4f6;--line:#e4e6ea;
+  --night:#0b1020;--night2:#121a30;--nline:#26314d;--ntext:#c9d3ea;--nmute:#7f8bab;
+  --err:#ff6b7d;--warn:#f5b84a;--ok:#5fd39a;--agent:#7c9cff;
+  --display:"Geist","Helvetica Neue",Arial,sans-serif;--mono:"Geist Mono",ui-monospace,Menlo,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--display);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;padding:0 max(16px,env(safe-area-inset-left,0px))}
+a{color:inherit}h1,h2,h3{margin:0;font-weight:500;letter-spacing:-.02em;text-wrap:balance}p{margin:0}
+.wrap{max-width:1240px;margin:0 auto}
+.label{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.top{display:flex;align-items:center;height:60px;gap:16px}.top a{text-decoration:none;font-size:15px;color:var(--muted)}.top a:hover{color:var(--ink)}.top .sp{flex:1}
+header.hero{padding:clamp(40px,7vw,96px) 0 clamp(28px,4vw,48px)}
+.hero h1{font-size:clamp(34px,5vw,62px);line-height:1.03;letter-spacing:-.035em;max-width:17ch;margin-top:14px}
+.hero .lede{font-size:clamp(17px,1.6vw,21px);max-width:62ch;margin-top:20px}
+.note{display:inline-flex;margin-top:18px;font-size:13.5px;color:var(--muted);background:var(--panel);border-radius:999px;padding:6px 12px}
+.facts{display:flex;flex-wrap:wrap;gap:12px 36px;margin:28px 0 0;padding:0}.facts div{display:flex;gap:10px;align-items:baseline}.facts dt{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.facts dd{margin:0}
+section{margin-top:clamp(56px,8vw,104px)}
+.sh{display:flex;justify-content:space-between;align-items:baseline;gap:16px;border-top:1.5px solid var(--ink);padding-top:16px}.sh h2{font-size:clamp(24px,2.8vw,36px)}
+.intro{color:var(--muted);max-width:66ch;margin-top:14px;font-size:17px}
+
+/* lab */
+.lab{background:var(--night);color:var(--ntext);border-radius:22px;margin-top:24px;padding:clamp(14px,2.4vw,28px);position:relative;overflow:hidden}
+.lab:before{content:"";position:absolute;inset:0;background:radial-gradient(50% 45% at 30% 40%,rgba(124,156,255,.14),transparent 70%);pointer-events:none}
+.lg{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:start}
+.card{background:var(--night2);border:1px solid var(--nline);border-radius:14px;padding:14px}
+.card h4{margin:0;font-weight:500;font-size:12px;color:#fff;font-family:var(--mono);letter-spacing:.07em;text-transform:uppercase}
+.pick{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.pick button,.btns button{font:inherit;font-size:13px;border:1px solid var(--nline);background:rgba(255,255,255,.03);color:var(--ntext);border-radius:999px;padding:7px 12px;cursor:pointer}
+.pick button[aria-pressed="true"]{background:#fff;color:var(--night);border-color:#fff}
+.btns{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap;align-items:center}
+.btns .run{background:var(--agent);border-color:var(--agent);color:#0b1020;font-weight:500}
+.btns .fix{background:var(--ok);border-color:var(--ok);color:#06231a;font-weight:500}
+.btns button:disabled{opacity:.4;cursor:default}
+.btns label{font-size:12.5px;color:var(--nmute);display:flex;gap:6px;align-items:center;margin-left:auto}
+/* phone */
+.phonecol{display:flex;flex-direction:column;align-items:center;gap:10px}
+.ph{width:316px;border-radius:44px;padding:10px;background:#1d1d1f;box-shadow:0 0 0 1px #2a2f3d,0 30px 60px -30px rgba(0,0,0,.6)}
+.vp{width:296px;height:600px;border-radius:34px;overflow:hidden auto;background:#fff;position:relative;scrollbar-width:none}
+.vp::-webkit-scrollbar{display:none}
+.scr{position:relative;width:375px;transform:scale(.78933);transform-origin:0 0;font-family:"Inter","Geist",Arial,sans-serif;color:#111827}
+.scr.squint .el{filter:blur(6px)}
+.el{position:absolute;display:flex;align-items:center;line-height:1.25;transition:all .45s ease;overflow:hidden}
+.el.txt{align-items:flex-start}
+.el.btn{justify-content:center;border-radius:10px;font-weight:600}
+.el.inp{border:1px solid #d1d5db;border-radius:8px;padding:0 12px}
+.el.box{border:1px solid #e5e7eb;border-radius:12px}
+.el.chk{border:1.5px solid #9ca3af;border-radius:4px}
+.fold{position:absolute;left:0;right:0;border-top:1.5px dashed #ff6b7d;pointer-events:none;z-index:4}
+.fold span{position:absolute;right:6px;top:-18px;font:500 11px var(--mono);color:#ff6b7d;background:#fff;padding:0 4px}
+.mk{position:absolute;z-index:5;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:600 12px var(--mono);color:#0b1020;box-shadow:0 0 0 3px rgba(255,255,255,.9);cursor:pointer;transform:translate(-40%,-40%);animation:pop .25s ease}
+.mk.error{background:var(--err)}.mk.warn{background:var(--warn)}
+.ol{position:absolute;z-index:4;border:2px solid;border-radius:6px;pointer-events:none;opacity:.9}
+.ol.error{border-color:var(--err)}.ol.warn{border-color:var(--warn)}.ol.hi{box-shadow:0 0 0 4px rgba(124,156,255,.45);border-color:var(--agent)}
+@keyframes pop{from{transform:translate(-40%,-40%) scale(.3)}}
+.score{display:flex;align-items:center;gap:14px}
+.ring{width:64px;height:64px;position:relative;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font:600 20px var(--display);color:#fff}
+.score .t b{display:block;color:#fff;font-weight:500;font-size:15px}.score .t span{font-size:13px;color:var(--nmute)}
+.cnt{display:flex;gap:10px;margin-top:10px;font-size:12.5px}
+.cnt span{display:flex;align-items:center;gap:6px}.cnt i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.right{display:flex;flex-direction:column;gap:12px;min-width:0}
+.trace{font-family:var(--mono);font-size:12px;line-height:1.6;margin-top:8px;max-height:190px;overflow:auto}
+.tr{display:grid;grid-template-columns:18px 1fr auto;gap:8px;animation:in .2s ease}
+.tr .s{color:var(--agent)}.tr.done .s{color:var(--ok)}.tr .c{color:var(--nmute)}
+@keyframes in{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.issues{display:flex;flex-direction:column;gap:8px;margin-top:10px;max-height:370px;overflow:auto;padding-right:2px}
+.is{display:grid;grid-template-columns:26px 1fr;gap:10px;background:#0e1528;border:1px solid var(--nline);border-radius:12px;padding:10px 12px;cursor:pointer;transition:border-color .2s;animation:in .25s ease}
+.is:hover,.is.hi{border-color:#4a5a86}
+.is .n{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:600 11.5px var(--mono);color:#0b1020}
+.is.error .n{background:var(--err)}.is.warn .n{background:var(--warn)}
+.is b{display:block;color:#fff;font-weight:500;font-size:14px}
+.is .r{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--nmute)}
+.is p{font-size:13px;margin-top:4px}
+.is .fx{display:block;margin-top:6px;font-size:12.5px;color:var(--ok)}
+.is.fixed{opacity:.55}.is.fixed .n{background:var(--ok)}
+.empty{font-size:13px;color:var(--nmute);margin-top:10px}
+.rules{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.rules span{font-size:12px;border:1px solid var(--nline);border-radius:8px;padding:4px 8px;color:var(--ntext)}
+/* white sections */
+.ds{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:22px;margin-top:24px}
+.ds h3{font-size:18px}.ds p{color:var(--muted);font-size:15px;margin-top:6px}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}.sw i{width:30px;height:30px;border-radius:8px;border:1px solid var(--line)}
+.arch{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:24px;align-items:stretch}
+.ab{border:1px solid var(--line);border-radius:14px;padding:16px;position:relative}
+.ab .label{display:block}.ab h3{font-size:18px;margin-top:8px}.ab p{color:var(--muted);font-size:14.5px;margin-top:6px}
+.ab:not(:last-child):after{content:"→";position:absolute;right:-12px;top:50%;transform:translate(50%,-50%);color:var(--muted);font-size:18px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:22px 28px;margin-top:26px;counter-reset:s}
+.step{border-top:1.5px solid var(--ink);padding-top:14px;counter-increment:s}
+.step:before{content:"0" counter(s);font-family:var(--mono);font-size:12px;color:var(--muted)}
+.step h3{font-size:19px;margin-top:6px}.step p{color:var(--muted);margin-top:6px;font-size:15px}
+.impact{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:22px;margin-top:22px}
+.impact p{font-size:17px}.impact span{color:var(--muted)}
+footer{margin:clamp(56px,8vw,104px) 0 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:20px}
+@media (max-width:900px){.lg{grid-template-columns:1fr}.phonecol{order:0}.arch{grid-template-columns:1fr 1fr}.ab:nth-child(2):after{display:none}}
+@media (max-width:560px){.arch{grid-template-columns:1fr}.ab:after{display:none}}
+body.embed{padding:0;background:transparent}body.embed .page>*:not(#lab){display:none}body.embed #lab{margin:0}body.embed #lab .sh,body.embed #lab .intro{display:none}body.embed .lab{margin-top:0}
+</style>
+</head>
+<body>
+<div class="page wrap">
+  <nav class="top"><a href="../">← Abhishek Bora</a><span class="sp"></span><a href="#lab">Try it</a><a href="#how">How it works</a><a href="#process">Process</a></nav>
+
+  <header class="hero">
+    <span class="label">Personal project · AI agent · Design process</span>
+    <h1>A design review agent that checks every screen before review</h1>
+    <p class="lede">Design reviews spend too much time on the same mistakes: low contrast, off-grid spacing, wrong colours, small tap targets, unclear buttons. I built an agent that catches them in seconds, explains why each one matters, and fixes them, so reviews can focus on the real design decisions.</p>
+    <span class="note">Started as a Figma plugin idea for our design quality checks. Rebuilt here so you can run it in the browser.</span>
+    <dl class="facts"><div><dt>Role</dt><dd>Designer and builder</dd></div><div><dt>Checks</dt><dd>8 rules from the design system</dd></div><div><dt>Built with</dt><dd>Claude, Figma plugin API</dd></div></dl>
+  </header>
+
+  <section id="lab">
+    <div class="sh"><h2>Try the agent</h2><span class="label">Live · pick a screen and run</span></div>
+    <p class="intro">Pick a screen, run the review, then tap an issue to see it on the screen. “Fix all” applies the design system fixes and runs the review again.</p>
+    <div class="lab"><div class="lg">
+      <div class="phonecol">
+        <div class="ph"><div class="vp" id="vp"><div class="scr" id="scr"></div></div></div>
+        <div class="btns" style="justify-content:center"><label style="margin:0"><input type="checkbox" id="sq"> Squint test</label><label style="margin:0"><input type="checkbox" id="fd" checked> Show fold</label></div>
+      </div>
+      <div class="right">
+        <div class="card">
+          <h4>1 · Pick a screen</h4>
+          <div class="pick" id="pick"></div>
+          <div class="btns"><button class="run" id="run">▶ Run review</button><button class="fix" id="fix" disabled>✓ Fix all</button><button id="reset">Reset</button></div>
+        </div>
+        <div class="card">
+          <div class="score"><div class="ring"><svg width="64" height="64"><circle cx="32" cy="32" r="27" stroke="#26314d" stroke-width="6" fill="none"/><circle id="arc" cx="32" cy="32" r="27" stroke="#7c9cff" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="169.6" stroke-dashoffset="169.6" style="transition:stroke-dashoffset .6s,stroke .3s"/></svg><b id="sc">–</b></div>
+            <div class="t"><b id="st">Not reviewed yet</b><span id="ss">Run the agent to score this screen.</span></div></div>
+          <div class="cnt"><span><i style="background:var(--err)"></i><em id="ce" style="font-style:normal">0</em> errors</span><span><i style="background:var(--warn)"></i><em id="cw" style="font-style:normal">0</em> warnings</span><span><i style="background:var(--ok)"></i><em id="cf" style="font-style:normal">0</em> fixed</span></div>
+          <div class="trace" id="trace"></div>
+        </div>
+        <div class="card"><h4>2 · Issues</h4><div class="issues" id="issues"><div class="empty">Issues will appear here.</div></div></div>
+      </div>
+    </div></div>
+  </section>
+
+  <section id="how">
+    <div class="sh"><h2>How it works</h2><span class="label">Agent architecture</span></div>
+    <div class="arch">
+      <div class="ab"><span class="label">Input</span><h3>Read the frame</h3><p>The plugin reads every layer in the selected Figma frame: position, size, colours, fonts and text.</p></div>
+      <div class="ab"><span class="label">Rules</span><h3>Check the system</h3><p>Deterministic checks for contrast, tokens, type scale, spacing, tap targets and the fold.</p></div>
+      <div class="ab"><span class="label">AI</span><h3>Judge and explain</h3><p>An LLM reviews copy and hierarchy, explains each issue in plain words and suggests the fix.</p></div>
+      <div class="ab"><span class="label">Output</span><h3>Fix and report</h3><p>One click applies token fixes. The report goes to the designer before the review, not after.</p></div>
+    </div>
+    <p class="intro">Rules handle what can be measured, so results are consistent. AI handles what needs judgement, like whether a button label is clear. In this browser version the AI suggestions are pre-written for the sample screens.</p>
+  </section>
+
+  <section id="system">
+    <div class="sh"><h2>The rules come from the design system</h2><span class="label">What the agent checks</span></div>
+    <div class="ds">
+      <div><h3>Colour tokens</h3><p>Only system colours, and text must pass WCAG AA contrast (4.5:1, or 3:1 for large text).</p><div class="sw"><i style="background:#111827"></i><i style="background:#4b5563"></i><i style="background:#2754e6"></i><i style="background:#12805c"></i><i style="background:#b42318"></i><i style="background:#7a4b00"></i><i style="background:#fff4d6"></i><i style="background:#f3f4f6"></i></div></div>
+      <div><h3>Type scale</h3><p>Six sizes only: 12, 14, 16, 20, 24 and 32. Anything in between is a sign of a one-off style.</p></div>
+      <div><h3>Spacing and touch</h3><p>Spacing on a 4 point grid, and every tap target at least 44 points tall.</p></div>
+      <div><h3>Copy and hierarchy</h3><p>Buttons say what happens next in a few words. One primary action per screen, visible without scrolling.</p></div>
+    </div>
+  </section>
+
+  <section id="process">
+    <div class="sh"><h2>How I built it</h2><span class="label">Process</span></div>
+    <div class="steps">
+      <div class="step"><h3>Listed review comments</h3><p>Went through past design review notes and grouped the comments that kept repeating.</p></div>
+      <div class="step"><h3>Turned them into rules</h3><p>Each repeated comment became a rule tied to a design system token, with a clear pass and fail.</p></div>
+      <div class="step"><h3>Split rules and AI</h3><p>Measurable checks run as code. Judgement calls like copy and hierarchy go to the LLM.</p></div>
+      <div class="step"><h3>Built it with Claude</h3><p>Wrote the plugin and this browser version with Claude, testing each rule on real screens.</p></div>
+      <div class="step"><h3>Designed the report</h3><p>Every issue says what is wrong, why it matters and how to fix it, with one-click fixes where safe.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sh"><h2>What it changes</h2><span class="label">Impact</span></div>
+    <div class="impact">
+      <p>Reviews focus on decisions. <span>The basic checks are done before anyone looks at the screen.</span></p>
+      <p>Faster feedback. <span>A designer gets a full check in seconds instead of waiting for the next review.</span></p>
+      <p>A stronger design system. <span>Every fix points back to a token, so one-off styles stop spreading.</span></p>
+    </div>
+  </section>
+
+  <footer><span>Abhishek Bora · Designed by me, built with AI</span><a href="../">Back to portfolio</a></footer>
+</div>
+
+<script>
+(()=>{
+if(/[?&]embed/.test(location.search))document.body.classList.add('embed');
+const $=s=>document.querySelector(s);
+const T={ink:'#111827',muted:'#4b5563',primary:'#2754e6',white:'#ffffff',panel:'#f3f4f6',line:'#e5e7eb',success:'#12805c',danger:'#b42318',promoBg:'#fff4d6',promoText:'#7a4b00'};
+const TOKENS=Object.values(T).map(c=>c.toLowerCase());
+const SCALE=[12,14,16,20,24,32];const FOLD=667;
+// element: id,k(type),x,y,w,h,bg,fg,fs,fw,text,role,ph(placeholder)
+const SCREENS={
+ plan:{name:'Plan selection',h:800,els:[
+  {id:'t1',k:'txt',x:16,y:56,w:343,h:34,fg:T.ink,fs:24,fw:700,text:'Choose your internet plan'},
+  {id:'promo',k:'txt',x:16,y:104,w:343,h:52,bg:'#fff4d6',fg:'#c58a2c',fs:14,fw:600,text:'Limited time: plans as low as $49.99/mo*',pad:16},
+  {id:'card',k:'box',x:16,y:172,w:343,h:372,bg:'#ffffff'},
+  {id:'pn',k:'txt',x:32,y:190,w:300,h:26,fg:T.ink,fs:20,fw:600,text:'Fiber 500'},
+  {id:'price',k:'txt',x:32,y:222,w:300,h:42,fg:T.ink,fs:32,fw:700,text:'$74.99/mo'},
+  {id:'small',k:'txt',x:32,y:270,w:300,h:36,fg:'#a3a8b1',fs:13,fw:400,text:'As low as $59.99/mo with Auto Pay and Mobile + Home discount'},
+  {id:'feat',k:'txt',x:32,y:318,w:300,h:60,fg:T.muted,fs:14,fw:400,text:'Router included · 4-year price guarantee · Up to 500 Mbps download'},
+  {id:'gift',k:'txt',x:29,y:390,w:300,h:40,fg:T.muted,fs:14,fw:400,text:'Choose 1 gift: smart speaker, gaming controller or streaming credit'},
+  {id:'link',k:'txt',x:32,y:446,w:200,h:22,fg:'#3b82c4',fs:14,fw:600,text:'Review details'},
+  {id:'pn2',k:'box',x:16,y:560,w:343,h:120,bg:'#ffffff'},
+  {id:'pn2t',k:'txt',x:32,y:578,w:300,h:26,fg:T.ink,fs:20,fw:600,text:'Fiber 1 Gig'},
+  {id:'pn2p',k:'txt',x:32,y:610,w:300,h:42,fg:T.ink,fs:32,fw:700,text:'$89.99/mo'},
+  {id:'cta',k:'btn',x:16,y:712,w:343,h:36,bg:'#3b82c4',fg:'#ffffff',fs:14,fw:600,text:'CLICK HERE TO PROCEED TO THE NEXT STEP',role:'primary'}]},
+ checkout:{name:'Checkout',h:720,els:[
+  {id:'t1',k:'txt',x:16,y:56,w:343,h:34,fg:T.ink,fs:24,fw:700,text:'Review your order'},
+  {id:'sum',k:'box',x:16,y:104,w:343,h:200,bg:T.panel},
+  {id:'r1',k:'txt',x:32,y:124,w:300,h:22,fg:T.ink,fs:16,fw:400,text:'Fiber 500 · $59.99/mo'},
+  {id:'r2',k:'txt',x:32,y:156,w:300,h:22,fg:T.ink,fs:16,fw:400,text:'Router · Included'},
+  {id:'r3',k:'txt',x:32,y:188,w:300,h:22,fg:T.ink,fs:16,fw:400,text:'Setup · $0 online only'},
+  {id:'tot',k:'txt',x:32,y:236,w:300,h:30,fg:T.ink,fs:20,fw:700,text:'Due today: $0'},
+  {id:'promo',k:'inp',x:18,y:324,w:341,h:48,bg:'#ffffff',fg:'#c4c7cc',fs:16,fw:400,text:'Promo code',ph:true},
+  {id:'chk',k:'chk',x:16,y:396,w:18,h:18,bg:'#ffffff'},
+  {id:'chkt',k:'txt',x:44,y:394,w:310,h:22,fg:T.ink,fs:14,fw:400,text:'I agree to the Terms of Service'},
+  {id:'disc',k:'txt',x:16,y:430,w:343,h:44,fg:'#c9cdd3',fs:11,fw:400,text:'Price excludes taxes and fees. Auto Pay discount needs a bank account. Offer may change.'},
+  {id:'cta',k:'btn',x:16,y:500,w:343,h:48,bg:T.primary,fg:'#ffffff',fs:16,fw:600,text:'Place order',role:'primary'},
+  {id:'cta2',k:'btn',x:16,y:560,w:343,h:48,bg:T.primary,fg:'#ffffff',fs:16,fw:600,text:'Add more services',role:'primary'}]},
+ signup:{name:'Sign up',h:700,els:[
+  {id:'t1',k:'txt',x:16,y:56,w:343,h:40,fg:T.ink,fs:28,fw:700,text:'Create your account'},
+  {id:'sub',k:'txt',x:16,y:104,w:343,h:44,fg:T.muted,fs:16,fw:400,text:'Manage your plan, pay bills and track your install.'},
+  {id:'em',k:'inp',x:16,y:168,w:343,h:48,bg:'#ffffff',fg:'#b8bcc3',fs:16,fw:400,text:'Email address',ph:true},
+  {id:'pw',k:'inp',x:16,y:230,w:343,h:48,bg:'#ffffff',fg:'#b8bcc3',fs:16,fw:400,text:'Password',ph:true},
+  {id:'err',k:'txt',x:16,y:286,w:343,h:20,fg:'#ff7676',fs:12,fw:500,text:'Password must be at least 8 characters'},
+  {id:'hint',k:'txt',x:16,y:312,w:343,h:36,fg:'#a1a1aa',fs:12,fw:400,text:'Use a mix of letters, numbers and symbols for a stronger password.'},
+  {id:'cta',k:'btn',x:16,y:372,w:343,h:40,bg:T.primary,fg:'#ffffff',fs:16,fw:600,text:'Submit',role:'primary'},
+  {id:'alt',k:'txt',x:16,y:430,w:343,h:22,fg:'#6b9be8',fs:14,fw:500,text:'Utilize your existing credentials to log in'}]}
+};
+let cur='plan',els=[],issues=[],fixed=0,reviewed=false;
+
+/* ---------- colour maths ---------- */
+const hex=h=>{h=h.replace('#','');return[0,2,4].map(i=>parseInt(h.substr(i,2),16)/255)};
+const lum=h=>{const c=hex(h).map(v=>v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4));return .2126*c[0]+.7152*c[1]+.0722*c[2]};
+const cr=(a,b)=>{const A=lum(a),B=lum(b);return (Math.max(A,B)+.05)/(Math.min(A,B)+.05)};
+function bgOf(e){if(e.bg&&e.k!=='txt')return e.bg;if(e.bg)return e.bg;const under=els.filter(o=>o!==e&&(o.k==='box')&&e.x>=o.x&&e.y>=o.y&&e.x<o.x+o.w&&e.y<o.y+o.h).pop();return under?under.bg:'#ffffff'}
+
+/* ---------- render ---------- */
+function render(){const s=$('#scr');s.style.height=SCREENS[cur].h+'px';s.innerHTML='';
+  els.forEach(e=>{const d=document.createElement('div');d.className='el '+e.k;d.id='el-'+e.id;
+    Object.assign(d.style,{left:e.x+'px',top:e.y+'px',width:e.w+'px',height:e.h+'px',background:e.bg||'transparent',color:e.fg||'',fontSize:(e.fs||14)+'px',fontWeight:e.fw||400,padding:e.pad?`0 ${e.pad}px`:'',borderRadius:e.k==='txt'&&e.bg?'10px':''});
+    if(e.pad)d.style.alignItems='center';
+    if(e.k==='btn'&&e.role==='secondary'){d.style.background='#fff';d.style.color=T.primary;d.style.boxShadow='inset 0 0 0 1.5px '+T.primary}
+    if(e.label){const l=document.createElement('div');l.className='el txt';Object.assign(l.style,{left:e.x+'px',top:(e.y-22)+'px',width:e.w+'px',height:'20px',fontSize:'14px',fontWeight:500,color:T.ink});l.textContent=e.label;s.appendChild(l)}
+    if(e.k!=='box'&&e.k!=='chk')d.textContent=e.text||'';
+    if(e.k==='chk')d.style.background='#fff';
+    s.appendChild(d)});
+  const f=document.createElement('div');f.className='fold';f.style.top=FOLD+'px';f.innerHTML='<span>FOLD · 667</span>';f.style.display=$('#fd').checked?'':'none';s.appendChild(f);
+  $('#scr').classList.toggle('squint',$('#sq').checked);
+  drawMarks()}
+function drawMarks(){document.querySelectorAll('.mk,.ol').forEach(n=>n.remove());if(!reviewed)return;const s=$('#scr');
+  issues.forEach((is,k)=>{if(is.fixed)return;const e=els.find(x=>x.id===is.el);if(!e)return;
+    const o=document.createElement('div');o.className='ol '+is.sev;o.id='ol-'+k;Object.assign(o.style,{left:(e.x-3)+'px',top:(e.y-3)+'px',width:(e.w+6)+'px',height:(e.h+6)+'px'});s.appendChild(o);
+    const m=document.createElement('div');m.className='mk '+is.sev;m.textContent=k+1;Object.assign(m.style,{left:(e.x+e.w-4)+'px',top:(e.y+2)+'px'});m.onclick=()=>focusIssue(k);s.appendChild(m)})}
+
+/* ---------- rules ---------- */
+const COPY={plan:{cta:{t:'Continue',why:'Says what happens next in one word, and works with screen readers.'}},checkout:{},signup:{cta:{t:'Create account',why:'“Submit” does not say what happens. Name the outcome.'},alt:{t:'Already have an account? Sign in',why:'Avoid jargon like “utilize” and “credentials”. Use the words people use.'}}};
+function review(){const out=[];const add=(el,sev,rule,title,msg,fix,fixText)=>out.push({el,sev,rule,title,msg,fix,fixText});
+  const prim=els.filter(e=>e.role==='primary');
+  els.forEach(e=>{
+    // contrast
+    if(e.k==='txt'||e.k==='btn'||e.k==='inp'){const r=cr(e.fg,bgOf(e)),large=e.fs>=24||(e.fs>=18.66&&e.fw>=700),need=large?3:4.5;
+      if(r<need){const tok=e.k==='btn'?{bg:T.primary}:{fg:e.ph?T.muted:(/err/.test(e.id)?T.danger:(e.bg==='#fff4d6'?T.promoText:(e.id==='link'||e.id==='alt'?T.primary:T.muted)))};
+        add(e.id,'error','Contrast',`Low contrast: ${r.toFixed(1)}:1`,`“${(e.text||'').slice(0,34)}${(e.text||'').length>34?'…':''}” needs at least ${need}:1 to be readable for everyone.`,o=>Object.assign(o,tok),`Use token ${Object.values(tok)[0]} (${tokName(Object.values(tok)[0])})`)}}
+    // tokens
+    ['fg','bg'].forEach(p=>{if(e[p]&&!TOKENS.includes(e[p].toLowerCase())&&!out.some(i=>i.el===e.id&&i.rule==='Contrast')){const t=p==='bg'&&e.k==='btn'?T.primary:(e.id==='link'||e.id==='alt'?T.primary:T.muted);
+      add(e.id,'warn','Tokens',`Colour not in the design system`,`${e[p]} is a one-off colour. One-off colours make the product feel inconsistent and are hard to maintain.`,o=>{o[p]=t},`Replace with ${t} (${tokName(t)})`)}});
+    // type scale
+    if(e.fs&&!SCALE.includes(e.fs))add(e.id,'warn','Type scale',`Font size ${e.fs} is off the scale`,`Allowed sizes are ${SCALE.join(', ')}.`,o=>{o.fs=SCALE.reduce((a,b)=>Math.abs(b-o.fs)<Math.abs(a-o.fs)?b:a);if(o.fs<14&&o.k==='txt')o.fs=14},`Snap to ${SCALE.reduce((a,b)=>Math.abs(b-e.fs)<Math.abs(a-e.fs)?b:a)<14?14:SCALE.reduce((a,b)=>Math.abs(b-e.fs)<Math.abs(a-e.fs)?b:a)}`);
+    // spacing
+    if(e.x%4!==0)add(e.id,'warn','Spacing',`Off the 4 point grid (x = ${e.x})`,`Small misalignments add up and make layouts look messy.`,o=>{o.x=Math.round(o.x/8)*8||16},`Align to x = ${Math.round(e.x/8)*8||16}`);
+    // tap target
+    if((e.k==='btn'||e.k==='chk')&&e.h<44&&!e.row)add(e.id,'error','Tap target',`Tap target ${e.h}pt is too small`,`Anything people tap should be at least 44pt tall, or it is easy to miss.`,o=>{if(o.k==='chk'){o.w=24;o.h=24;o.y-=3;o.row=true}else{o.h=48}},e.k==='chk'?'Make the checkbox and its label one 44pt tap row':'Increase height to 48pt');
+    // input label
+    if(e.ph)add(e.id,'warn','Forms',`Placeholder used as label`,`The hint disappears when people type, so they forget what the field was for.`,o=>{els.forEach(x=>{if(x!==o&&x.y>o.y)x.y+=28});o.label=o.text;o.ph=false;o.fg=T.ink;o.text='';o.y+=28},'Add a visible label above the field');
+  });
+  // copy
+  els.filter(e=>e.k==='btn'||e.id==='alt').forEach(e=>{const c=(COPY[cur]||{})[e.id];
+    if((e.k==='btn'&&(e.text===e.text.toUpperCase()&&e.text.length>8||e.text.split(' ').length>4)&&!(c&&e.text===c.t))||(c&&e.text!==c.t))add(e.id,'warn','Copy · AI',`Unclear label: “${e.text.slice(0,26)}${e.text.length>26?'…':''}”`,c?c.why:'Long, all-caps labels are hard to scan. Say what happens next in a few words.',o=>{o.text=c?c.t:'Continue'},`Rewrite as “${c?c.t:'Continue'}”`)});
+  // hierarchy: one primary
+  if(prim.length>1){const e=prim[prim.length-1];add(e.id,'warn','Hierarchy · AI','Two primary buttons compete',`“${prim[0].text}” and “${e.text}” look the same, so neither stands out. Keep one primary action.`,o=>{o.role='secondary'},'Make it a secondary button')}
+  // fold
+  prim.forEach(e=>{if(e.y+e.h>FOLD)add(e.id,'error','Fold','Primary action is below the fold',`People have to scroll to find how to continue. The main action should be visible on load.`,o=>{const y0=556;els.forEach(x=>{if(x!==o&&x.y>=y0)x.y+=72});o.y=y0},'Move it up, right after the first plan')});
+  return out}
+const tokName=v=>Object.entries(T).find(([k,c])=>c.toLowerCase()===String(v).toLowerCase())?.[0]||'token';
+
+/* ---------- ui ---------- */
+function setScore(){const open=issues.filter(i=>!i.fixed),e=open.filter(i=>i.sev==='error').length,w=open.length-e;
+  const sc=Math.max(0,100-e*12-w*5);$('#sc').textContent=sc;const arc=$('#arc');arc.style.strokeDashoffset=169.6*(1-sc/100);arc.style.stroke=sc>=90?'#5fd39a':sc>=70?'#f5b84a':'#ff6b7d';
+  $('#ce').textContent=e;$('#cw').textContent=w;$('#cf').textContent=issues.filter(i=>i.fixed).length;
+  $('#st').textContent=sc>=90?'Ready for review':sc>=70?'Needs a few fixes':'Not ready for review';
+  $('#ss').textContent=open.length?`${open.length} open issue${open.length>1?'s':''} on “${SCREENS[cur].name}”`:'All checks pass.';
+  $('#fix').disabled=!open.length}
+function listIssues(){const L=$('#issues');if(!issues.length){L.innerHTML='<div class="empty">No issues found.</div>';return}
+  L.innerHTML=issues.map((i,k)=>`<div class="is ${i.sev}${i.fixed?' fixed':''}" data-k="${k}"><span class="n">${i.fixed?'✓':k+1}</span><div><span class="r">${i.rule}</span><b>${i.title}</b><p>${i.msg}</p><span class="fx">${i.fixed?'Fixed: ':'Fix: '}${i.fixText}</span></div></div>`).join('');
+  L.querySelectorAll('.is').forEach(n=>n.onclick=()=>focusIssue(+n.dataset.k))}
+function focusIssue(k){document.querySelectorAll('.is').forEach(n=>n.classList.toggle('hi',+n.dataset.k===k));document.querySelectorAll('.ol').forEach(o=>o.classList.toggle('hi',o.id==='ol-'+k));
+  const e=els.find(x=>x.id===issues[k].el);if(e)$('#vp').scrollTo({top:Math.max(0,e.y*.789-200),behavior:'smooth'});
+  const n=document.querySelector(`.is[data-k="${k}"]`);if(n)n.scrollIntoView({block:'nearest',behavior:'smooth'})}
+const STEPS=[['Read 1 frame',()=>`${els.length} layers`],['Contrast · WCAG AA',r=>cnt(r,'Contrast')],['Colour tokens',r=>cnt(r,'Tokens')],['Type scale',r=>cnt(r,'Type scale')],['Spacing grid',r=>cnt(r,'Spacing')],['Tap targets',r=>cnt(r,'Tap target')],['Forms',r=>cnt(r,'Forms')],['Copy · AI review',r=>cnt(r,'Copy · AI')],['Hierarchy · squint test',r=>cnt(r,'Hierarchy · AI')],['Fold check',r=>cnt(r,'Fold')]];
+const cnt=(r,k)=>{const n=r.filter(i=>i.rule===k).length;return n?`${n} issue${n>1?'s':''}`:'pass'};
+let busy=false;
+function run(again){if(busy)return;busy=true;const res=review();const tr=$('#trace');tr.innerHTML='';reviewed=false;drawMarks();$('#issues').innerHTML='<div class="empty">Reviewing…</div>';
+  let k=0;const t=setInterval(()=>{if(k<STEPS.length){const [n,f]=STEPS[k];const d=document.createElement('div');d.className='tr done';d.innerHTML=`<span class="s">✓</span><span>${n}</span><span class="c">${f(res)}</span>`;tr.appendChild(d);tr.scrollTop=1e6;k++}
+   else{clearInterval(t);if(!again){issues=res}else{issues=issues.concat(res)}reviewed=true;listIssues();drawMarks();setScore();busy=false}},again?90:170)}
+function fixAll(){if(busy)return;const open=issues.filter(i=>!i.fixed);
+  open.forEach(i=>{const e=els.find(x=>x.id===i.el);if(e&&i.fix)i.fix(e);i.fixed=true});render();listIssues();setScore();
+  setTimeout(()=>{const more=review();if(more.length){issues.forEach(i=>i.fixed=true);run(true)}else{const d=document.createElement('div');d.className='tr done';d.innerHTML='<span class="s">✓</span><span>Re-run after fixes</span><span class="c">all pass</span>';$('#trace').appendChild(d);$('#trace').scrollTop=1e6}},500)}
+function load(k){cur=k;els=JSON.parse(JSON.stringify(SCREENS[k].els));issues=[];reviewed=false;$('#trace').innerHTML='';$('#issues').innerHTML='<div class="empty">Issues will appear here.</div>';
+  $('#sc').textContent='–';$('#arc').style.strokeDashoffset=169.6;$('#st').textContent='Not reviewed yet';$('#ss').textContent='Run the agent to score this screen.';['#ce','#cw','#cf'].forEach(s=>$(s).textContent=0);$('#fix').disabled=true;
+  document.querySelectorAll('#pick button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k));$('#vp').scrollTop=0;render()}
+$('#pick').innerHTML=Object.entries(SCREENS).map(([k,v])=>`<button type="button" data-k="${k}">${v.name}</button>`).join('');
+$('#pick').onclick=e=>{const b=e.target.closest('button');if(b&&!busy)load(b.dataset.k)};
+$('#run').onclick=()=>run();$('#fix').onclick=fixAll;$('#reset').onclick=()=>{if(!busy)load(cur)};
+$('#sq').onchange=()=>$('#scr').classList.toggle('squint',$('#sq').checked);
+$('#fd').onchange=()=>{const f=document.querySelector('.fold');if(f)f.style.display=$('#fd').checked?'':'none'};
+load('plan');
+})();
+</script>
+</body>
+</html>

@@ -466,6 +466,14 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     <p class="more-link rv"><a class="btn" href="agent/">Read the full case study ↗</a></p>
   </article>
 
+  <!-- Design review agent -->
+  <article class="project" id="review">
+    <div class="sub-chapter rv"><span class="label">AI agent · Design process · Personal project</span><h3>A design review agent that checks every screen before review</h3></div>
+    <p class="blurb rv">Design reviews spend too much time on the same mistakes: low contrast, off-grid spacing, wrong colours, small tap targets, unclear buttons. I built an agent that catches them in seconds, explains each one and fixes it, so reviews can focus on real design decisions. Pick a screen and run it.</p>
+    <div class="agent-embed rv"><iframe id="reviewF" class="fitf" src="review/index.html?embed=1" title="Design review agent, interactive" loading="lazy" scrolling="no"></iframe></div>
+    <p class="more-link rv"><a class="btn" href="review/">See how it works ↗</a></p>
+  </article>
+
   <!-- WiFi Backup -->
   <article class="project" id="wifi">
     <h2 class="p-title rv">WiFi Backup</h2>
@@ -861,6 +869,6 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
 </script>
 
 
-<script>(()=>{const f=document.getElementById('agentF');if(!f)return;const fit=()=>{try{const d=f.contentDocument;if(d&&d.body){const h=d.querySelector('#lab').getBoundingClientRect().height;if(h>100)f.style.height=Math.ceil(h)+'px'}}catch(e){}};f.addEventListener('load',()=>{fit();setInterval(fit,800)});addEventListener('resize',fit)})();</script>
+<script>(()=>{['agentF','reviewF'].forEach(id=>{const f=document.getElementById(id);if(!f)return;const fit=()=>{try{const d=f.contentDocument;if(d&&d.body){const h=d.querySelector('#lab').getBoundingClientRect().height;if(h>100)f.style.height=Math.ceil(h)+'px'}}catch(e){}};f.addEventListener('load',()=>{fit();setInterval(fit,800)});addEventListener('resize',fit)})})();</script>
 </body>
 </html>
