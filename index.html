@@ -474,6 +474,14 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     <p class="more-link rv"><a class="btn" href="review/">See how it works ↗</a></p>
   </article>
 
+  <!-- AI-ready design system -->
+  <article class="project" id="aiready">
+    <div class="sub-chapter rv"><span class="label">Design systems · Playbook and personal project</span><h3>Making a legacy design system AI-ready</h3></div>
+    <p class="blurb rv">AI coding tools guess when a design system was built only for people: hard-coded colours, made-up spacing, buttons made of divs. This is how I fix it, from the audit and the HTML and CSS review with developers to purpose-named tokens, docs written for AI and lint guardrails. Switch between the two systems and run the check.</p>
+    <div class="agent-embed rv"><iframe id="readyF" src="ai-ready/index.html?embed=1" title="Legacy vs AI-ready design system, live demo" loading="lazy" scrolling="no"></iframe></div>
+    <p class="more-link rv"><a class="btn" href="ai-ready/">Read the case study ↗</a> <a class="btn ghost" href="ai-ready/article.html" style="margin:8px 0 0 0">Read the article ↗</a></p>
+  </article>
+
   <!-- WiFi Backup -->
   <article class="project" id="wifi">
     <h2 class="p-title rv">WiFi Backup</h2>
@@ -869,6 +877,6 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
 </script>
 
 
-<script>(()=>{['agentF','reviewF'].forEach(id=>{const f=document.getElementById(id);if(!f)return;const fit=()=>{try{const d=f.contentDocument;if(d&&d.body){const h=d.querySelector('#lab').getBoundingClientRect().height;if(h>100)f.style.height=Math.ceil(h)+'px'}}catch(e){}};f.addEventListener('load',()=>{fit();setInterval(fit,800)});addEventListener('resize',fit)})})();</script>
+<script>(()=>{['agentF','reviewF','readyF'].forEach(id=>{const f=document.getElementById(id);if(!f)return;const fit=()=>{try{const d=f.contentDocument;if(d&&d.body){const h=d.querySelector('#lab').getBoundingClientRect().height;if(h>100)f.style.height=Math.ceil(h)+'px'}}catch(e){}};f.addEventListener('load',()=>{fit();setInterval(fit,800)});addEventListener('resize',fit)})})();</script>
 </body>
 </html>

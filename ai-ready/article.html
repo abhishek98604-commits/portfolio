@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design Systems for AI</title>
+<meta name="description" content="Your design system was built for people. Now it needs to work for AI too. What breaks, what to fix first, and how to bring the team along.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap">
+<style>
+:root{--ink:#0f1115;--muted:#5d6370;--line:#e4e6ea;--panel:#f3f4f6}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:#fff;color:var(--ink);font-family:"Source Serif 4",Georgia,serif;font-size:19px;line-height:1.7;-webkit-font-smoothing:antialiased;padding:0 16px}
+.top{max-width:1240px;margin:0 auto;display:flex;align-items:center;height:60px;font-family:"Geist",Arial,sans-serif}
+.top a{text-decoration:none;font-size:15px;color:var(--muted)}.top .sp{flex:1}
+article{max-width:680px;margin:0 auto;padding:clamp(32px,6vw,72px) 0 40px}
+.label{font-family:"Geist Mono",monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:"Geist",Arial,sans-serif;font-weight:500;font-size:clamp(32px,4.4vw,48px);line-height:1.08;letter-spacing:-.03em;margin:14px 0 0}
+.by{font-family:"Geist",Arial,sans-serif;font-size:15px;color:var(--muted);margin-top:16px}
+h2{font-family:"Geist",Arial,sans-serif;font-weight:500;font-size:25px;letter-spacing:-.02em;margin:44px 0 0}
+p{margin:18px 0 0}
+ul,ol{margin:16px 0 0;padding-left:22px}li{margin-top:8px}
+code{font-family:"Geist Mono",monospace;font-size:.82em;background:var(--panel);padding:2px 6px;border-radius:5px}
+pre{font-family:"Geist Mono",monospace;font-size:14px;line-height:1.6;background:#0b1020;color:#cfd8f0;border-radius:12px;padding:16px 18px;overflow:auto;margin:22px 0 0}
+blockquote{margin:26px 0 0;padding-left:18px;border-left:3px solid var(--ink);font-size:21px}
+.end{margin-top:48px;padding-top:20px;border-top:1px solid var(--line);font-family:"Geist",Arial,sans-serif;font-size:15px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.end a{color:var(--ink)}
+</style>
+</head>
+<body>
+<nav class="top"><a href="index.html">← Case study</a><span class="sp"></span><a href="../">Abhishek Bora</a></nav>
+<article>
+  <span class="label">Article · Design systems · 6 min read</span>
+  <h1>Your design system was built for people. Now it needs to work for AI too.</h1>
+  <p class="by">Abhishek Bora, Principal Designer</p>
+
+  <p>A few months ago I asked an AI coding tool to build a simple plan card using our design system. The result looked close enough at first glance. Then I opened the code. Six hard-coded colours. Eleven pixel values that matched nothing in our spacing scale. A button made out of a <code>div</code>, with no focus state and an all-caps label.</p>
+  <p>The tool was not the problem. It did exactly what our system taught it to do.</p>
+
+  <h2>Why AI tools struggle with older systems</h2>
+  <p>Most design systems that have been around for a few years work well for the people who use them every day. Those people know which blue is for buttons, which card is the real one, and which rules are written down only in someone’s head.</p>
+  <p>An AI tool has none of that memory. It reads what is in front of it: the code, the token names, the docs. Every gap becomes a guess, and guesses add up fast. In my audits, the same six problems came up again and again:</p>
+  <ol>
+    <li><strong>Figma and code drift apart.</strong> The button has five variants in Figma and nine in code, and the names do not match.</li>
+    <li><strong>Tokens are named by value.</strong> <code>blue-600</code> tells you the colour, not when to use it.</li>
+    <li><strong>Product code is full of quick fixes.</strong> Hex colours, pixel spacing and <code>!important</code>, copied from file to file.</li>
+    <li><strong>Markup is not accessible.</strong> Clickable divs, inputs without labels, errors shown only in red.</li>
+    <li><strong>Docs are written for eyes.</strong> Screenshots and examples, but no written rule like “one primary button per screen”.</li>
+    <li><strong>There is no single source of truth.</strong> Three copies of the same card, slightly different, in three folders.</li>
+  </ol>
+  <p>None of these are new. What is new is that AI tools copy them at speed.</p>
+
+  <h2>Start with a code review, not a Figma file</h2>
+  <p>My first instinct as a designer was to clean up the Figma library. That helped, but it was not where the problems lived. The real work started when I sat with front-end developers and went through the component code line by line.</p>
+  <p>We used a short checklist:</p>
+  <ul>
+    <li>Is every clickable thing a real <code>button</code> or link?</li>
+    <li>Does every input have a visible label?</li>
+    <li>Is there a visible focus state?</li>
+    <li>Do colours, spacing and font sizes come from tokens?</li>
+    <li>Are there any <code>!important</code> overrides?</li>
+    <li>Do the prop names match the Figma variant names?</li>
+  </ul>
+  <p>Doing this together mattered. Developers saw why the design rules existed, and I learned which rules were expensive to change and which were easy wins.</p>
+
+  <h2>Fix it in four layers</h2>
+  <p><strong>1. Tokens named by purpose.</strong> Add a layer of names that describe the job: <code>color-action-primary</code>, <code>color-text-secondary</code>, <code>color-border-subtle</code>. Point them at the existing palette, so nothing changes visually. Keep the old names as aliases for now.</p>
+<pre>"color-action-primary": "{blue-600}",
+"color-text-secondary": "{gray-600}",
+"space-4": "1rem"</pre>
+  <p><strong>2. Components that match.</strong> Every Figma variant should map one to one to a code prop. <em>Primary / Large</em> in Figma becomes <code>variant="primary" size="lg"</code> in code. Then link the two, so tools can see which code belongs to which design.</p>
+  <p><strong>3. Docs written for both people and AI.</strong> For each component, a short text file: what it is for, when not to use it, the props, and the accessibility rules. Plain sentences, no screenshots needed.</p>
+<pre># button.md
+Use: one primary button per view.
+Do not: use for navigation. Use a link.
+Label: verb + object, e.g. "Select plan".
+A11y: never remove the focus outline.</pre>
+  <p>This is the layer that changed the AI output the most. Once the rules were written down, the tool followed them.</p>
+  <p><strong>4. Guardrails that catch drift.</strong> Lint rules that flag hard-coded colours, pixel values and <code>!important</code> in every pull request. On the design side, an automated review that checks screens for contrast, spacing and tap targets before a human looks at them.</p>
+
+  <h2>The people part is the hard part</h2>
+  <p>A design system belongs to a team, and to every product team that depends on it. Three conversations come up every time.</p>
+  <blockquote>“Renaming tokens will break every team.”</blockquote>
+  <p>It will, if you do it in one go. Keep the old names as aliases, mark them deprecated, and give teams a script that swaps them automatically. Remove the old names only when nobody uses them.</p>
+  <blockquote>“Strict lint rules will slow us down.”</blockquote>
+  <p>Start with warnings, not errors. Allow documented exceptions. Turn on blocking only once a team is close to zero warnings. Nobody likes a rule that stops a release on day one.</p>
+  <blockquote>“Design and code use different names.”</blockquote>
+  <p>Code names win, because that is what ships. Figma can keep friendly display names, mapped one to one in the docs.</p>
+  <p>What made it work was a simple rhythm: one shared audit sheet with the design system team, one pilot flow before scaling, a short weekly triage, and designers reviewing component code in pull requests, not just screens.</p>
+
+  <h2>How to know it is working</h2>
+  <p>Four numbers are enough:</p>
+  <ul>
+    <li><strong>Token coverage:</strong> the share of colours, spacing and type that come from tokens.</li>
+    <li><strong>Hard-coded values:</strong> counted by the linter each sprint. It should only go down.</li>
+    <li><strong>AI first-pass rate:</strong> how often generated UI passes the checks with no edits.</li>
+    <li><strong>Time to prototype:</strong> from design to a working, on-brand prototype.</li>
+  </ul>
+  <p>In my sample system, the same prompt went from seven lint issues to zero, and token usage in the generated CSS went from none to most of it. The change was not in the AI tool. It was in what we gave it to read.</p>
+
+  <h2>Where to start on Monday</h2>
+  <ol>
+    <li>Ask an AI tool to build one common component with your system, and read the code it writes.</li>
+    <li>List every guess it made. That list is your audit.</li>
+    <li>Pick the one component used most, and fix it across all four layers.</li>
+    <li>Run the same prompt again and compare.</li>
+  </ol>
+  <p>A design system has always been a set of agreements between people. Now some of the readers are machines. The good news is that the things that help AI, clear names, written rules and accessible code, help every new designer and developer too.</p>
+
+  <div class="end"><span>Abhishek Bora · abhishekbora.in</span><a href="index.html">See the case study and live demo →</a></div>
+</article>
+</body>
+</html>

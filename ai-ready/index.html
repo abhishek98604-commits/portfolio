@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-Ready Design System</title>
+<meta name="description" content="How to make a legacy design system work with AI coding tools: the audit, the HTML and CSS review with developers, tokens, docs for AI, guardrails and how to measure it.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{--paper:#fff;--ink:#0f1115;--muted:#5d6370;--panel:#f3f4f6;--line:#e4e6ea;
+  --night:#0b1020;--night2:#121a30;--nline:#26314d;--ntext:#c9d3ea;--nmute:#7f8bab;
+  --err:#ff6b7d;--warn:#f5b84a;--ok:#5fd39a;--agent:#7c9cff;
+  --display:"Geist","Helvetica Neue",Arial,sans-serif;--mono:"Geist Mono",ui-monospace,Menlo,monospace}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--display);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;padding:0 max(16px,env(safe-area-inset-left,0px))}
+a{color:inherit}h1,h2,h3{margin:0;font-weight:500;letter-spacing:-.02em;text-wrap:balance}p{margin:0}
+.wrap{max-width:1240px;margin:0 auto}
+.label{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.top{display:flex;align-items:center;height:60px;gap:16px}.top a{text-decoration:none;font-size:15px;color:var(--muted)}.top a:hover{color:var(--ink)}.top .sp{flex:1}
+header.hero{padding:clamp(40px,7vw,96px) 0 clamp(28px,4vw,48px)}
+.hero h1{font-size:clamp(34px,5vw,62px);line-height:1.03;letter-spacing:-.035em;max-width:16ch;margin-top:14px}
+.hero .lede{font-size:clamp(17px,1.6vw,21px);max-width:64ch;margin-top:20px}
+.note{display:inline-flex;margin-top:18px;font-size:13.5px;color:var(--muted);background:var(--panel);border-radius:14px;padding:8px 14px;max-width:70ch}
+.facts{display:flex;flex-wrap:wrap;gap:12px 36px;margin:28px 0 0;padding:0}.facts div{display:flex;gap:10px;align-items:baseline}.facts dt{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.facts dd{margin:0}
+.cta{display:inline-flex;margin-top:24px;text-decoration:none;font-weight:500;font-size:14px;padding:10px 18px;border-radius:999px;background:var(--ink);color:#fff}
+section{margin-top:clamp(56px,8vw,104px)}
+.sh{display:flex;justify-content:space-between;align-items:baseline;gap:16px;border-top:1.5px solid var(--ink);padding-top:16px}.sh h2{font-size:clamp(24px,2.8vw,36px)}
+.intro{color:var(--muted);max-width:68ch;margin-top:14px;font-size:17px}
+code,pre{font-family:var(--mono)}
+/* lab */
+.lab{background:var(--night);color:var(--ntext);border-radius:22px;margin-top:24px;padding:clamp(14px,2.4vw,28px);position:relative;overflow:hidden}
+.lab:before{content:"";position:absolute;inset:0;background:radial-gradient(50% 40% at 50% 0%,rgba(124,156,255,.14),transparent 70%);pointer-events:none}
+.prompt{position:relative;display:flex;gap:12px;align-items:center;background:var(--night2);border:1px solid var(--nline);border-radius:14px;padding:12px 14px;font-size:15px;color:#fff}
+.prompt .label{color:var(--nmute);flex:none}
+.tabs{position:relative;display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}
+.tabs button{font:inherit;font-size:14px;border:1px solid var(--nline);background:rgba(255,255,255,.03);color:var(--ntext);border-radius:999px;padding:8px 14px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:#fff;color:var(--night);border-color:#fff}
+.tabs .lint{margin-left:auto;background:var(--agent);border-color:var(--agent);color:#0b1020;font-weight:500}
+.dgrid{position:relative;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:14px}
+.box{background:var(--night2);border:1px solid var(--nline);border-radius:14px;padding:14px;min-width:0}
+.box h4{margin:0 0 10px;font-weight:500;font-size:12px;color:#fff;font-family:var(--mono);letter-spacing:.07em;text-transform:uppercase;display:flex;justify-content:space-between}
+.box h4 span{color:var(--nmute)}
+.ctx{font-size:13px;line-height:1.5}
+.ctx ul{margin:6px 0 0;padding-left:18px}
+.prev{background:#fff;border-radius:10px;padding:18px;min-height:210px}
+.prev iframe{width:100%;height:220px;border:0;display:block}
+.code{background:#070b16;border:1px solid var(--nline);border-radius:10px;padding:12px 14px;font-size:12.2px;line-height:1.6;overflow:auto;max-height:420px;white-space:pre;color:#cfd8f0;margin:0}
+.code .hl{background:rgba(255,107,125,.18);border-bottom:1px solid var(--err);border-radius:2px}
+.code .tk{color:#9fb3ff}.code .tg{color:#7ee2c0}.code .cm{color:#56638a}
+.res{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin-top:14px}
+.big{font:600 34px var(--display);color:#fff}
+.big small{font-size:14px;color:var(--nmute);font-weight:400;display:block}
+.hits{display:flex;flex-wrap:wrap;gap:6px}
+.hit{font-size:12.5px;border-radius:999px;padding:4px 10px;border:1px solid var(--nline)}
+.hit.bad{border-color:rgba(255,107,125,.5);color:#ffc2ca}.hit.good{border-color:rgba(95,211,154,.5);color:#bff3d4}
+.cmp{position:relative;margin-top:14px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.kpi{background:var(--night2);border:1px solid var(--nline);border-radius:14px;padding:12px 14px}
+.kpi span{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--nmute)}
+.kpi b{display:block;font-weight:500;font-size:22px;color:#fff;margin-top:4px}
+.kpi b i{font-style:normal;color:var(--nmute);font-size:14px;margin:0 6px}
+/* audit */
+.aud{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:18px;margin-top:24px}
+.ai{border:1px solid var(--line);border-radius:16px;padding:18px}
+.ai .n{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.ai h3{font-size:19px;margin-top:4px}
+.ai p{color:var(--muted);font-size:15px;margin-top:8px}
+.ai p b{color:var(--ink);font-weight:500}
+.snip{background:#0b1020;color:#cfd8f0;border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.55;margin-top:12px;overflow:auto;white-space:pre}
+.snip .x{color:#ff9aa7}.snip .c{color:#56638a}
+/* review table */
+.rv{width:100%;border-collapse:collapse;margin-top:22px;font-size:14.5px}
+.rv th,.rv td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.rv th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500}
+.rv td:first-child{font-weight:500;width:20%}
+.rv code{font-size:12.5px;background:var(--panel);padding:2px 6px;border-radius:5px;white-space:pre-wrap;display:inline-block}
+.rv td.bad code{background:#fdecee;color:#9f1d2c}.rv td.good code{background:#e8f7ef;color:#11643f}
+/* layers */
+.layers{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:18px;margin-top:24px}
+.ly{border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column}
+.ly .n{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.ly h3{font-size:20px;margin-top:4px}.ly p{color:var(--muted);font-size:15px;margin-top:8px}
+.ly .snip{flex:1}
+.map{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.map td{padding:5px 6px;border-bottom:1px solid var(--line)}
+.map td:nth-child(2){color:var(--muted);text-align:center}
+/* people */
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:22px 28px;margin-top:26px;counter-reset:s}
+.st{border-top:1.5px solid var(--ink);padding-top:14px;counter-increment:s}
+.st:before{content:"0" counter(s);font-family:var(--mono);font-size:12px;color:var(--muted)}
+.st h3{font-size:19px;margin-top:6px}.st p{color:var(--muted);margin-top:6px;font-size:15px}
+.tens{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:18px;margin-top:30px}
+.tn{background:var(--panel);border-radius:16px;padding:18px}
+.tn .label{display:block}.tn h3{font-size:18px;margin-top:8px}
+.tn p{font-size:15px;margin-top:8px;color:var(--muted)}.tn p b{color:var(--ink);font-weight:500}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:18px;margin-top:24px}
+.mt{border-top:1.5px solid var(--ink);padding-top:12px}.mt b{display:block;font-size:17px;font-weight:500}.mt p{color:var(--muted);font-size:15px;margin-top:4px}
+.art{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;margin-top:24px;border:1px solid var(--line);border-radius:18px;padding:22px 24px}
+.art h3{font-size:22px}.art p{color:var(--muted);margin-top:6px;max-width:60ch}
+footer{margin:clamp(56px,8vw,104px) 0 40px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:20px}
+@media (max-width:900px){.dgrid{grid-template-columns:1fr}.cmp{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){.rv thead{display:none}.rv tr{display:block;border-bottom:1px solid var(--line);padding:10px 0}.rv td{display:block;border:0;padding:4px 0;width:auto!important}.tabs .lint{margin-left:0}}
+body.embed{padding:0;background:transparent}body.embed .page>*:not(#lab){display:none}body.embed #lab{margin:0}body.embed #lab .sh,body.embed #lab .intro{display:none}body.embed .lab{margin-top:0}
+</style>
+</head>
+<body>
+<div class="page wrap">
+  <nav class="top"><a href="../">← Abhishek Bora</a><span class="sp"></span><a href="#lab">Demo</a><a href="#audit">Audit</a><a href="#people">Working with teams</a><a href="article.html">Article</a></nav>
+
+  <header class="hero">
+    <span class="label">Playbook · Personal project · Design systems</span>
+    <h1>Making a legacy design system AI-ready</h1>
+    <p class="lede">Designers and developers now build with AI tools like Claude Code, Cursor and Figma-to-code. Pointed at an older design system, these tools guess. They hard-code colours, invent spacing and turn buttons into divs. This is how I approach fixing that: what to audit, what to review in the HTML and CSS with developers, and how to work with the design system team so the fix sticks.</p>
+    <span class="note">The problems come from my experience with large, long-lived design systems. The before and after below uses Northstar, a sample system I built for this project. It is not Verizon code.</span>
+    <dl class="facts"><div><dt>Role</dt><dd>Designer, auditor, builder</dd></div><div><dt>Partners</dt><dd>Design system team, front-end developers</dd></div><div><dt>Built with</dt><dd>Figma, Claude Code, Stylelint</dd></div></dl>
+    <a class="cta" href="article.html">Read the article ↗</a>
+  </header>
+
+  <!-- ===== LAB ===== -->
+  <section id="lab">
+    <div class="sh"><h2>Same prompt, two design systems</h2><span class="label">Live demo</span></div>
+    <p class="intro">I gave Claude the same request twice. First with the legacy system as it was: a Storybook link, screenshots and value-named tokens. Then with the AI-ready version. Switch between them and run the lint check. The checks run live on the code.</p>
+    <div class="lab">
+      <div class="prompt"><span class="label">Prompt</span><span>“Build a plan card for Fiber 500 with the price, the Auto Pay offer and a select button. Use our design system.”</span></div>
+      <div class="tabs"><button type="button" data-v="legacy" aria-pressed="true">Legacy system</button><button type="button" data-v="ready" aria-pressed="false">AI-ready system</button><button type="button" class="lint" id="lint">Run lint check</button></div>
+      <div class="dgrid">
+        <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+          <div class="box"><h4>What the AI was given</h4><div class="ctx" id="ctx"></div></div>
+          <div class="box"><h4>Rendered result</h4><div class="prev"><iframe id="pv" title="Rendered output"></iframe></div></div>
+        </div>
+        <div class="box"><h4>Code the AI wrote <span id="lines"></span></h4><pre class="code" id="code"></pre>
+          <div class="res"><div class="big" id="score">–<small>lint issues</small></div><div class="hits" id="hits"><span class="hit">Run the lint check to scan this code</span></div></div>
+        </div>
+      </div>
+      <div class="cmp" id="cmp">
+        <div class="kpi"><span>Hard-coded colours</span><b id="k1">–</b></div>
+        <div class="kpi"><span>Raw pixel values</span><b id="k2">–</b></div>
+        <div class="kpi"><span>Non-semantic controls</span><b id="k3">–</b></div>
+        <div class="kpi"><span>Token usage</span><b id="k4">–</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== AUDIT ===== -->
+  <section id="audit">
+    <div class="sh"><h2>The audit: why AI tools get it wrong</h2><span class="label">Six problems</span></div>
+    <p class="intro">Most legacy systems work fine for people who already know them. AI tools do not have that memory. They only see what is written down, so every gap becomes a guess.</p>
+    <div class="aud">
+      <div class="ai"><span class="n">01</span><h3>Figma and code drifted apart</h3><p>The Figma button had 5 variants, the code had 9, and the names did not match. <b>The AI cannot map a design to the right component.</b></p>
+<pre class="snip"><span class="c">Figma:</span> Button / Primary / Large
+<span class="c">Code: </span> &lt;Btn kind="<span class="x">cta-blue</span>" size="<span class="x">xl</span>"&gt;</pre></div>
+      <div class="ai"><span class="n">02</span><h3>Tokens named by value, not purpose</h3><p><code>blue-600</code> says what it looks like, not when to use it. <b>The AI picks colours by eye, so the same blue ends up on links, buttons and info banners.</b></p>
+<pre class="snip">--blue-600: #2754e6;   <span class="c">/* button? link? info? */</span>
+--gray-300: #d1d5db;   <span class="c">/* border? disabled text? */</span></pre></div>
+      <div class="ai"><span class="n">03</span><h3>Hard-coded values in product code</h3><p>Years of quick fixes left hex colours, pixel spacing and <code>!important</code> overrides across product code. <b>AI tools copy the patterns they find in the codebase.</b></p>
+<pre class="snip">.promo-banner {
+  color: <span class="x">#b7791f !important</span>;
+  margin-top: <span class="x">17px</span>;
+}</pre></div>
+      <div class="ai"><span class="n">04</span><h3>Inaccessible markup</h3><p>Clickable divs, inputs without labels, missing focus styles, errors shown only in red. <b>Generated code repeats the same accessibility gaps.</b></p>
+<pre class="snip">&lt;<span class="x">div</span> class="btn" <span class="x">onclick</span>="next()"&gt;SELECT&lt;/div&gt;
+&lt;input placeholder="<span class="x">Email</span>"&gt;  <span class="c">&lt;!-- no label --&gt;</span></pre></div>
+      <div class="ai"><span class="n">05</span><h3>Docs written only for people</h3><p>Screenshots, PDFs and Storybook pages with no written rules. <b>An AI cannot read “use this for the main action only” from a picture.</b></p>
+<pre class="snip"><span class="c">Button docs today:</span>
+  [image] [image] [image]
+  <span class="x">“See examples above.”</span></pre></div>
+      <div class="ai"><span class="n">06</span><h3>No single source of truth</h3><p>Some teams kept their own copies of components and changed them. <b>The AI finds three versions of the same card and does not know which one is right.</b></p>
+<pre class="snip">/checkout/components/<span class="x">PlanCard.jsx</span>
+/shop/shared/<span class="x">PlanCard.jsx</span>
+/legacy/ui/<span class="x">plan-card-v2.jsx</span></pre></div>
+    </div>
+  </section>
+
+  <!-- ===== REVIEW ===== -->
+  <section id="review">
+    <div class="sh"><h2>The HTML and CSS review with developers</h2><span class="label">What we checked</span></div>
+    <p class="intro">I did not review screens alone. I sat with front-end developers and went through the component code line by line. This is the checklist we used, with a real example of each fix.</p>
+    <table class="rv">
+      <thead><tr><th>Check</th><th>Before</th><th>After</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr><td>Semantic elements</td><td class="bad"><code>&lt;div class="btn"&gt;</code></td><td class="good"><code>&lt;button type="button"&gt;</code></td><td>Keyboard and screen reader support for free.</td></tr>
+        <tr><td>Labels on inputs</td><td class="bad"><code>placeholder="Email"</code></td><td class="good"><code>&lt;label for="email"&gt;</code></td><td>The hint disappears when people type.</td></tr>
+        <tr><td>Focus states</td><td class="bad"><code>outline: none;</code></td><td class="good"><code>:focus-visible { outline: 2px solid var(--color-focus) }</code></td><td>Keyboard users need to see where they are.</td></tr>
+        <tr><td>Colours from tokens</td><td class="bad"><code>color: #0066cc;</code></td><td class="good"><code>color: var(--color-action-primary);</code></td><td>One change updates every product.</td></tr>
+        <tr><td>Units</td><td class="bad"><code>font-size: 13px;</code></td><td class="good"><code>font-size: var(--font-size-sm);</code></td><td>Respects the user’s text size settings.</td></tr>
+        <tr><td>No overrides</td><td class="bad"><code>!important</code></td><td class="good"><code>.ns-button--primary</code></td><td>Overrides break the next person’s change.</td></tr>
+        <tr><td>State classes</td><td class="bad"><code>.red-text</code></td><td class="good"><code>.is-error</code> + icon + message</td><td>Describes the state, not the look. Never colour alone.</td></tr>
+        <tr><td>Names match Figma</td><td class="bad"><code>kind="cta-blue"</code></td><td class="good"><code>variant="primary"</code></td><td>Design and code speak the same language.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ===== LAYERS ===== -->
+  <section id="layers">
+    <div class="sh"><h2>The fix, in four layers</h2><span class="label">What changed</span></div>
+    <div class="layers">
+      <div class="ly"><span class="n">01 · Tokens</span><h3>Name by purpose</h3><p>A purpose layer sits on top of the old colour palette. Old names still work as aliases, so nothing breaks on day one.</p>
+<pre class="snip"><span class="c">// tokens.json (one file, Figma and code)</span>
+"color-action-primary": "{blue-600}",
+"color-text-secondary": "{gray-600}",
+"color-border-subtle":  "{gray-200}",
+"space-4": "1rem"</pre></div>
+      <div class="ly"><span class="n">02 · Components</span><h3>Match Figma to code</h3><p>Every Figma variant maps one to one to a code prop, and each Figma component links to its code, so tools can see both.</p>
+<table class="map"><tr><td>Primary / Large</td><td>→</td><td><code>variant="primary" size="lg"</code></td></tr><tr><td>Secondary / Medium</td><td>→</td><td><code>variant="secondary"</code></td></tr><tr><td>Text link</td><td>→</td><td><code>variant="ghost"</code></td></tr></table></div>
+      <div class="ly"><span class="n">03 · Docs for AI</span><h3>Write the rules down</h3><p>A short markdown file per component that people and AI tools both read: purpose, when not to use it, required props, accessibility.</p>
+<pre class="snip"><span class="c"># button.md</span>
+Use: one primary button per view.
+Do not: use for navigation, use a link.
+Label: verb + object, e.g. “Select plan”.
+Props: variant, size, disabled.
+A11y: never remove focus outline.</pre></div>
+      <div class="ly"><span class="n">04 · Guardrails</span><h3>Catch drift automatically</h3><p>Lint rules block hard-coded colours and pixel values in pull requests, and the <a href="../review/">design review agent</a> checks screens before review.</p>
+<pre class="snip"><span class="c">// .stylelintrc</span>
+"color-no-hex": true,
+"declaration-no-important": true,
+"unit-disallowed-list": ["px"],
+"scale-unlimited/declaration-strict-value":
+  ["/color/", "font-size"]</pre></div>
+    </div>
+  </section>
+
+  <!-- ===== PEOPLE ===== -->
+  <section id="people">
+    <div class="sh"><h2>Working with the design system team and developers</h2><span class="label">How the work runs</span></div>
+    <p class="intro">A design system belongs to a team, not to one designer. The technical fix is the easy part. Getting many product teams to change how they work is the real job.</p>
+    <div class="how">
+      <div class="st"><h3>Audit together</h3><p>One shared sheet with the design system team: every component, its Figma name, code name, and gaps found.</p></div>
+      <div class="st"><h3>Agree the rules first</h3><p>Token names and the component checklist were agreed with the system team before any code changed.</p></div>
+      <div class="st"><h3>Pilot one flow</h3><p>Start with one real flow, like plan selection, prove it works, then scale to other teams.</p></div>
+      <div class="st"><h3>Review in pull requests</h3><p>Designers review component code in pull requests, not just screens in Figma.</p></div>
+      <div class="st"><h3>Weekly triage</h3><p>A short weekly session to sort new gaps: fix in the system, or fix in the product.</p></div>
+      <div class="st"><h3>Contribution model</h3><p>Product teams propose new components, the system team approves, so copies stop spreading.</p></div>
+    </div>
+    <div class="tens">
+      <div class="tn"><span class="label">Tension</span><h3>“Renaming tokens will break every team.”</h3><p><b>Resolution:</b> keep old names as aliases, mark them deprecated in the docs, and give teams a script that replaces them automatically. Remove the old names only after usage drops to zero.</p></div>
+      <div class="tn"><span class="label">Tension</span><h3>“Strict lint rules will slow us down.”</h3><p><b>Resolution:</b> start the rules as warnings, not errors. Allow a documented exception with a comment. Turn on blocking only once a team is under a small agreed number of warnings.</p></div>
+      <div class="tn"><span class="label">Tension</span><h3>“Design and code use different names.”</h3><p><b>Resolution:</b> code names win, because that is what ships. Figma keeps friendly display names, mapped one to one in the component docs.</p></div>
+    </div>
+  </section>
+
+  <!-- ===== METRICS ===== -->
+  <section id="metrics">
+    <div class="sh"><h2>How to know it is working</h2><span class="label">Measures</span></div>
+    <div class="metrics">
+      <div class="mt"><b>Token coverage</b><p>Share of colours, spacing and type in product code that come from tokens.</p></div>
+      <div class="mt"><b>Hard-coded values</b><p>Count from the lint report each sprint. It should only go down.</p></div>
+      <div class="mt"><b>AI first-pass rate</b><p>How often AI-generated UI passes the lint check and review agent with no changes.</p></div>
+      <div class="mt"><b>Time to prototype</b><p>Time from a design to a working, on-brand prototype.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="art"><div><span class="label">Article</span><h3>Your design system was built for people. Now it needs to work for AI too.</h3><p>The same story in plain words: what breaks, what to fix first, and how to bring the team along.</p></div><a class="cta" href="article.html" style="margin:0">Read the article ↗</a></div>
+  </section>
+
+  <footer><span>Abhishek Bora · Designed by me, built with AI</span><a href="../">Back to portfolio</a></footer>
+</div>
+
+<script>
+(()=>{
+if(/[?&]embed/.test(location.search))document.body.classList.add('embed');
+const $=s=>document.querySelector(s);
+const V={
+legacy:{ctx:`<b style="color:#fff;font-weight:500">Storybook link, screenshots and the palette</b><ul><li>Tokens: <code>blue-600</code>, <code>gray-300</code>, <code>gray-500</code></li><li>Button docs: three screenshots, no written rules</li><li>Three copies of PlanCard in the codebase</li></ul>`,
+html:`<div class="card">
+  <div class="title">Fiber 500</div>
+  <div class="price">$74.99/mo</div>
+  <div class="small">As low as $59.99/mo with Auto Pay</div>
+  <div class="btn-blue" onclick="next()">SELECT</div>
+</div>`,
+css:`.card {
+  border: 1px solid #d8dada;
+  padding: 15px;
+  border-radius: 6px;
+}
+.title { font-size: 19px; font-weight: bold; color: #333; }
+.price { font-size: 30px; color: #000; margin-top: 6px; }
+.small { font-size: 11px; color: #a7a7a7; margin-top: 3px; }
+.btn-blue {
+  background: #0066cc !important;
+  color: #fff;
+  padding: 9px 13px;
+  font-size: 13px;
+  margin-top: 17px;
+  display: inline-block;
+  cursor: pointer;
+}`},
+ready:{ctx:`<b style="color:#fff;font-weight:500">tokens.json, component docs and a rules file</b><ul><li>Purpose tokens: <code>color-action-primary</code>, <code>color-text-secondary</code></li><li><code>card.md</code>, <code>button.md</code>: when to use, props, accessibility</li><li>One PlanCard, mapped to Figma</li></ul>`,
+html:`<article class="ns-card">
+  <h3 class="ns-card__title">Fiber 500</h3>
+  <p class="ns-price">$74.99<span>/mo</span></p>
+  <p class="ns-text ns-text--secondary">$59.99/mo with Auto Pay</p>
+  <button class="ns-button ns-button--primary" type="button">
+    Select Fiber 500
+  </button>
+</article>`,
+css:`/* tokens.css (generated from tokens.json) */
+:root {
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-action-primary: #2754e6;
+  --color-on-action: #ffffff;
+  --color-border-subtle: #e5e7eb;
+  --color-focus: #7c9cff;
+  --space-2: 0.5rem;  --space-4: 1rem;
+  --radius-md: 0.75rem;
+  --font-size-sm: 0.875rem; --font-size-lg: 1.25rem;
+  --font-size-2xl: 2rem;
+}
+.ns-card {
+  border: 1px solid var(--color-border-subtle);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+}
+.ns-card__title { font-size: var(--font-size-lg); color: var(--color-text-primary); margin: 0; }
+.ns-price { font-size: var(--font-size-2xl); color: var(--color-text-primary); margin: var(--space-2) 0 0; }
+.ns-price span { font-size: var(--font-size-sm); }
+.ns-text--secondary { font-size: var(--font-size-sm); color: var(--color-text-secondary); margin: var(--space-2) 0 0; }
+.ns-button {
+  min-height: 2.75rem;
+  margin-top: var(--space-4);
+  padding: 0 var(--space-4);
+  border: 0;
+  border-radius: var(--radius-md);
+  font: inherit;
+  font-size: var(--font-size-sm);
+}
+.ns-button--primary { background: var(--color-action-primary); color: var(--color-on-action); }
+.ns-button:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }`}
+};
+let cur='legacy';
+const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function bodyCss(css){return css.replace(/:root\s*\{[\s\S]*?\}/,'')}
+function lint(v){const {html,css}=V[v];const body=bodyCss(css);const r=[];
+  const hex=(body.match(/#[0-9a-fA-F]{3,6}\b/g)||[]);
+  const px=(body.match(/\b\d+px\b/g)||[]).filter(x=>!['1px','2px'].includes(x));
+  const imp=(body.match(/!important/g)||[]);
+  const divBtn=(html.match(/<(div|span)[^>]*(onclick|btn)/g)||[]);
+  const noFocus=/<button|onclick/.test(html)&&!/:focus-visible/.test(css)?1:0;
+  const fs=(body.match(/font-size:\s*\d+px/g)||[]);
+  const caps=(html.match(/>\s*[A-Z]{4,}\s*</g)||[]);
+  const vars=(body.match(/var\(--/g)||[]).length,decl=(body.match(/:\s*[^;{}]+;/g)||[]).length;
+  if(hex.length)r.push(['bad',`${hex.length} hard-coded colours`]);
+  if(px.length)r.push(['bad',`${px.length} raw pixel values`]);
+  if(fs.length)r.push(['bad',`${fs.length} font sizes off the scale`]);
+  if(imp.length)r.push(['bad',`${imp.length} !important`]);
+  if(divBtn.length)r.push(['bad',`${divBtn.length} div used as a button`]);
+  if(noFocus)r.push(['bad','No focus state']);
+  if(caps.length)r.push(['bad','All-caps label']);
+  if(!r.length)r.push(['good','No hard-coded values'],['good','Semantic button'],['good','Focus state present'],['good','Label says what happens']);
+  return {r,hex:hex.length,px:px.length,ctrl:divBtn.length,tok:Math.round(vars/Math.max(1,decl)*100),n:r.filter(x=>x[0]==='bad').length,bad:{hex,px,imp}}}
+function hl(css,bad){let out=esc(css);
+  out=out.replace(/(\/\*[\s\S]*?\*\/)/g,'<span class="cm">$1</span>').replace(/(var\(--[a-z0-9-]+\))/g,'<span class="tk">$1</span>');
+  return out}
+function hlHtml(h){return esc(h).replace(/(&lt;\/?)([a-z0-9]+)/g,'$1<span class="tg">$2</span>')}
+let linted=false;
+function show(v){cur=v;linted=false;document.querySelectorAll('.tabs [data-v]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
+  const d=V[v];$('#ctx').innerHTML=d.ctx;$('#code').innerHTML=hlHtml(d.html)+'\n\n'+hl(d.css);$('#lines').textContent=(d.html+d.css).split('\n').length+' lines';
+  $('#pv').srcdoc=`<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;font-family:Inter,Arial,sans-serif}${d.css}</style></head><body>${d.html.replace('onclick="next()"','')}</body></html>`;
+  $('#score').innerHTML='–<small>lint issues</small>';$('#hits').innerHTML='<span class="hit">Run the lint check to scan this code</span>';['#k1','#k2','#k3','#k4'].forEach(s=>$(s).textContent='–')}
+function runLint(){const a=lint(cur),L=lint('legacy'),R=lint('ready');
+  // highlight offending tokens in code
+  let code=$('#code').innerHTML;
+  if(cur==='legacy'){code=code.replace(/(#[0-9a-fA-F]{3,6}\b|\b(?:[3-9]|1\d|[2-9]\d)px\b|!important|onclick|SELECT)/g,'<span class="hl">$1</span>');$('#code').innerHTML=code}
+  $('#score').innerHTML=`${a.n}<small>lint issues</small>`;$('#score').style.color=a.n?'#ff9aa7':'#7ee2a8';
+  $('#hits').innerHTML=a.r.map(([k,t])=>`<span class="hit ${k}">${k==='bad'?'✕':'✓'} ${t}</span>`).join('');
+  $('#k1').innerHTML=`${L.hex}<i>→</i>${R.hex}`;$('#k2').innerHTML=`${L.px}<i>→</i>${R.px}`;$('#k3').innerHTML=`${L.ctrl}<i>→</i>${R.ctrl}`;$('#k4').innerHTML=`${L.tok}%<i>→</i>${R.tok}%`}
+document.querySelectorAll('.tabs [data-v]').forEach(b=>b.onclick=()=>show(b.dataset.v));
+$('#lint').onclick=runLint;
+show('legacy');
+})();
+</script>
+</body>
+</html>
