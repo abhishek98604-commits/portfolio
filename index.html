@@ -113,8 +113,8 @@ p{margin:0}
 .facts dt{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .facts dd{margin:0;font-weight:500}
 .problem{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(28px,5vw,72px);margin-top:clamp(36px,5vw,60px);align-items:start}
-.problem .copy{min-width:0}
-.problem .copy p{font-size:clamp(17px,1.5vw,20px);line-height:1.5;max-width:62ch}
+.problem .copy{min-width:0;padding:0;font-size:inherit}
+.problem .copy p{font-size:clamp(17px,1.5vw,20px);line-height:1.5;max-width:none}
 .problem .copy p+p{margin-top:14px}
 .problem .copy em{font-style:normal;font-weight:500;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
 .figs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:1.5px solid var(--ink)}
@@ -449,14 +449,6 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     <div class="locked rv"><span class="lk" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v12H4z"/><path d="M8 21h8M12 17v4"/></svg></span>
       <div><b>Full case study</b><p>The complete plan selection story: research, journey map, design decisions, the final prototype and the outcome.</p>
       <div class="lk-row"><a class="btn" href="https://abhishekbora.myportfolio.com/verizon-plan-selection" target="_blank" rel="noopener">View full case study ↗</a></div></div></div>
-  </article>
-
-  <!-- AI shopping agent -->
-  <article class="project" id="agent">
-    <div class="sub-chapter rv"><span class="label">Verizon · Concept · Under NDA</span><h3>Designing an AI shopping agent that people can trust</h3></div>
-    <p class="blurb rv">An agent that helps people buy home internet: it checks the address, recommends a plan, applies offers and gets them to checkout. Working as a team, we defined which part does what, when the shopper decides, and what happens when something goes wrong. Run a scenario to see it work.</p>
-    <div class="agent-embed rv"><iframe id="agentF" src="agent/index.html?embed=1" title="AI shopping agent orchestration, interactive" loading="lazy" scrolling="no"></iframe></div>
-    <p class="more-link rv"><a class="btn" href="agent/">See the full flow ↗</a></p>
   </article>
 
   <!-- WiFi Backup -->
@@ -853,6 +845,6 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
 </script>
 
 
-<script>(()=>{['agentF'].forEach(id=>{const f=document.getElementById(id);if(!f)return;const fit=()=>{try{const d=f.contentDocument;if(d&&d.body){const h=d.querySelector('#lab').getBoundingClientRect().height;if(h>100)f.style.height=Math.ceil(h)+'px'}}catch(e){}};f.addEventListener('load',()=>{fit();setInterval(fit,800)});addEventListener('resize',fit)})})();</script>
+<script>(()=>{[].forEach(id=>{const f=document.getElementById(id);if(!f)return;const fit=()=>{try{const d=f.contentDocument;if(d&&d.body){const h=d.querySelector('#lab').getBoundingClientRect().height;if(h>100)f.style.height=Math.ceil(h)+'px'}}catch(e){}};f.addEventListener('load',()=>{fit();setInterval(fit,800)});addEventListener('resize',fit)})})();</script>
 </body>
 </html>
