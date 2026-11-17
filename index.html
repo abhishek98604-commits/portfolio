@@ -433,17 +433,10 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     </dl>
     <div class="problem">
       <div class="copy rv">
-        <p>Verizon Home Internet has about 17 million customers and adds about 350,000 every quarter.</p>
-        <p>But <em>4 in 10 shoppers</em> dropped off at plan selection, roughly 100,000 people a month. Prices, discounts and speeds were hard to compare, especially on mobile.</p>
-        <p><b>My role.</b> I led the redesign end to end. I analysed funnel and session data, mapped the full buying journey, synthesised existing research with AI, and prototyped with the Verizon Design System. I worked with product and engineering from goals to rollout.</p>
+        <p>Plan selection is where Verizon Home Internet shoppers decide to buy, and <em>4 in 10 were leaving at this step</em>. With about 17 million customers and 350,000 new ones every quarter, even a small improvement here means a lot of extra sales.</p>
+        <p>The old page made people work too hard. They could not compare prices, speeds and offers, especially on mobile. The new design shows price and speed first, opens details right on the card, and keeps add-ons optional. That makes the choice easier, so more people reach checkout.</p>
       </div>
     </div>
-    <div class="decisions-wrap"><span class="label kh-label">Key highlights</span>
-    <div class="decisions">
-      <div class="decision rv"><h3>Clear hierarchy</h3><p>Price and speed lead every card. Supporting details are one tap away.</p></div>
-      <div class="decision rv"><h3>Progressive disclosure</h3><p>Plan details expand in place, so users keep their context. This tested better on mobile.</p></div>
-      <div class="decision rv"><h3>Hub and spoke</h3><p>Perks, TV and Home Phone are optional add-ons, which keeps the path to checkout short.</p></div>
-    </div></div>
     <div class="ba rv">
       <figure class="ba-col">
         <span class="label">Before</span>
@@ -456,7 +449,7 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
         <figcaption>All plans in one list. Price and speed first, details open in place. Try it: tap a plan.</figcaption>
       </figure>
     </div>
-    <div class="outcome rv"><span class="label">Outcome</span><p>Rolling out in phases, measured on how many people move past plan selection. The card and hub patterns are now reused across Home Internet buying.</p></div>
+    <div class="outcome rv"><span class="label">Outcome</span><p>Live for 10% of shoppers in an A/B test, measured on how many move past plan selection. The new card and hub patterns are now reused across Home Internet buying.</p></div>
     <div class="locked rv"><span class="lk" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v12H4z"/><path d="M8 21h8M12 17v4"/></svg></span>
       <div><b>Full case study</b><p>The complete plan selection story: research, journey map, design decisions, the final prototype and the outcome.</p>
       <div class="lk-row"><a class="btn" href="case-study/full/" target="_blank" rel="noopener">View full case study ↗</a></div></div></div>
@@ -464,7 +457,7 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
 
   <!-- ===== AI group ===== -->
   <div class="ai-group" id="aiwork">
-  <div class="group-head rv"><span class="label">Verizon · 3 projects · Under NDA</span><h2>Designing with AI</h2><p>An AI shopping agent, a design system made ready for AI tools, and an agent that reviews designs. Each one is a working demo that recreates my Verizon work with sample data.</p></div>
+  <div class="group-head rv"><span class="label">Verizon · 2 projects · Under NDA</span><h2>Designing with AI</h2><p>An AI shopping agent and a design system made ready for AI tools. Each one is a working demo that recreates my Verizon work with sample data.</p></div>
 
   <!-- AI shopping agent -->
   <article class="project" id="agent">
@@ -479,15 +472,7 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     <div class="sub-chapter rv"><span class="label">02 · AI-ready design system</span><h3>Making a legacy design system AI-ready</h3></div>
     <p class="blurb rv">AI tools guessed when pointed at our older design system: hard-coded colours, made-up spacing, buttons made of divs. I worked with the design system team and developers to fix it. A demo of my Verizon work, switch systems and run the check.</p>
     <div class="agent-embed rv"><iframe id="readyF" src="ai-ready/index.html?embed=1" title="Legacy vs AI-ready design system, live demo" loading="lazy" scrolling="no"></iframe></div>
-    <p class="more-link rv"><a class="btn" href="ai-ready/">Read the case study ↗</a> <a class="btn ghost" href="ai-ready/article.html" style="margin:8px 0 0 0">Read the article ↗</a></p>
-  </article>
-
-  <!-- Design review agent -->
-  <article class="project" id="review">
-    <div class="sub-chapter rv"><span class="label">03 · Design review agent</span><h3>A design review agent that checks every screen before review</h3></div>
-    <p class="blurb rv">An agent that checks a screen against the design system in seconds and fixes what it can, so reviews focus on design decisions. A demo of my Verizon work, pick a screen and run it.</p>
-    <div class="agent-embed rv"><iframe id="reviewF" class="fitf" src="review/index.html?embed=1" title="Design review agent, interactive" loading="lazy" scrolling="no"></iframe></div>
-    <p class="more-link rv"><a class="btn" href="review/">See how it works ↗</a></p>
+    <p class="more-link rv"><a class="btn" href="ai-ready/">Read the case study ↗</a></p>
   </article>
   </div>
 
@@ -886,6 +871,6 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
 </script>
 
 
-<script>(()=>{['agentF','reviewF','readyF'].forEach(id=>{const f=document.getElementById(id);if(!f)return;const fit=()=>{try{const d=f.contentDocument;if(d&&d.body){const h=d.querySelector('#lab').getBoundingClientRect().height;if(h>100)f.style.height=Math.ceil(h)+'px'}}catch(e){}};f.addEventListener('load',()=>{fit();setInterval(fit,800)});addEventListener('resize',fit)})})();</script>
+<script>(()=>{['agentF','readyF'].forEach(id=>{const f=document.getElementById(id);if(!f)return;const fit=()=>{try{const d=f.contentDocument;if(d&&d.body){const h=d.querySelector('#lab').getBoundingClientRect().height;if(h>100)f.style.height=Math.ceil(h)+'px'}}catch(e){}};f.addEventListener('load',()=>{fit();setInterval(fit,800)});addEventListener('resize',fit)})})();</script>
 </body>
 </html>
