@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI Shopping Agent · Orchestration</title>
+<title>Shopping Agent · Orchestration</title>
 <meta name="description" content="How I designed the orchestration of an AI shopping agent for home internet: agents, tools, checkpoints, failure states and tests.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -124,6 +124,35 @@ footer{margin:clamp(56px,8vw,104px) 0 40px;display:flex;justify-content:space-be
 body.embed{padding:0;background:transparent}
 body.embed .page>*:not(#lab){display:none}
 body.embed #lab{margin:0}body.embed #lab .sh,body.embed #lab .intro{display:none}body.embed .lab{margin-top:0}
+
+/* ===== light theme ===== */
+.lab{background:#fff;color:#1f2430;border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.lab:before{display:none}
+.dia,.card{background:#fafbfc;border-color:var(--line)}
+.card h4{color:#0f1115}
+.legend{border-color:var(--line);color:var(--muted)}
+.scen button,.ctrl button{border-color:#d9dce2;background:#fff;color:#1f2430}
+.scen button:hover,.ctrl button:hover{border-color:#9aa1ad;color:#0f1115}
+.scen button[aria-pressed="true"]{background:#0f1115;color:#fff;border-color:#0f1115}
+.ctrl .run{background:#0f1115;border-color:#0f1115;color:#fff}
+.ctrl label,.empty,.detail .kv b{color:var(--muted)}
+.bub.u{background:#0f1115;color:#fff}
+.bub.a{background:#fff;border-color:var(--line);color:#1f2430}
+.bub.a .ok{color:#a26300}
+.trace{background:#fafbfc;border-color:var(--line)}
+.trace .th{border-color:var(--line);color:var(--muted)}
+.tl .n{color:#a3a9b4}.tl .x{color:#1f2430}.tl .x code{color:#2754e6}.tl.user .k{color:#0f1115}
+.tl.agent .k{color:#3157d6}.tl.tool .k{color:#0f8a6c}.tl.check .k{color:#a26300}.tl.guard .k{color:#c2324a}.tl.human .k{color:#7a3fc4}.tl.done .k{color:#16804f}
+.res{background:#eaf7f0;border-color:#a7dcc0;color:#11643f}
+.edge{stroke:#d6dae1}
+.node rect{fill:#fff;stroke:#d6dae1}
+.node .t{fill:#0f1115}.node .s{fill:#7a818d}
+.node:hover rect,.node:focus rect{stroke:#9aa1ad}
+.node.sel rect{stroke:#0f1115}
+.node.on rect{fill:#f5f7ff;filter:none}
+.zone{stroke:#d6dae1}.ztxt{fill:#9aa1ad}
+:root{--agent:#3f66e0;--tool:#13a383;--check:#d99a1c;--guard:#e0455d;--human:#9a5ee0}
+body.embed{background:#fff}
 </style>
 </head>
 <body>
@@ -133,12 +162,12 @@ body.embed #lab{margin:0}body.embed #lab .sh,body.embed #lab .intro{display:none
   <header class="hero">
     <span class="label">Verizon · AI agent · Home internet</span>
     <h1>Designing an AI shopping agent that people can trust</h1>
-    <p class="lede">An agent that helps people buy home internet: it checks the address, recommends a plan, applies offers and prepares checkout. I designed the system behind it: which agent does what, when the user decides, and what happens when something fails.</p>
-    <span class="note">Under NDA. What you see here is a demo that recreates my work at Verizon with sample data, not real Verizon screens or code.</span>
+    <p class="lede">An agent that helps people buy home internet: it checks the address, recommends a plan, applies offers and gets them to checkout. Working as a team with product and engineering, we defined which part does what, when the shopper decides, and what happens when something goes wrong.</p>
+    <span class="note">Concept work, under NDA. This demo uses sample data, not real Verizon screens or code.</span>
     <dl class="facts">
       <div><dt>Role</dt><dd>Design lead</dd></div>
       <div><dt>Scope</dt><dd>Orchestration, autonomy, failure states</dd></div>
-      <div><dt>Built with</dt><dd>Figma, Claude</dd></div>
+      <div><dt>Team</dt><dd>Product, Engineering, Design</dd></div>
     </dl>
   </header>
 
@@ -191,19 +220,19 @@ body.embed #lab{margin:0}body.embed #lab .sh,body.embed #lab .intro{display:none
   <!-- ================= EVALS ================= -->
   <section id="evals">
     <div class="sh"><h2>Testing the design</h2><span class="label">Design evals</span></div>
-    <p class="intro">An agent can say anything, so “looks good in Figma” is not enough. I wrote the rules the agent must always follow as test cases, and ran every scenario against them. Each one passes only when a scenario proves it.</p>
+    <p class="intro">An agent can say anything, so “looks good in Figma” is not enough. We wrote the rules the agent must always follow as test cases, and ran every scenario against them. Each one passes only when a scenario proves it.</p>
     <div class="evals" id="evlist"></div>
     <div class="evbar"><button class="btn" id="runall">Run all scenarios</button><span id="evsum">0 of 9 checks passed</span></div>
   </section>
 
-  <footer><span>Abhishek Bora · Designed by me, built with AI</span><a href="../">Back to portfolio</a></footer>
+  <footer><span>Abhishek Bora</span><a href="../">Back to portfolio</a></footer>
 </div>
 
 <script>
 (()=>{
 if(/[?&]embed/.test(location.search))document.body.classList.add('embed');
 const $=s=>document.querySelector(s);
-const C={agent:'var(--agent)',tool:'var(--tool)',check:'var(--check)',guard:'var(--guard)',human:'var(--human)',user:'#ffffff'};
+const C={agent:'var(--agent)',tool:'var(--tool)',check:'var(--check)',guard:'var(--guard)',human:'var(--human)',user:'#0f1115'};
 const N={
  user:{x:30,y:268,w:170,t:'User',s:'shopper',k:'user',job:'Says what they need in their own words, and makes the final call at every checkpoint.',auto:'Decides',guard:'Can stop, change or undo at any point.'},
  orch:{x:286,y:252,w:268,h:96,t:'Orchestrator agent',s:'plans · routes · explains',k:'agent',job:'The only agent that talks to the user. Breaks the request into jobs, calls the right specialist, and turns results into one clear answer.',auto:'Routes work, asks questions',guard:'Never states a fact a tool did not return.'},

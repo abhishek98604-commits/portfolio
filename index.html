@@ -98,6 +98,7 @@ p{margin:0}
 .ai-group{margin-top:var(--blk);padding-top:clamp(28px,4vw,44px);border-top:1.5px solid var(--ink)}
 .group-head h2{font-size:clamp(28px,3.4vw,44px);margin-top:10px}.group-head p{color:var(--muted);font-size:clamp(16px,1.4vw,18px);max-width:62ch;margin-top:12px}
 .ai-group #agent .sub-chapter{margin-top:clamp(24px,3vw,36px)}
+.ba.one{grid-template-columns:300px;justify-content:center}
 .more-link{margin-top:20px}
 .lk-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:14px}
 .lk-mail{font-family:var(--mono);font-size:14px;user-select:all}
@@ -394,9 +395,8 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     <a class="mark" href="#top">Selected work</a>
     <ul>
       <li><a href="#verizon">Verizon</a></li>
-      <li><a href="#aiwork">AI work</a></li>
       <li><a href="#bluejeans">BlueJeans</a></li>
-      <li><a href="#ai">AI prototypes</a></li>
+      <li><a href="#ai">Prototypes</a></li>
             <li><a href="#contact">Contact</a></li>
     </ul>
     <button class="btn ghost js-resume" type="button">Resume ↓</button>
@@ -435,46 +435,29 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
       <div class="copy rv">
         <p>Plan selection is where Verizon Home Internet shoppers decide to buy, and <em>4 in 10 were leaving at this step</em>. With about 17 million customers and 350,000 new ones every quarter, even a small improvement here means a lot of extra sales.</p>
         <p>The old page made people work too hard. They could not compare prices, speeds and offers, especially on mobile. The new design shows price and speed first, opens details right on the card, and keeps add-ons optional. That makes the choice easier, so more people reach checkout.</p>
+        <p><b style="font-weight:500">Outcome.</b> Live for 10% of shoppers in an A/B test, measured on how many move past plan selection. The new card and hub patterns are now reused across Home Internet buying.</p>
+        <p><b style="font-weight:500">My role.</b> I led the design, working closely with product, engineering and the design system team.</p>
       </div>
     </div>
-    <div class="ba rv">
+    <div class="ba rv one">
       <figure class="ba-col">
-        <span class="label">Before</span>
-        <div class="cph"><div class="cvp"><iframe src="before/index.html" title="Before: the old plan selection page, rebuilt" loading="lazy"></iframe></div></div>
-        <figcaption>One plan at a time in a side scroll. Price, perks and fine print all compete. Rebuilt from the live page, so you can scroll it.</figcaption>
-      </figure>
-      <figure class="ba-col">
-        <span class="label">After · live prototype</span>
+        <span class="label">Final design · live prototype</span>
         <div class="cph"><div class="cvp"><iframe src="proto/index.html?demo#plan" title="Interactive plan selection prototype" loading="lazy"></iframe></div></div>
         <figcaption>All plans in one list. Price and speed first, details open in place. Try it: tap a plan.</figcaption>
       </figure>
     </div>
-    <div class="outcome rv"><span class="label">Outcome</span><p>Live for 10% of shoppers in an A/B test, measured on how many move past plan selection. The new card and hub patterns are now reused across Home Internet buying.</p></div>
     <div class="locked rv"><span class="lk" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v12H4z"/><path d="M8 21h8M12 17v4"/></svg></span>
       <div><b>Full case study</b><p>The complete plan selection story: research, journey map, design decisions, the final prototype and the outcome.</p>
-      <div class="lk-row"><a class="btn" href="case-study/full/" target="_blank" rel="noopener">View full case study ↗</a></div></div></div>
+      <div class="lk-row"><a class="btn" href="https://abhishekbora.myportfolio.com/verizon-plan-selection" target="_blank" rel="noopener">View full case study ↗</a></div></div></div>
   </article>
-
-  <!-- ===== AI group ===== -->
-  <div class="ai-group" id="aiwork">
-  <div class="group-head rv"><span class="label">Verizon · 2 projects · Under NDA</span><h2>Designing with AI</h2><p>An AI shopping agent and a design system made ready for AI tools. Each one is a working demo that recreates my Verizon work with sample data.</p></div>
 
   <!-- AI shopping agent -->
   <article class="project" id="agent">
-    <div class="sub-chapter rv"><span class="label">01 · AI agent orchestration</span><h3>Designing an AI shopping agent that people can trust</h3></div>
-    <p class="blurb rv">An agent that helps people buy home internet. I designed the system behind it: which agent does what, when the user decides, and what happens when something fails. A demo of my Verizon work, run a scenario to test it.</p>
+    <div class="sub-chapter rv"><span class="label">Verizon · Concept · Under NDA</span><h3>Designing an AI shopping agent that people can trust</h3></div>
+    <p class="blurb rv">An agent that helps people buy home internet: it checks the address, recommends a plan, applies offers and gets them to checkout. Working as a team, we defined which part does what, when the shopper decides, and what happens when something goes wrong. Run a scenario to see it work.</p>
     <div class="agent-embed rv"><iframe id="agentF" src="agent/index.html?embed=1" title="AI shopping agent orchestration, interactive" loading="lazy" scrolling="no"></iframe></div>
-    <p class="more-link rv"><a class="btn" href="agent/">Read the full case study ↗</a></p>
+    <p class="more-link rv"><a class="btn" href="agent/">See the full flow ↗</a></p>
   </article>
-
-  <!-- AI-ready design system -->
-  <article class="project" id="aiready">
-    <div class="sub-chapter rv"><span class="label">02 · AI-ready design system</span><h3>Making a legacy design system AI-ready</h3></div>
-    <p class="blurb rv">AI tools guessed when pointed at our older design system: hard-coded colours, made-up spacing, buttons made of divs. I worked with the design system team and developers to fix it. A demo of my Verizon work, switch systems and run the check.</p>
-    <div class="agent-embed rv"><iframe id="readyF" src="ai-ready/index.html?embed=1" title="Legacy vs AI-ready design system, live demo" loading="lazy" scrolling="no"></iframe></div>
-    <p class="more-link rv"><a class="btn" href="ai-ready/">Read the case study ↗</a></p>
-  </article>
-  </div>
 
   <!-- WiFi Backup -->
   <article class="project" id="wifi">
@@ -670,8 +653,8 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
 
 <!-- ============ AI & EARLIER WORK ============ -->
 <section class="chapter wrap" id="ai">
-  <div class="chapter-head"><h2>Built with AI</h2><span class="label">Working prototypes</span></div>
-  <p class="blurb rv">New ideas and older projects, rebuilt as working prototypes with AI (Claude). They are live right here, so click around.</p>
+  <div class="chapter-head"><h2>Prototypes</h2><span class="label">Side projects</span></div>
+  <p class="blurb rv">New ideas and older projects, rebuilt as working prototypes. They are live right here, so click around.</p>
   <div class="live-stack rv">
     <figure class="live-desk">
       <div class="tabletf"><div class="scaler" data-w="1180" data-h="820"><iframe src="protos/logdoc/index.html" title="LogDoc interactive prototype" loading="lazy"></iframe></div></div>
@@ -720,7 +703,7 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     <button class="btn ghost js-resume" type="button">Download resume ↓</button>
     <a class="quiet-link" href="https://abhishekbora.myportfolio.com" target="_blank" rel="noopener">Older work ↗</a>
   </div>
-  <div class="foot"><span>Bangalore, India</span><span>Designed by me, built with AI</span></div>
+  <div class="foot"><span>Bangalore, India</span><span>Designed and built by me</span></div>
 </section>
 </main>
 
@@ -733,7 +716,6 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
     <div class="chips" id="askChips">
       <button type="button" data-q="impact">What impact did the plan selection work aim for?</button>
       <button type="button" data-q="lead">How do you lead a design team?</button>
-      <button type="button" data-q="ai">How do you use AI in design?</button>
       <button type="button" data-q="hardware">Have you designed for hardware?</button>
       <button type="button" data-q="contact">How do I reach you?</button>
     </div>
@@ -821,7 +803,7 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
   const FAQ={
     impact:"About 4 in 10 shoppers dropped off at plan selection, roughly 100,000 a month. I put price and speed first, opened details in place and kept add-ons optional. It is rolling out in phases, measured on how many people move past plan selection.",
     lead:"At BlueJeans I built and led a team of 6 designers for iOS and Android. I set direction and quality standards, planned the roadmap with product and engineering, and handled hiring and mentoring. While I led the team, the apps held ratings of 4.8 on the App Store and 4.7 on Google Play.",
-    ai:"I use AI to research, prototype and ship faster: Gemini, NotebookLM, Claude and Figma Make. The prototypes in the Built with AI section were built with Claude, and I build small Figma plugins for my team. AI speeds things up, but judgment and craft decide quality.",
+    ai:"I use AI to research, prototype and ship faster: Gemini, NotebookLM, Claude and Figma Make. The prototypes on this page were built with Claude, and I build small Figma plugins for my team. AI speeds things up, but judgment and craft decide quality.",
     hardware:"Yes. I designed BlueJeans Rooms, the TV screen and a 12 inch touch controller, shipped with Poly hardware for customers like Facebook, LinkedIn and Red Hat. At Verizon I designed WiFi Backup, which pairs a backup router with the Verizon Home app.",
     contact:"Email me at abhishekbora86@gmail.com. You can also use Schedule a call at the bottom of this page."
   };
@@ -871,6 +853,6 @@ figcaption b{color:var(--ink);font-weight:500;display:block}
 </script>
 
 
-<script>(()=>{['agentF','readyF'].forEach(id=>{const f=document.getElementById(id);if(!f)return;const fit=()=>{try{const d=f.contentDocument;if(d&&d.body){const h=d.querySelector('#lab').getBoundingClientRect().height;if(h>100)f.style.height=Math.ceil(h)+'px'}}catch(e){}};f.addEventListener('load',()=>{fit();setInterval(fit,800)});addEventListener('resize',fit)})})();</script>
+<script>(()=>{['agentF'].forEach(id=>{const f=document.getElementById(id);if(!f)return;const fit=()=>{try{const d=f.contentDocument;if(d&&d.body){const h=d.querySelector('#lab').getBoundingClientRect().height;if(h>100)f.style.height=Math.ceil(h)+'px'}}catch(e){}};f.addEventListener('load',()=>{fit();setInterval(fit,800)});addEventListener('resize',fit)})})();</script>
 </body>
 </html>
